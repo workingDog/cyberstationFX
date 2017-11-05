@@ -34,7 +34,7 @@ trait BundleViewControllerInterface {
 
 @sfxml
 class BundleViewController(bundleViewBox: VBox,
-                           @FXML redoButton: JFXButton,
+                           @FXML idButton: JFXButton,
                            @FXML sendButton: JFXButton,
                            @FXML addButton: JFXButton,
                            @FXML deleteButton: JFXButton,
@@ -149,7 +149,7 @@ class BundleViewController(bundleViewBox: VBox,
     connInfo.add(2, new InfoTableEntry("Collection", ""))
   }
 
-  redoButton.setOnMouseClicked((_: MouseEvent) => {
+  idButton.setOnMouseClicked((_: MouseEvent) => {
     if(bundlesListView.getSelectionModel.getSelectedItem != null) {
       bundleId.textProperty.unbind()
       bundleId.text = Identifier(Bundle.`type`).toString()

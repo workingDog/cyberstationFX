@@ -1,8 +1,13 @@
 package controllers
 
 import javafx.fxml.FXML
+
 import com.jfoenix.controls._
+import com.kodekutters.stix.{Bundle, Identifier}
 import cyberProtocol.CyberObj
+import scala.language.postfixOps
+import scalafx.Includes._
+import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 
 
@@ -12,7 +17,9 @@ trait CommonControllerInterface {
 }
 
 @sfxml
-class CommonController(@FXML createdField: JFXTextField,
+class CommonController(@FXML idButton: JFXButton,
+                       @FXML idField: JFXTextField,
+                       @FXML createdField: JFXTextField,
                        @FXML modifiedField: JFXTextField,
                        @FXML revokedField: JFXToggleButton,
                        @FXML confidenceField: JFXTextField,
@@ -34,6 +41,7 @@ class CommonController(@FXML createdField: JFXTextField,
     objMarkingsField.setText("")
     externalRefField.setText("")
     revokedField.setSelected(false)
+    idField.setText("")
   }
 
   private def loadValues(): Unit = {
@@ -45,6 +53,7 @@ class CommonController(@FXML createdField: JFXTextField,
     objMarkingsField.setText("")
     externalRefField.setText("")
     revokedField.setSelected(currentForm.revoked.value)
+    idField.setText(currentForm.id.value)
   }
 
   private def unbindAll(): Unit = {
@@ -76,5 +85,10 @@ class CommonController(@FXML createdField: JFXTextField,
     currentForm.created_by_ref <== createdByField.textProperty()
     currentForm.revoked <== revokedField.selectedProperty()
   }
+
+  idButton.setOnMouseClicked((_: MouseEvent) => {
+    currentForm.id.value = Identifier(currentForm.`type`).toString()
+    idField.setText(currentForm.id.value)
+  })
 
 }

@@ -54,7 +54,7 @@
                      </GridPane.margin></Label>
                   <JFXTextField fx:id="bundleId" labelFloat="true" text="Id" GridPane.rowIndex="1" />
                   <JFXTextField fx:id="bundleVersion" labelFloat="true" prefWidth="100.0" text="Version" GridPane.rowIndex="2" />
-                  <JFXButton fx:id="redoButton" buttonType="RAISED" style="-fx-background-radius: 5em; -fx-min-width: 60; -fx-min-height: 30; -fx-max-width: 60; -fx-max-height: 30; -fx-background-color: lightBlue;" text="renew" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <JFXButton fx:id="idButton" buttonType="RAISED" style="-fx-background-radius: 5em; -fx-min-width: 60; -fx-min-height: 30; -fx-max-width: 60; -fx-max-height: 30; -fx-background-color: lightBlue;" text="renew" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="6.0" />
                      </GridPane.margin>

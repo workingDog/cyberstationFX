@@ -4,10 +4,9 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView}
 import com.kodekutters.stix._
-import cyberProtocol.{CyberBundle, IndicatorForm}
+import cyberProtocol.IndicatorForm
 
 import scalafx.Includes._
-import scalafx.beans.property.ObjectProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.Label
 import scalafx.scene.control.cell.TextFieldListCell
@@ -31,7 +30,6 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
 
   val indicatorList = ObservableBuffer[IndicatorForm]()
   var bundleController: Option[BundleViewControllerInterface] = None
-  // val currentBundle = new ObjectProperty[CyberBundle]()
 
   init()
 
