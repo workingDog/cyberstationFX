@@ -13,7 +13,7 @@ class MainMenuController(theLabel: Label) extends MainMenuControllerInterface {
 
 
   override def init() {
-    println("---> in MainMenuController init")
+
   }
 
 }

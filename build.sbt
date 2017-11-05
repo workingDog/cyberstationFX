@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.github.workingDog" %% "taxii2lib" % "0.1"
 )
 
-homepage := Some(url("https://github.com/workingDog/CyberStationApp"))
+homepage := Some(url("https://github.com/workingDog/cyberstationFX"))
 
 licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
