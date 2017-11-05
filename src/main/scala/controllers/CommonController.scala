@@ -87,8 +87,10 @@ class CommonController(@FXML idButton: JFXButton,
   }
 
   idButton.setOnMouseClicked((_: MouseEvent) => {
-    currentForm.id.value = Identifier(currentForm.`type`).toString()
-    idField.setText(currentForm.id.value)
+    if(currentForm != null) {
+      currentForm.id.value = Identifier(currentForm.`type`).toString()
+      idField.setText(currentForm.id.value)
+    }
   })
 
 }
