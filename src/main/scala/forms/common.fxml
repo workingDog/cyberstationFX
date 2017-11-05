@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane hgap="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" vgap="12.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommonController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <JFXTextField fx:id="createdField" labelFloat="true" promptText="created">
+         <GridPane.margin>
+            <Insets left="8.0" />
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="modifiedField" labelFloat="true" promptText="modified" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets left="8.0" />
+         </GridPane.margin></JFXTextField>
+      <JFXToggleButton fx:id="revokedField" text="revoked" GridPane.columnIndex="2">
+         <GridPane.margin>
+            <Insets left="12.0" />
+         </GridPane.margin>
+      </JFXToggleButton>
+      <JFXTextField fx:id="langField" labelFloat="true" promptText="language" text="en" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <JFXComboBox fx:id="labelsField" labelFloat="true" prefHeight="28.0" prefWidth="185.0" promptText="labels" visibleRowCount="8" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <JFXTextField fx:id="confidenceField" labelFloat="true" promptText="confidence" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="8.0" />
+         </GridPane.margin>
+      </JFXTextField>
+      <JFXTextField fx:id="createdByField" labelFloat="true" promptText="created by" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="8.0" />
+         </GridPane.margin>
+      </JFXTextField>
+      <JFXTextField fx:id="objMarkingsField" labelFloat="true" promptText="object marking references" GridPane.rowIndex="3" />
+      <JFXTextField fx:id="externalRefField" labelFloat="true" promptText="external references" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   </children>
+   <padding>
+      <Insets left="8.0" right="8.0" top="8.0" />
+   </padding>
+</GridPane>

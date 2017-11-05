@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="bundleHBox" prefHeight="617.0" prefWidth="872.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BundleViewController">
+   <children>
+      <VBox fx:id="bundleViewBox" prefWidth="340.0" HBox.hgrow="NEVER">
+         <children>
+            <HBox prefHeight="48.0" prefWidth="260.0" spacing="8.0" VBox.vgrow="NEVER">
+               <children>
+                  <JFXButton fx:id="addButton" buttonType="RAISED" text="Add" />
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" text="Delete" />
+                  <JFXButton fx:id="sendButton" buttonType="RAISED" text="Send to server" />
+                  <JFXSpinner fx:id="serverSpinner" visible="false" />
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="12.0" right="4.0" top="10.0" />
+               </padding>
+            </HBox>
+            <JFXListView fx:id="bundlesListView" editable="true" prefHeight="551.0" prefWidth="320.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets left="8.0" right="8.0" />
+               </VBox.margin></JFXListView>
+         </children>
+      </VBox>
+      <VBox prefWidth="491.0" spacing="8.0" HBox.hgrow="ALWAYS">
+         <children>
+            <GridPane prefHeight="87.0" prefWidth="524.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="481.0" minWidth="10.0" prefWidth="443.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.0" minWidth="10.0" prefWidth="81.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="bundleName" maxWidth="1.7976931348623157E308" prefWidth="315.0" GridPane.hgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets top="8.0" />
+                     </GridPane.margin></Label>
+                  <JFXTextField fx:id="bundleId" labelFloat="true" text="Id" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="bundleVersion" labelFloat="true" prefWidth="100.0" text="Version" GridPane.rowIndex="2" />
+                  <JFXButton fx:id="redoButton" buttonType="RAISED" style="-fx-background-radius: 5em; -fx-min-width: 60; -fx-min-height: 30; -fx-max-width: 60; -fx-max-height: 30; -fx-background-color: lightBlue;" text="renew" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="6.0" />
+                     </GridPane.margin>
+                  </JFXButton>
+               </children>
+            </GridPane>
+            <HBox prefHeight="328.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="454.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TableView fx:id="connectionInfo" pickOnBounds="false" prefHeight="191.0" prefWidth="524.0" VBox.vgrow="NEVER">
+                           <columns>
+                              <TableColumn editable="false" prefWidth="106.0" sortable="false" />
+                              <TableColumn editable="false" prefWidth="380.0" sortable="false" />
+                           </columns>
+                        </TableView>
+                        <JFXListView fx:id="bundleStixView" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+         <HBox.margin>
+            <Insets top="6.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets right="8.0" top="8.0" />
+   </padding>
+</HBox>

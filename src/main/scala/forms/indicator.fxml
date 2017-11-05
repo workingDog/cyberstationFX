@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.IndicatorController">
+   <children>
+      <VBox prefWidth="300.0" HBox.hgrow="NEVER">
+         <children>
+            <HBox prefHeight="61.0" prefWidth="300.0" spacing="8.0" VBox.vgrow="NEVER">
+               <children>
+                  <JFXButton fx:id="addButton" buttonType="RAISED" text="Add">
+                     <HBox.margin>
+                        <Insets top="12.0" />
+                     </HBox.margin></JFXButton>
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" text="Delete">
+                     <HBox.margin>
+                        <Insets top="12.0" />
+                     </HBox.margin></JFXButton>
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="12.0" right="4.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <JFXListView fx:id="indicatorListView" editable="true" prefWidth="124.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets left="8.0" />
+               </VBox.margin></JFXListView>
+         </children>
+         <opaqueInsets>
+            <Insets left="8.0" right="8.0" />
+         </opaqueInsets>
+      </VBox>
+      <VBox prefWidth="418.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="bundleLabel" maxWidth="1.7976931348623157E308" text="Part of bundle: ">
+               <padding>
+                  <Insets left="44.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="26.0" />
+               </VBox.margin>
+            </Label>
+            <AnchorPane prefHeight="400.0" VBox.vgrow="ALWAYS">
+            <children>
+               <fx:include fx:id="common" source="common.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" VBox.vgrow="ALWAYS" />
+         </children></VBox>
+   </children>
+</HBox>
