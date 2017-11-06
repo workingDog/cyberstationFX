@@ -30,6 +30,7 @@ trait BundleViewControllerInterface {
   def addStixToBundle(stix: CyberObj)
   def removeStixFromBundle(stix: CyberObj)
   def getCurrentBundle(): ReadOnlyObjectProperty[CyberBundle]
+  def getBundleStixView: JFXListView[CyberObj]
 }
 
 @sfxml
@@ -43,8 +44,8 @@ class BundleViewController(bundleViewBox: VBox,
                            @FXML bundleVersion: JFXTextField,
                            @FXML bundleStixView: JFXListView[CyberObj],
                            @FXML bundlesListView: JFXListView[CyberBundle],
-                           bundleName: Label,
-                           connectionInfo: TableView[InfoTableEntry]) extends BundleViewControllerInterface {
+                           connectionInfo: TableView[InfoTableEntry],
+                           bundleName: Label) extends BundleViewControllerInterface {
 
   val bundleList = ObservableBuffer[CyberBundle]()
   val connInfo = ObservableBuffer[InfoTableEntry]()
@@ -54,6 +55,9 @@ class BundleViewController(bundleViewBox: VBox,
   init()
 
   def getCurrentBundle() = bundlesListView.getSelectionModel.selectedItemProperty()
+
+  def getBundleStixView() = bundleStixView
+
 
   override def addStixToBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
@@ -90,7 +94,6 @@ class BundleViewController(bundleViewBox: VBox,
     bundlesListView.setExpanded(true)
     bundlesListView.setDepth(1)
     bundlesListView.setItems(bundleList)
-    bundlesListView.getSelectionModel.selectFirst()
     bundlesListView.cellFactory = { _ =>
       new TextFieldListCell[CyberBundle] {
         converter = cyberStringConverter

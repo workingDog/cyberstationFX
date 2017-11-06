@@ -12,7 +12,8 @@ import scalafxml.core.macros.sfxml
 
 
 trait CommonControllerInterface {
-  def control(stix: CyberObj): Unit
+  def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit
+
   def clear(): Unit
 }
 
@@ -30,6 +31,7 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML externalRefField: JFXTextField) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
+  var controller: Option[BundleViewControllerInterface] = None
 
   override def clear(): Unit = {
     unbindAll()
@@ -65,6 +67,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.confidence.unbind()
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
+      currentForm.id.unbind()
       //  currentForm.labels.unbind()
       //    currentForm.confidence.unbind()
       //  currentForm.external_references.unbind()
@@ -73,9 +76,10 @@ class CommonController(@FXML idButton: JFXButton,
     }
   }
 
-  override def control(stix: CyberObj): Unit = {
+  override def control(stix: CyberObj, controllerOpt: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
     currentForm = stix
+    controller = controllerOpt
     loadValues()
     // bind the form to the UI
     currentForm.lang <== langField.textProperty()
@@ -84,12 +88,14 @@ class CommonController(@FXML idButton: JFXButton,
     //form.confidence <== confidenceField.IntegerProperty()
     currentForm.created_by_ref <== createdByField.textProperty()
     currentForm.revoked <== revokedField.selectedProperty()
+    currentForm.id <== idField.textProperty()
   }
 
   idButton.setOnMouseClicked((_: MouseEvent) => {
-    if(currentForm != null) {
-      currentForm.id.value = Identifier(currentForm.`type`).toString()
-      idField.setText(currentForm.id.value)
+    if (currentForm != null) {
+      idField.setText(Identifier(currentForm.`type`).toString())
+      // to force a refresh
+      controller.map(cntrl => cntrl.getBundleStixView.refresh())
     }
   })
 
