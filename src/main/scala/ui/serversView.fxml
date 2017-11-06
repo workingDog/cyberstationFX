@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -34,19 +33,14 @@
                <children>
                   <AnchorPane maxHeight="169.0" prefHeight="146.0" prefWidth="491.0" VBox.vgrow="NEVER">
                <children>
-                  <TableView fx:id="serverInfoTable" pickOnBounds="false" prefHeight="169.0" prefWidth="491.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columns>
-                      <TableColumn editable="false" prefWidth="106.0" sortable="false" />
-                      <TableColumn editable="false" prefWidth="373.0" sortable="false" />
-                    </columns>
-                  </TableView>
+                  <TableView fx:id="serverInfoTable" pickOnBounds="false" prefHeight="169.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" top="8.0" />
                </VBox.margin></AnchorPane>
             <HBox prefHeight="328.0" VBox.vgrow="ALWAYS">
                <children>
-                        <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="128.0" HBox.hgrow="NEVER" />
+                        <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
                   <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS" />
                </children>
                <VBox.margin>

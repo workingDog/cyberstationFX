@@ -79,24 +79,19 @@ class ServersViewController(@FXML addButton: JFXButton,
     wipeInfo()
     serverInfoTable.editable = false
     serverInfoTable.selectionModel = null
-    serverInfoTable.tableMenuButtonVisible = false
     serverInfoTable.columns.clear()
     serverInfoTable.columns ++= List(
       new TableColumn[InfoTableEntry, String] {
         prefWidth = 100
         editable = false
         sortable = false
-        cellValueFactory = {
-          _.value.title
-        }
+        cellValueFactory = _.value.title
       },
       new TableColumn[InfoTableEntry, String]() {
         prefWidth = 400
         editable = false
         sortable = false
-        cellValueFactory = {
-          _.value.info
-        }
+        cellValueFactory = _.value.info
       })
     // setup the collectionsListView
     collectionsListView.setItems(collectionList)
@@ -124,13 +119,13 @@ class ServersViewController(@FXML addButton: JFXButton,
     serverInfoItems += new InfoTableEntry("Default", "")
   }
 
-  def getCollectionsInfo(apirootShort: String): Unit = {
-    if (apirootShort == null || apirootShort.isEmpty) {
+  def getCollectionsInfo(apiroot: String): Unit = {
+    if (apiroot == null || apiroot.isEmpty) {
       serverSpinner.setVisible(false)
       return
     }
     connOpt.map(conn => {
-      val cols = Collections(conn.baseURL + apirootShort, conn)
+      val cols = Collections(apiroot, conn)
       cols.collections().map(theList => {
         theList.foreach(col => {
           val canread = if (col.taxiiCollection.can_read) "can read" else "cannot read"
@@ -175,7 +170,7 @@ class ServersViewController(@FXML addButton: JFXButton,
             apirootList.clear()
             // have to do this because we are inside a FX-UI thread
             Platform.runLater(() => {
-              theList.foreach(s => apirootList.append(s.replace(server.conn.baseURL, "")))
+              theList.foreach(s => apirootList.append(s))
               if (apirootList.length > 0) apirootsListView.getSelectionModel.selectFirst()
             })
 

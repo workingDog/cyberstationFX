@@ -3,7 +3,7 @@ package controllers
 import javafx.fxml.FXML
 
 import com.jfoenix.controls._
-import com.kodekutters.stix.{Bundle, Identifier}
+import com.kodekutters.stix.Identifier
 import cyberProtocol.CyberObj
 import scala.language.postfixOps
 import scalafx.Includes._
