@@ -59,7 +59,7 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
   override def setBundleViewController(controller: BundleViewControllerInterface): Unit = {
     bundleController = Option(controller)
     // the BundleViewController currentBundle
-    val currentBundle = controller.getCurrentBundle()
+    val currentBundle = controller.getCurrentBundle
     val bndlName = if (currentBundle.value != null) currentBundle.value.name.value else ""
     bundleLabel.text = "Part of bundle: " + bndlName
     if (currentBundle != null) {
@@ -79,7 +79,7 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
 
   addButton.setOnMouseClicked((_: MouseEvent) => {
     bundleController.map(controller => {
-      if (controller.getCurrentBundle().value != null) {
+      if (controller.getCurrentBundle.value != null) {
         val newStix = new IndicatorForm()
         indicatorList.append(newStix)
         controller.addStixToBundle(newStix)

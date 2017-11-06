@@ -29,7 +29,7 @@ trait BundleViewControllerInterface {
   def setSelectedCollection(theSelectedCollection: StringProperty): Unit
   def addStixToBundle(stix: CyberObj)
   def removeStixFromBundle(stix: CyberObj)
-  def getCurrentBundle(): ReadOnlyObjectProperty[CyberBundle]
+  def getCurrentBundle: ReadOnlyObjectProperty[CyberBundle]
   def getBundleStixView: JFXListView[CyberObj]
 }
 
