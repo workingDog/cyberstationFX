@@ -47,7 +47,7 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
       }
     }
     indicatorListView.getSelectionModel.selectedItem.onChange { (_, oldValue, newValue) =>
-      // the commonController will take care of all interactions with the new IndicatorForm
+      // the commonController will take care of all interactions/updates with the new IndicatorForm
       if (newValue != null) {
         commonController.control(newValue, bundleController)
       } else {
