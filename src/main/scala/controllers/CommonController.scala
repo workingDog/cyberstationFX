@@ -1,11 +1,9 @@
 package controllers
 
 import javafx.fxml.FXML
-
 import com.jfoenix.controls._
 import com.kodekutters.stix.Identifier
 import cyberProtocol.CyberObj
-import scala.language.postfixOps
 import scalafx.Includes._
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
@@ -94,8 +92,8 @@ class CommonController(@FXML idButton: JFXButton,
   idButton.setOnMouseClicked((_: MouseEvent) => {
     if (currentForm != null) {
       idField.setText(Identifier(currentForm.`type`).toString())
-      // to force a refresh
-      controller.map(cntrl => cntrl.getBundleStixView.refresh())
+      // force a refresh
+      controller.map(_.getBundleStixView.refresh())
     }
   })
 

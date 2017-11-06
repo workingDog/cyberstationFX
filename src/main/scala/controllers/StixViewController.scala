@@ -28,7 +28,6 @@ class StixViewController(bundleHBox: HBox,
     bundleViewController.setSelectedServer(theSelectedServer)
     theSelectedServer.onChange { (_, oldValue, newValue) =>
     }
-
   }
 
   override def setSelectedApiroot(theSelectedApiroot: StringProperty) {

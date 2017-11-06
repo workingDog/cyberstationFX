@@ -1,15 +1,12 @@
 package controllers
 
 import javafx.fxml.FXML
-
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.InfoTableEntry
 import cyberProtocol.{CyberBundle, CyberObj}
 import taxii.{Collection, Server}
 import util.NameMaker
-
-import scala.language.postfixOps
 import scalafx.Includes._
 import scalafx.beans.property.{ReadOnlyObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
@@ -29,8 +26,8 @@ trait BundleViewControllerInterface {
   def setSelectedCollection(theSelectedCollection: StringProperty): Unit
   def addStixToBundle(stix: CyberObj)
   def removeStixFromBundle(stix: CyberObj)
-  def getCurrentBundle: ReadOnlyObjectProperty[CyberBundle]
-  def getBundleStixView: JFXListView[CyberObj]
+  def getCurrentBundle(): ReadOnlyObjectProperty[CyberBundle]
+  def getBundleStixView(): JFXListView[CyberObj]
 }
 
 @sfxml
