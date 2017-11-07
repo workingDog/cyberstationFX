@@ -2,7 +2,9 @@
 package controllers
 
 import javafx.fxml.FXML
+
 import com.jfoenix.controls.JFXTabPane
+
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
 import scalafxml.core.macros.{nested, sfxml}
@@ -17,7 +19,9 @@ class CyberStationController(mainMenu: VBox,
                              loginButton: Button,
                              messageLabel: Label,
                              serversView: HBox,
+                             objectsView: VBox,
                              @FXML stixView: JFXTabPane,
+                             @nested[ObjectsViewController] objectsViewController: ObjectsViewControllerInterface,
                              @nested[MainMenuController] mainMenuController: MainMenuControllerInterface,
                              @nested[ServersViewController] serversViewController: ServersViewControllerInterface,
                              @nested[StixViewController] stixViewController: StixViewControllerInterface)
@@ -27,5 +31,9 @@ class CyberStationController(mainMenu: VBox,
   stixViewController.setSelectedServer(serversViewController.serverInfo)
   stixViewController.setSelectedApiroot(serversViewController.apirootInfo)
   stixViewController.setSelectedCollection(serversViewController.collectionInfo)
+
+  // give the server info properties to the ObjectsViewController
+  objectsViewController.setSelectedApiroot(serversViewController.apirootInfo)
+  objectsViewController.setSelectedCollection(serversViewController.collectionInfo)
 
 }

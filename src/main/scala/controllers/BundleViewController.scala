@@ -1,14 +1,16 @@
 package controllers
 
 import javafx.fxml.FXML
+
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.InfoTableEntry
 import cyberProtocol.{CyberBundle, CyberObj}
-import taxii.{Collection, Server}
+import taxii.{Collection, Server, TaxiiCollection}
 import util.NameMaker
+
 import scalafx.Includes._
-import scalafx.beans.property.{ReadOnlyObjectProperty, StringProperty}
+import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control.{Label, ListCell, TableColumn, TableView}
@@ -21,12 +23,19 @@ import scalafxml.core.macros.sfxml
 
 trait BundleViewControllerInterface {
   def init(): Unit
+
   def setSelectedServer(theSelectedServer: StringProperty): Unit
+
   def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
-  def setSelectedCollection(theSelectedCollection: StringProperty): Unit
+
+  def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
+
   def addStixToBundle(stix: CyberObj)
+
   def removeStixFromBundle(stix: CyberObj)
+
   def getCurrentBundle(): ReadOnlyObjectProperty[CyberBundle]
+
   def getBundleStixView(): JFXListView[CyberObj]
 }
 
@@ -78,9 +87,12 @@ class BundleViewController(bundleViewBox: VBox,
     }
   }
 
-  override def setSelectedCollection(theSelectedCollection: StringProperty) {
+  override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
     theSelectedCollection.onChange { (_, oldValue, newValue) =>
-      connInfo.update(2, new InfoTableEntry("Collection", newValue))
+      if (newValue != null)
+        connInfo.update(2, new InfoTableEntry("Collection", newValue.title))
+      else
+        connInfo.update(2, new InfoTableEntry("Collection", ""))
     }
   }
 
@@ -112,8 +124,8 @@ class BundleViewController(bundleViewBox: VBox,
       }
     }
     // setup the table of connection info
-    connectionInfo.setItems(connInfo)
     wipeConnInfo()
+    connectionInfo.setItems(connInfo)
     connectionInfo.editable = false
     connectionInfo.selectionModel = null
     connectionInfo.tableMenuButtonVisible = false
@@ -150,7 +162,7 @@ class BundleViewController(bundleViewBox: VBox,
   }
 
   idButton.setOnMouseClicked((_: MouseEvent) => {
-    if(bundlesListView.getSelectionModel.getSelectedItem != null) {
+    if (bundlesListView.getSelectionModel.getSelectedItem != null) {
       bundleId.textProperty.unbind()
       bundleId.text = Identifier(Bundle.`type`).toString()
     }

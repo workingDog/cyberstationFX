@@ -91,7 +91,7 @@ class CommonController(@FXML idButton: JFXButton,
 
   idButton.setOnMouseClicked((_: MouseEvent) => {
     if (currentForm != null) {
-      idField.setText(Identifier(currentForm.`type`).toString())
+      idField.setText(Identifier(currentForm.`type`.value).toString())
       // force a refresh
       controller.map(_.getBundleStixView.refresh())
     }

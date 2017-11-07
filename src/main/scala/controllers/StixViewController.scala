@@ -1,7 +1,9 @@
 package controllers
 
+import taxii.TaxiiCollection
+
 import scalafxml.core.macros.{nested, sfxml}
-import scalafx.beans.property.StringProperty
+import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.scene.layout.HBox
 
 
@@ -9,7 +11,7 @@ trait StixViewControllerInterface {
   def init(): Unit
   def setSelectedServer(theSelectedServer: StringProperty): Unit
   def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
-  def setSelectedCollection(theSelectedCollection: StringProperty): Unit
+  def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
 }
 
 @sfxml
@@ -36,7 +38,7 @@ class StixViewController(bundleHBox: HBox,
     }
   }
 
-  override def setSelectedCollection(theSelectedCollection: StringProperty) {
+  override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
     bundleViewController.setSelectedCollection(theSelectedCollection)
     theSelectedCollection.onChange { (_, oldValue, newValue) =>
     }

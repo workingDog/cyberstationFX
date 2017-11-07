@@ -28,7 +28,7 @@ trait ServersViewControllerInterface {
 
   val serverInfo = StringProperty("")
   val apirootInfo = StringProperty("")
-  val collectionInfo = StringProperty("")
+  val collectionInfo = new ObjectProperty[TaxiiCollection]()
 }
 
 @sfxml
@@ -36,19 +36,15 @@ class ServersViewController(@FXML addButton: JFXButton,
                             @FXML deleteButton: JFXButton,
                             @FXML serverSpinner: JFXSpinner,
                             @FXML serversListView: JFXListView[String],
-                            @FXML collectionsListView: JFXListView[String],
+                            @FXML collectionsListView: JFXListView[TaxiiCollection],
                             @FXML apirootsListView: JFXListView[String],
                             serverInfoTable: TableView[InfoTableEntry]) extends ServersViewControllerInterface {
 
   var connOpt: Option[TaxiiConnection] = None
   val serverInfoItems = ObservableBuffer[InfoTableEntry]()
-  val srvList = ObservableBuffer[String](
-    "https://test.freetaxii.com:8000",
-    "https://test.freetaxii.com:8001")
+  val srvList = ObservableBuffer[String]("https://test.freetaxii.com:8000", "https://test.freetaxii.com:8001")
   val apirootList = ObservableBuffer[String]()
-  val collectionList = ObservableBuffer[String]()
-  var collection: Option[String] = None
-  val taxiiColInfo = new ObjectProperty[TaxiiCollection]()
+  val collectionList = ObservableBuffer[TaxiiCollection]()
 
   init()
 
@@ -95,8 +91,18 @@ class ServersViewController(@FXML addButton: JFXButton,
       })
     // setup the collectionsListView
     collectionsListView.setItems(collectionList)
-    collectionsListView.getSelectionModel.selectedItem.onChange { (_, _, newValue) =>
-      collection = Some(newValue)
+    collectionsListView.cellFactory = { _ =>
+      new ListCell[TaxiiCollection] {
+        item.onChange { (_, _, taxiiCol) => {
+          if (taxiiCol != null) {
+            val canread = if (taxiiCol.can_read) "can read" else "cannot read"
+            val canwrite = if (taxiiCol.can_write) "can write to" else "cannot write to"
+            val description = taxiiCol.description.getOrElse("")
+            text = taxiiCol.title + "\n" + description + "\n" + taxiiCol.id + "\n" + "(" + canread + " - " + canwrite + ")"
+          } else
+            text = ""
+        }}
+      }
     }
     // setup the apirootsListView
     apirootsListView.setItems(apirootList)
@@ -126,15 +132,12 @@ class ServersViewController(@FXML addButton: JFXButton,
     }
     connOpt.map(conn => {
       val cols = Collections(apiroot, conn)
+      collectionList.clear()
       cols.collections().map(theList => {
         theList.foreach(col => {
-          val canread = if (col.taxiiCollection.can_read) "can read" else "cannot read"
-          val canwrite = if (col.taxiiCollection.can_write) "can write to" else "cannot write to"
-          val description = col.taxiiCollection.description.getOrElse("")
-          val info = col.taxiiCollection.title + "\n" + description + "\n" + col.taxiiCollection.id + "\n" + "(" + canread + " - " + canwrite + ")"
           // have to do this because we are inside a FX-UI thread
           Platform.runLater(() => {
-            collectionList.append(info)
+            collectionList.append(col.taxiiCollection)
             if (collectionList.length > 0) collectionsListView.getSelectionModel.selectFirst()
           })
         })
