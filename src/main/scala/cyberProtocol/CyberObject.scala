@@ -84,15 +84,20 @@ class IndicatorForm() extends CyberObj {
 
 object CyberConverter {
 
-  def fromStix(theStix: StixObj) = {
-    val stix = theStix.asInstanceOf[SDO]
-    val newForm = new IndicatorForm()
-    newForm.`type`.value = stix.`type`
-    newForm.id.value = stix.id.toString()
-  //  newForm.name.value = stix.name.getOrElse("")
-    newForm.created.value = stix.created.toString()
-    newForm.lang.value = stix.lang.getOrElse("")
+  def toCyberObj(theStix: StixObj): CyberObj = {
+    theStix match {
+      case stix: Indicator =>
+        new IndicatorForm {
+          `type`.value = stix.`type`
+          id.value = stix.id.toString()
+          // name.value = stix.name.getOrElse("")
+          created.value = stix.created.toString()
+          lang.value = stix.lang.getOrElse("")
+        }
 
-    newForm
+      case stix: Identity => new IndicatorForm()
+      case stix: Campaign => new IndicatorForm()
+    }
   }
+
 }

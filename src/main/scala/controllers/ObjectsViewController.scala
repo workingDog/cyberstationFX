@@ -76,7 +76,7 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
       val col = new Collection(apirootInfo, apirootInfo, taxiiCol.id, "", "")
       col.getObjects().map(bndl => {
         bndl.map(theBundle =>
-          for (obj <- theBundle.objects) objects.append(CyberConverter.fromStix(obj)))
+          for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix)))
       })
     }
   }
