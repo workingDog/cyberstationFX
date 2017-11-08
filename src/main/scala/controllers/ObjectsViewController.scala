@@ -54,6 +54,13 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
         cellValueFactory = _.value.`type`
       },
       new TableColumn[CyberObj, String]() {
+        text = "Name"
+        prefWidth = 200
+        editable = false
+        sortable = false
+        cellValueFactory = _.value.name
+      },
+      new TableColumn[CyberObj, String]() {
         text = "Created"
         prefWidth = 180
         editable = false
