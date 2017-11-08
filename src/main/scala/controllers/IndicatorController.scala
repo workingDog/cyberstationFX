@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView}
 import com.kodekutters.stix._
-import cyberProtocol.IndicatorForm
+import cyber.IndicatorForm
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer

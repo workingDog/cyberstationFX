@@ -4,8 +4,7 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
-import cyber.InfoTableEntry
-import cyberProtocol.{CyberBundle, CyberObj}
+import cyber.{CyberBundle, CyberObj, InfoTableEntry}
 import taxii.{Collection, Server, TaxiiCollection}
 import util.NameMaker
 
@@ -65,6 +64,10 @@ class BundleViewController(bundleViewBox: VBox,
   def getBundleStixView() = bundleStixView
 
 
+  bundleList.onChange((source, changes) => {
+    if (bundleList.isEmpty) sendButton.setDisable(true)
+  })
+
   override def addStixToBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects += stix
@@ -89,10 +92,15 @@ class BundleViewController(bundleViewBox: VBox,
 
   override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
     theSelectedCollection.onChange { (_, oldValue, newValue) =>
-      if (newValue != null)
-        connInfo.update(2, new InfoTableEntry("Collection", newValue.title))
-      else
+      if (newValue != null) {
+        val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
+        sendButton.setDisable(!newValue.can_write)
+        connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
+      }
+      else {
+        sendButton.setDisable(true)
         connInfo.update(2, new InfoTableEntry("Collection", ""))
+      }
     }
   }
 
@@ -152,6 +160,8 @@ class BundleViewController(bundleViewBox: VBox,
         item.onChange { (_, _, stix) => text = NameMaker.from(stix) }
       }
     }
+    // start with a disable sendButton
+    sendButton.setDisable(true)
   }
 
   def wipeConnInfo(): Unit = {

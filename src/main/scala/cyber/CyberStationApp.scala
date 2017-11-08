@@ -1,7 +1,9 @@
 package cyber
 
 import java.io.IOException
+import java.security.Security
 import javafx.{fxml => jfxf, scene => jfxs}
+
 import controllers.CyberStationControllerInterface
 
 import scalafx.Includes._
@@ -17,6 +19,9 @@ import scalafxml.core.{DependenciesByType, FXMLLoader, FXMLView, NoDependencyRes
   * @author Ringo Wathelet
   */
 object CyberStationApp extends JFXApp {
+
+  // needed for (SSL) TLS-1.2 in https, requires jdk1.8.0_152
+  Security.setProperty("crypto.policy", "unlimited")
 
   val resource = getClass.getResource("../ui/mainView.fxml")
   if (resource == null) {
@@ -35,5 +40,12 @@ object CyberStationApp extends JFXApp {
     title = "CyberStation 0.1"
     scene = new Scene(root)
   }
+
+  // close properly before exiting
+  override def stopApp(): Unit = {
+
+    super.stopApp
+  }
+
 
 }

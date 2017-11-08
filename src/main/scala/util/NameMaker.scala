@@ -1,6 +1,6 @@
 package util
 
-import cyberProtocol.CyberObj
+import cyber.CyberObj
 
 
 // Indicator, ObservedData, Relationship, Sighting, LanguageContent, Bundle

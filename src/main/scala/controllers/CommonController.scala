@@ -1,9 +1,11 @@
 package controllers
 
 import javafx.fxml.FXML
+
 import com.jfoenix.controls._
 import com.kodekutters.stix.Identifier
-import cyberProtocol.CyberObj
+import cyber.CyberObj
+
 import scalafx.Includes._
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml

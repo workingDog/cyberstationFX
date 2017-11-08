@@ -3,7 +3,7 @@ package cyber
 
 import com.jfoenix.controls.JFXToggleButton
 import com.kodekutters.stix.{Indicator, Timestamp}
-import cyberProtocol.{CyberBundle, IndicatorForm}
+import cyber.IndicatorForm
 import play.api.libs.json.Json
 import util.Utils
 

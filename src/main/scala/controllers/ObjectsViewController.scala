@@ -1,6 +1,6 @@
 package controllers
 
-import cyberProtocol.{CyberConverter, CyberObj}
+import cyber.{CyberConverter, CyberObj}
 import taxii.{Collection, TaxiiCollection, TaxiiConnection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,28 +50,24 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
         text = "Type"
         prefWidth = 150
         editable = false
-        sortable = false
         cellValueFactory = _.value.`type`
       },
       new TableColumn[CyberObj, String]() {
         text = "Name"
         prefWidth = 200
         editable = false
-        sortable = false
         cellValueFactory = _.value.name
       },
       new TableColumn[CyberObj, String]() {
         text = "Created"
         prefWidth = 180
         editable = false
-        sortable = false
         cellValueFactory = _.value.created
       },
       new TableColumn[CyberObj, String]() {
         text = "Id"
         prefWidth = 350
         editable = false
-        sortable = false
         cellValueFactory = _.value.id
       })
   }
@@ -80,10 +76,13 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
     objects.clear()
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
-      val col = new Collection(taxiiCol, apirootInfo, TaxiiConnection("", 0, "", "", ""))
+      val conn = TaxiiConnection("", 0, "", "", "")
+      val col = new Collection(taxiiCol, apirootInfo, conn)
       col.getObjects().map(bndl => {
-        bndl.map(theBundle =>
-          for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix)))
+        bndl.map(theBundle => {
+          for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
+          conn.close()
+        })
       })
     }
   }

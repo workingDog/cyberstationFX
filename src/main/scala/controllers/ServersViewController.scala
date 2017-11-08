@@ -142,6 +142,8 @@ class ServersViewController(@FXML addButton: JFXButton,
           })
         })
         serverSpinner.setVisible(false)
+        // close the connection
+        conn.close()
       })
     })
   }
@@ -152,6 +154,9 @@ class ServersViewController(@FXML addButton: JFXButton,
       serverSpinner.setVisible(false)
       return
     }
+    // close any previous connection
+    connOpt.map(conn => conn.close())
+    // create a new connection object
     connOpt = Some(new TaxiiConnection(url, "user", "psw", 5))
     val server = Server(conn = connOpt.get)
     // get the future response from the server
