@@ -1,9 +1,9 @@
 package controllers
 
 import cyberProtocol.{CyberConverter, CyberObj}
-import taxii.{Collection, TaxiiCollection}
-import scala.concurrent.ExecutionContext.Implicits.global
+import taxii.{Collection, TaxiiCollection, TaxiiConnection}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scalafxml.core.macros.sfxml
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
@@ -73,7 +73,7 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
     objects.clear()
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
-      val col = new Collection(apirootInfo, apirootInfo, taxiiCol.id, "", "")
+      val col = new Collection(taxiiCol, apirootInfo, TaxiiConnection("", 0, "", "", ""))
       col.getObjects().map(bndl => {
         bndl.map(theBundle =>
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix)))

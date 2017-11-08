@@ -8,7 +8,7 @@ import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 
 /**
-  * the common attributes of a sdo object
+  * representing the common attributes of a sdo object as a set of properties
   */
 trait CyberObj {
   val `type`: StringProperty
@@ -29,8 +29,7 @@ trait CyberObj {
 }
 
 /**
-  * a STIX Bundle with a name
-  *
+  * a Bundle form
   */
 class CyberBundle() {
   val name = StringProperty("bundle " + Utils.randName)
@@ -47,6 +46,9 @@ class CyberBundle() {
 
 // Indicator, ObservedData, Relationship, Sighting, LanguageContent, Bundle
 
+/**
+  * an Indicator form
+  */
 class IndicatorForm() extends CyberObj {
   val `type`: StringProperty = StringProperty(Indicator.`type`)
   val id: StringProperty = StringProperty(Identifier(Indicator.`type`).toString())
@@ -78,8 +80,7 @@ class IndicatorForm() extends CyberObj {
     Option(this.revoked.value), Option(this.confidence.value),
     Option(this.external_references), Option(this.lang.value),
     Option(this.object_marking_refs), Option(this.granular_markings),
-    None, None)
-
+    Option(Identifier.stringToIdentifier(this.created_by_ref.value)), None)
 }
 
 object CyberConverter {
@@ -90,7 +91,7 @@ object CyberConverter {
         new IndicatorForm {
           `type`.value = stix.`type`
           id.value = stix.id.toString()
-          // name.value = stix.name.getOrElse("")
+          name.value = stix.name.getOrElse("")
           created.value = stix.created.toString()
           lang.value = stix.lang.getOrElse("")
         }
