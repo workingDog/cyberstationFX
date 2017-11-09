@@ -65,11 +65,17 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
         cellValueFactory = _.value.created
       },
       new TableColumn[CyberObj, String]() {
-        text = "Id"
+        text = "Created by"
         prefWidth = 350
         editable = false
-        cellValueFactory = _.value.id
-      })
+        cellValueFactory = _.value.created_by_ref
+      },
+    new TableColumn[CyberObj, String]() {
+      text = "Id"
+      prefWidth = 350
+      editable = false
+      cellValueFactory = _.value.id
+    })
   }
 
   def getObjects(taxiiCol: TaxiiCollection): Unit = {

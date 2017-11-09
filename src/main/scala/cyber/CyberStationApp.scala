@@ -35,7 +35,6 @@ object CyberStationApp extends JFXApp {
   loader.load()
   val root: jfxs.Parent = loader.getRoot[jfxs.Parent]
   val controller = loader.getController[CyberStationControllerInterface]
-//  controller.setBusInfoServer(busInfoServer)
 
   stage = new PrimaryStage() {
     title = "CyberStation 0.1"
@@ -48,12 +47,5 @@ object CyberStationApp extends JFXApp {
     super.stopApp
     System.exit(0)
   }
-
-//  Runtime.getRuntime.addShutdownHook(new Thread() {
-//    override def run() {
-//      system.shutdown()
-//      system.awaitTermination()
-//    }
-//  })
 
 }

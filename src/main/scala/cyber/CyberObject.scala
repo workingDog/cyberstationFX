@@ -90,17 +90,29 @@ object CyberConverter {
 
   def toCyberObj(theStix: StixObj): CyberObj = {
     theStix match {
-      case stix: Indicator =>
-        new IndicatorForm {
-          `type`.value = stix.`type`
-          id.value = stix.id.toString()
-          name.value = stix.name.getOrElse("")
-          created.value = stix.created.toString()
-          lang.value = stix.lang.getOrElse("")
-        }
-
+      case stix: Indicator => new IndicatorForm {
+        `type`.value = stix.`type`
+        id.value = stix.id.toString()
+        name.value = stix.name.getOrElse("")
+        created.value = stix.created.toString()
+        lang.value = stix.lang.getOrElse("")
+      }
+      case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()
       case stix: Campaign => new IndicatorForm()
+      case stix: CourseOfAction => new IndicatorForm()
+      case stix: IntrusionSet => new IndicatorForm()
+      case stix: Malware => new IndicatorForm()
+      case stix: ObservedData => new IndicatorForm()
+      case stix: Report => new IndicatorForm()
+      case stix: ThreatActor => new IndicatorForm()
+      case stix: Tool => new IndicatorForm()
+      case stix: Vulnerability => new IndicatorForm()
+      case stix: Relationship => new IndicatorForm()
+      case stix: Sighting => new IndicatorForm()
+      case stix: MarkingDefinition => new IndicatorForm()
+      case stix: LanguageContent => new IndicatorForm()
+      case _ => new IndicatorForm()
     }
   }
 
