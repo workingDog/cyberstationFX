@@ -76,12 +76,11 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
     objects.clear()
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
-      val conn = TaxiiConnection("", 0, "", "", "")
-      val col = new Collection(taxiiCol, apirootInfo, conn)
+      val col = Collection(taxiiCol, apirootInfo)
       col.getObjects().map(bndl => {
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
-          conn.close()
+          col.conn.close()
         })
       })
     }

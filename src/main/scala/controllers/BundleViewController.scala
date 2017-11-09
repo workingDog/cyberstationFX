@@ -5,9 +5,10 @@ import javafx.fxml.FXML
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
-import taxii.{Collection, Server, TaxiiCollection}
+import taxii.{Collection, TaxiiCollection, TaxiiConnection}
 import util.NameMaker
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scalafx.Includes._
 import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
@@ -18,6 +19,7 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.VBox
 import scalafx.util.StringConverter
 import scalafxml.core.macros.sfxml
+
 
 
 trait BundleViewControllerInterface {
@@ -53,20 +55,19 @@ class BundleViewController(bundleViewBox: VBox,
                            bundleName: Label) extends BundleViewControllerInterface {
 
   val bundleList = ObservableBuffer[CyberBundle]()
+  bundleList.onChange((source, changes) => {
+    if (bundleList.isEmpty) sendButton.setDisable(true)
+  })
+
   val connInfo = ObservableBuffer[InfoTableEntry]()
-  var theServer: Option[Server] = None
-  var theCollection: Option[Collection] = None
+  var taxiiApiroot: Option[String] = None
+  var taxiiCol: Option[TaxiiCollection] = None
 
   init()
 
   def getCurrentBundle() = bundlesListView.getSelectionModel.selectedItemProperty()
 
   def getBundleStixView() = bundleStixView
-
-
-  bundleList.onChange((source, changes) => {
-    if (bundleList.isEmpty) sendButton.setDisable(true)
-  })
 
   override def addStixToBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
@@ -85,19 +86,27 @@ class BundleViewController(bundleViewBox: VBox,
   }
 
   override def setSelectedApiroot(theSelectedApiroot: StringProperty) {
-    theSelectedApiroot.onChange { (_, oldValue, newValue) =>
-      connInfo.update(1, new InfoTableEntry("Api root", newValue))
+    theSelectedApiroot.onChange { (_, oldValue, newValue) => {
+      if (newValue != null) {
+        taxiiApiroot = Option(newValue)
+        connInfo.update(1, new InfoTableEntry("Api root", newValue))
+      } else {
+        taxiiApiroot = None
+      }
+    }
     }
   }
 
   override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
     theSelectedCollection.onChange { (_, oldValue, newValue) =>
       if (newValue != null) {
+        taxiiCol = Option(newValue)
         val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
         sendButton.setDisable(!newValue.can_write)
         connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
       }
       else {
+        taxiiCol = None
         sendButton.setDisable(true)
         connInfo.update(2, new InfoTableEntry("Collection", ""))
       }
@@ -162,6 +171,28 @@ class BundleViewController(bundleViewBox: VBox,
     }
     // start with a disable sendButton
     sendButton.setDisable(true)
+    sendButton.setOnMouseClicked((_: MouseEvent) => {
+      serverSpinner.setVisible(true)
+      Future {
+        sendToServer()
+      }
+    })
+  }
+
+  def sendToServer(): Unit = {
+    val theBundle = bundlesListView.getSelectionModel.getSelectedItem
+    if (taxiiCol.isEmpty || taxiiApiroot.isEmpty || theBundle == null) {
+      serverSpinner.setVisible(false)
+    } else {
+      taxiiCol.map(colInfo => {
+        taxiiApiroot.map(apiroot => {
+          val col = Collection(colInfo, apiroot)
+          col.addObjects(theBundle.toStix)
+          col.conn.close()
+          serverSpinner.setVisible(false)
+        })
+      })
+    }
   }
 
   def wipeConnInfo(): Unit = {

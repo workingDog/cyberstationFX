@@ -5,6 +5,7 @@ import java.security.Security
 import javafx.{fxml => jfxf, scene => jfxs}
 
 import controllers.CyberStationControllerInterface
+import taxii.TaxiiConnection
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -43,9 +44,16 @@ object CyberStationApp extends JFXApp {
 
   // close properly before exiting
   override def stopApp(): Unit = {
-
+    TaxiiConnection.closeSystem()
     super.stopApp
+    System.exit(0)
   }
 
+//  Runtime.getRuntime.addShutdownHook(new Thread() {
+//    override def run() {
+//      system.shutdown()
+//      system.awaitTermination()
+//    }
+//  })
 
 }
