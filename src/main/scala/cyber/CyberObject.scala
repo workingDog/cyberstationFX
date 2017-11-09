@@ -8,23 +8,22 @@ import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 
 /**
-  * representing the common attributes of an sdo as a set of properties
+  * representing the common attributes of an SDO as a set of properties, a form
   */
 trait CyberObj {
-  val `type`: StringProperty
-  val id: StringProperty
-  val name: StringProperty
-  val lang: StringProperty
-  val created: StringProperty
-  val modified: StringProperty
-  val created_by_ref: StringProperty
-  val revoked: BooleanProperty
-  val labels: List[String]
-  val confidence: IntegerProperty
-  val external_references: List[ExternalReference]
-  val object_marking_refs: List[Identifier]
-  val granular_markings: List[GranularMarking]
-
+  val `type` = StringProperty("")
+  val id = StringProperty("")
+  val name = StringProperty("")
+  val lang = StringProperty("")
+  val created = StringProperty(Timestamp.now().toString())
+  val modified = StringProperty("")
+  val created_by_ref = StringProperty("")
+  val revoked = BooleanProperty(false)
+  val labels: List[String] = List()
+  val confidence = IntegerProperty(0)
+  val external_references: List[ExternalReference] = List()
+  val object_marking_refs: List[Identifier] = List()
+  val granular_markings: List[GranularMarking] = List()
   // to get the Stix object of the Cyber Object
   def toStix: StixObj
 }
@@ -51,24 +50,12 @@ class CyberBundle() {
   * an Indicator form
   */
 class IndicatorForm() extends CyberObj {
-  val `type`: StringProperty = StringProperty(Indicator.`type`)
-  val id: StringProperty = StringProperty(Identifier(Indicator.`type`).toString())
-
-  val lang = StringProperty("")
-  val created = StringProperty(Timestamp.now().toString())
-  val modified = StringProperty("")
-  val created_by_ref = StringProperty("")
-  val revoked = BooleanProperty(false)
-
-  val labels: List[String] = List()
-  val confidence = IntegerProperty(0)
-  val external_references: List[ExternalReference] = List()
-  val object_marking_refs: List[Identifier] = List()
-  val granular_markings: List[GranularMarking] = List()
+  `type`.value = Indicator.`type`
+  id.value = Identifier(Indicator.`type`).toString()
+  name.value = "indicator " + Utils.randName
 
   val pattern = StringProperty("")
   val valid_from = StringProperty("")
-  val name = StringProperty("indicator " + Utils.randName)
   val valid_until = StringProperty("")
   val kill_chain_phases = List[KillChainPhase]()
   val description = StringProperty("")
