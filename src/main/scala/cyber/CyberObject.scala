@@ -19,11 +19,11 @@ trait CyberObj {
   val modified = StringProperty("")
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
-  val labels: List[String] = List()
+  val labels = ObservableBuffer[String]()
   val confidence = IntegerProperty(0)
-  val external_references: List[ExternalReference] = List()
-  val object_marking_refs: List[Identifier] = List()
-  val granular_markings: List[GranularMarking] = List()
+  val external_references = ObservableBuffer[String]() // List[ExternalReference]
+  val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
+  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
   // to get the Stix object of the Cyber Object
   def toStix: StixObj
 }
@@ -63,13 +63,14 @@ class IndicatorForm() extends CyberObj {
   def toStix = new Indicator(Indicator.`type`, Identifier.stringToIdentifier(this.id.value),
     Timestamp(this.created.value), Timestamp(this.modified.value), this.pattern.value,
     Timestamp(this.valid_from.value), Option(this.name.value), Option(Timestamp(this.valid_until.value)),
-    Option(this.labels), Option(this.kill_chain_phases), Option(this.description.value),
+    Option(this.labels.toList), Option(this.kill_chain_phases), Option(this.description.value),
     Option(this.revoked.value), Option(this.confidence.value),
-    Option(this.external_references), Option(this.lang.value),
-    Option(this.object_marking_refs), Option(this.granular_markings),
+    Option(List()), Option(this.lang.value),
+    Option(List()), Option(List()),
     Option(Identifier.stringToIdentifier(this.created_by_ref.value)), None)
 }
 
+//  Option(this.object_marking_refs.toList)
 /**
   * convert a StixObj into a corresponding CyberObj
   */
