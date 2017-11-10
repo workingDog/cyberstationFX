@@ -68,8 +68,9 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText(currentForm.modified.value)
     confidenceField.setText(currentForm.confidence.value.toString())
     langField.setText(currentForm.lang.value)
-    //  labelsView.setItems(currentForm.labels)
     labelsView.setItems(initLabels)
+    // set the selections if any
+
     createdByField.setText(currentForm.created_by_ref.value)
     objMarkingsField.setText("")
     externalRefField.setText("")

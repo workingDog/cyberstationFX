@@ -1,17 +1,14 @@
-package cyber
 
 
-import com.jfoenix.controls.JFXToggleButton
-import com.kodekutters.stix.{Indicator, Timestamp}
-import cyber.IndicatorForm
-import play.api.libs.json.Json
-import util.Utils
-
-
-object TestApp {
-
-  def main(args: Array[String]): Unit = {
-
+//object TestApp {
+//
+//  def main(args: Array[String]): Unit = {
+//
+//        val resourcesPath = getClass.getResource("test.txt")
+//        println("--->resourcesPath: " +resourcesPath)
+//
+//      }
+//
 
 //    val newStix = new IndicatorForm()
 //    val cyber = new CyberBundle("xxxx", newStix)
@@ -34,6 +31,6 @@ object TestApp {
 //    newStix = newStix.copy(lang = Option("bbbbbbbbbbb"))
 //    println("--> after newStix=" + newStix.toString)
 
-  }
+//  }
 
-}
+//}

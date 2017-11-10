@@ -24,12 +24,12 @@ object CyberStationApp extends JFXApp {
   // needed for (SSL) TLS-1.2 in https, requires jdk1.8.0_152
   Security.setProperty("crypto.policy", "unlimited")
 
-  val resource = getClass.getResource("../ui/mainView.fxml")
+  val resource = getClass.getResource("ui/mainView.fxml")
   if (resource == null) {
     throw new IOException("Cannot load resource: mainView.fxml")
   }
 
- // val root = FXMLView(resource, new DependenciesByType(Map.empty))
+  // val root = FXMLView(resource, new DependenciesByType(Map.empty))
 
   val loader = new FXMLLoader(resource, new DependenciesByType(Map.empty))
   loader.load()
