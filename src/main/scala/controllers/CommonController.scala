@@ -16,7 +16,6 @@ import scalafxml.core.macros.sfxml
 
 trait CommonControllerInterface {
   def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit
-
   def clear(): Unit
 }
 
@@ -42,7 +41,7 @@ class CommonController(@FXML idButton: JFXButton,
     labelsView.getSelectionModel.selectionMode = SelectionMode.Multiple
     labelsView.setItems(ObservableBuffer[String](Utils.commonLabels))
     labelsView.getSelectionModel.selectedItems.onChange { (oldList, newList) =>
-      if (currentForm != null && newList != null && !onLoad) {
+      if (currentForm != null && !onLoad) {
         currentForm.labels.clear()
         currentForm.labels.appendAll(labelsView.getSelectionModel.getSelectedItems)
       }

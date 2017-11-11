@@ -2,8 +2,6 @@ package cyber
 
 import com.kodekutters.stix._
 import util.Utils
-
-//import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
