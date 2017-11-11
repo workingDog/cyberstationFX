@@ -70,8 +70,7 @@ class CommonController(@FXML idButton: JFXButton,
     labelsView.setItems(Utils.initLabels)
     labelsView.getSelectionModel.clearSelection()
     // set the selection of labels if any
-  //  println("--> loadValues currentForm.labels=" + currentForm.labels.toList)
-    currentForm.labels.toList.foreach(lbl => labelsView.getSelectionModel.select(lbl))
+    currentForm.labels.foreach(lbl => labelsView.getSelectionModel.select(lbl))
     createdByField.setText(currentForm.created_by_ref.value)
     objMarkingsField.setText("")
     externalRefField.setText("")
@@ -88,6 +87,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
+      currentForm = null // needed to unsure no residual binding
     }
   }
 

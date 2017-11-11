@@ -1,14 +1,20 @@
+import javafx.collections.ObservableList
 
+import scalafx.collections.ObservableBuffer
 
-//object TestApp {
-//
-//  def main(args: Array[String]): Unit = {
-//
-//        val resourcesPath = getClass.getResource("test.txt")
-//        println("--->resourcesPath: " +resourcesPath)
-//
-//      }
-//
+object TestApp {
+
+  def main(args: Array[String]): Unit = {
+
+    val labelsa = ObservableBuffer[String]()
+    val labelsb = ObservableBuffer[String]()
+
+  //  labelsa <== labelsb
+
+        println("--->resourcesPath: " )
+
+      }
+
 
 //    val newStix = new IndicatorForm()
 //    val cyber = new CyberBundle("xxxx", newStix)
@@ -33,4 +39,4 @@
 
 //  }
 
-//}
+}

@@ -3,6 +3,7 @@ package cyber
 import com.kodekutters.stix._
 import util.Utils
 
+//import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
@@ -19,7 +20,7 @@ trait CyberObj {
   val modified = StringProperty("")
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
-  val labels = ObservableBuffer[String]()
+  val labels = ListBuffer[String]()
   val confidence = IntegerProperty(0)
   val external_references = ObservableBuffer[String]() // List[ExternalReference]
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
@@ -60,14 +61,19 @@ class IndicatorForm() extends CyberObj {
   val kill_chain_phases = List[KillChainPhase]()
   val description = StringProperty("")
 
-  def toStix = new Indicator(Indicator.`type`, Identifier.stringToIdentifier(this.id.value),
-    Timestamp(this.created.value), Timestamp(this.modified.value), this.pattern.value,
-    Timestamp(this.valid_from.value), Option(this.name.value), Option(Timestamp(this.valid_until.value)),
-    Option(this.labels.toList), Option(this.kill_chain_phases), Option(this.description.value),
-    Option(this.revoked.value), Option(this.confidence.value),
-    Option(List()), Option(this.lang.value),
+  def toStix = new Indicator(Indicator.`type`, Identifier.stringToIdentifier(id.value),
+    Timestamp(created.value), Timestamp(modified.value), pattern.value,
+    Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
+    Option(labels.toList), Option(kill_chain_phases), Option(description.value),
+    Option(revoked.value), Option(confidence.value),
+    Option(List()), Option(lang.value),
     Option(List()), Option(List()),
-    Option(Identifier.stringToIdentifier(this.created_by_ref.value)), None)
+    Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
+
+  override def toString() = {
+    name.value + ", " + labels + ", " + id.value
+  }
+
 }
 
 //  Option(this.object_marking_refs.toList)
