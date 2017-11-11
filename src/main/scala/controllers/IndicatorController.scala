@@ -64,9 +64,9 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
     bundleLabel.text = "Part of bundle: " + bndlName
     if (currentBundle != null) {
       currentBundle.onChange { (source, oldValue, newValue) =>
-        // should load the new bundle list of IndicatorForm here
+        // load the new bundle list of IndicatorForm
         if (newValue != null) {
-          val indicators = newValue.objects.filter(stix => stix.`type` == Indicator.`type`).asInstanceOf[ObservableBuffer[IndicatorForm]]
+          val indicators = newValue.objects.filter(stix => stix.`type`.value == Indicator.`type`).asInstanceOf[ObservableBuffer[IndicatorForm]]
           indicatorList.clear()
           indicatorList.appendAll(indicators)
           bundleLabel.text = "Part of bundle: " + newValue.name.value

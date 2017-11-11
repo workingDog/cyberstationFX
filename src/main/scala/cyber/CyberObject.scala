@@ -84,6 +84,7 @@ object CyberConverter {
         name.value = stix.name.getOrElse("")
         created.value = stix.created.toString()
         lang.value = stix.lang.getOrElse("")
+        stix.labels.getOrElse(List()).foreach(lbl => labels += lbl)
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()

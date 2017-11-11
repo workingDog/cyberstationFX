@@ -5,13 +5,13 @@ import javafx.fxml.FXML
 import com.jfoenix.controls._
 import com.kodekutters.stix.Identifier
 import cyber.CyberObj
+import util.Utils
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.SelectionMode
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
-
 
 
 trait CommonControllerInterface {
@@ -34,18 +34,16 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML externalRefField: JFXTextField) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
-  var controller: Option[BundleViewControllerInterface] = None
-  val initLabels = ObservableBuffer[String]("", "anomalous-activity", "anonymization", "benign",
-    "organization", "compromised", "malicious-activity", "attribution")
 
   init()
 
   def init(): Unit = {
     labelsView.getSelectionModel.selectionMode = SelectionMode.Multiple
     labelsView.getSelectionModel.selectedItems.onChange { (oldList, newList) =>
-      currentForm.labels.clear()
-      currentForm.labels.appendAll(labelsView.getSelectionModel.getSelectedItems)
-      println("--> labelsView " + currentForm.labels.toList)
+      if (currentForm != null && newList != null) {
+        currentForm.labels.clear()
+        currentForm.labels.appendAll(labelsView.getSelectionModel.getSelectedItems)
+      }
     }
   }
 
@@ -55,7 +53,8 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText("")
     confidenceField.setText("")
     langField.setText("")
-    labelsView.setItems(ObservableBuffer[String]())
+    labelsView.setItems(Utils.initLabels)
+    labelsView.getSelectionModel.clearSelection()
     createdByField.setText("")
     objMarkingsField.setText("")
     externalRefField.setText("")
@@ -68,9 +67,11 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText(currentForm.modified.value)
     confidenceField.setText(currentForm.confidence.value.toString())
     langField.setText(currentForm.lang.value)
-    labelsView.setItems(initLabels)
-    // set the selections if any
-
+    labelsView.setItems(Utils.initLabels)
+    labelsView.getSelectionModel.clearSelection()
+    // set the selection of labels if any
+  //  println("--> loadValues currentForm.labels=" + currentForm.labels.toList)
+    currentForm.labels.toList.foreach(lbl => labelsView.getSelectionModel.select(lbl))
     createdByField.setText(currentForm.created_by_ref.value)
     objMarkingsField.setText("")
     externalRefField.setText("")
@@ -80,7 +81,6 @@ class CommonController(@FXML idButton: JFXButton,
 
   private def unbindAll(): Unit = {
     if (currentForm != null) {
-      //  currentForm.getClass.getFields.foreach(f => f.unbind())
       currentForm.lang.unbind()
       currentForm.created.unbind()
       currentForm.modified.unbind()
@@ -88,34 +88,29 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
-      currentForm.labels.clear()
-      //  currentForm.external_references.unbind()
-      //  currentForm.object_marking_refs.unbind()
-      //  currentForm.granular_markings.unbind()
     }
   }
 
-  override def control(stix: CyberObj, controllerOpt: Option[BundleViewControllerInterface]): Unit = {
+  override def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
-    currentForm = stix
-    controller = controllerOpt
-    loadValues()
-    // bind the form to the UI
-    currentForm.lang <== langField.textProperty()
-    currentForm.created <== createdField.textProperty()
-    currentForm.modified <== modifiedField.textProperty()
-    //form.confidence <== confidenceField.IntegerProperty()
-    currentForm.created_by_ref <== createdByField.textProperty()
-    currentForm.revoked <== revokedField.selectedProperty()
-    currentForm.id <== idField.textProperty()
-  }
-
-  idButton.setOnMouseClicked((_: MouseEvent) => {
-    if (currentForm != null) {
-      idField.setText(Identifier(currentForm.`type`.value).toString())
-      // force a refresh
-      controller.map(_.getBundleStixView.refresh())
+    if (stix != null) {
+      currentForm = stix
+      loadValues()
+      // bind the form to the UI
+      currentForm.lang <== langField.textProperty()
+      currentForm.created <== createdField.textProperty()
+      currentForm.modified <== modifiedField.textProperty()
+      //form.confidence <== confidenceField.IntegerProperty()
+      currentForm.created_by_ref <== createdByField.textProperty()
+      currentForm.revoked <== revokedField.selectedProperty()
+      currentForm.id <== idField.textProperty()
+      // set the id button new id action
+      idButton.setOnMouseClicked((_: MouseEvent) => {
+        idField.setText(Identifier(currentForm.`type`.value).toString())
+        // force a refresh
+        controller.map(_.getBundleStixView.refresh())
+      })
     }
-  })
+  }
 
 }

@@ -26,7 +26,7 @@ object CyberStationApp extends JFXApp {
 
   val resource = getClass.getResource("ui/mainView.fxml")
   if (resource == null) {
-    throw new IOException("Cannot load resource: mainView.fxml")
+    throw new IOException("Cannot load resource: ui/mainView.fxml")
   }
 
   // val root = FXMLView(resource, new DependenciesByType(Map.empty))

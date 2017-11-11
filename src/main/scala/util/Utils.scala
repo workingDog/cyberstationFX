@@ -3,6 +3,7 @@ package util
 import java.net.URL
 
 import scala.util.Random
+import scalafx.collections.ObservableBuffer
 
 object Utils {
 
@@ -29,5 +30,7 @@ object Utils {
   // generate a 4 letters random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString
 
+  val initLabels = ObservableBuffer[String]("", "anomalous-activity", "anonymization", "benign",
+    "organization", "compromised", "malicious-activity", "attribution")
 
 }
