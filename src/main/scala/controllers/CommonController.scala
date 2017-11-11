@@ -34,13 +34,15 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML externalRefField: JFXTextField) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
+  var onLoad = false
 
   init()
 
   def init(): Unit = {
     labelsView.getSelectionModel.selectionMode = SelectionMode.Multiple
+    labelsView.setItems(ObservableBuffer[String](Utils.commonLabels))
     labelsView.getSelectionModel.selectedItems.onChange { (oldList, newList) =>
-      if (currentForm != null && newList != null) {
+      if (currentForm != null && newList != null && !onLoad) {
         currentForm.labels.clear()
         currentForm.labels.appendAll(labelsView.getSelectionModel.getSelectedItems)
       }
@@ -53,7 +55,6 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText("")
     confidenceField.setText("")
     langField.setText("")
-    labelsView.setItems(Utils.initLabels)
     labelsView.getSelectionModel.clearSelection()
     createdByField.setText("")
     objMarkingsField.setText("")
@@ -65,11 +66,11 @@ class CommonController(@FXML idButton: JFXButton,
   private def loadValues(): Unit = {
     createdField.setText(currentForm.created.value)
     modifiedField.setText(currentForm.modified.value)
-    confidenceField.setText(currentForm.confidence.value.toString())
+    confidenceField.setText(currentForm.confidence.value.toString)
     langField.setText(currentForm.lang.value)
-    labelsView.setItems(Utils.initLabels)
+    onLoad = true
     labelsView.getSelectionModel.clearSelection()
-    // set the selection of labels if any
+    onLoad = false
     currentForm.labels.foreach(lbl => labelsView.getSelectionModel.select(lbl))
     createdByField.setText(currentForm.created_by_ref.value)
     objMarkingsField.setText("")
@@ -87,7 +88,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
-      currentForm = null // needed to unsure no residual binding
+      currentForm = null // needed see labelsView.getSelectionModel.selectedItems.onChange
     }
   }
 
