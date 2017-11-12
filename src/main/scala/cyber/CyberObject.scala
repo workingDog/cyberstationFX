@@ -9,11 +9,6 @@ import scalafx.collections.ObservableBuffer
 
 import scala.collection.mutable
 
-case class CyberItem(init: Boolean, name: String) {
-  val selected = BooleanProperty(init)
-
-  override def toString: String = name
-}
 
 /**
   * representing the common attributes of an SDO as a set of properties, a form

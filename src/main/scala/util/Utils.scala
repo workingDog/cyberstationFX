@@ -30,7 +30,7 @@ object Utils {
   // generate a 4 letters random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString
 
-  val commonLabels = List[String]("", "anomalous-activity", "anonymization", "benign",
+  val commonLabels = List[String]("anomalous-activity", "anonymization", "benign",
     "organization", "compromised", "malicious-activity", "attribution")
 
 }

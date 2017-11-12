@@ -8,14 +8,27 @@ import cyber.CyberObj
 import util.Utils
 
 import scalafx.Includes._
+import scalafx.beans.property.BooleanProperty
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.SelectionMode
+import scalafx.scene.control.cell.CheckBoxListCell
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 
 
+case class Item(init: Boolean, name: String, var form: CyberObj) {
+  val selected = BooleanProperty(init)
+  selected.onChange { (_, _, newValue) => {
+    if (form != null)
+      if (newValue) form.labels += name else form.labels -= name
+    }
+  }
+
+  override def toString: String = name
+}
+
 trait CommonControllerInterface {
   def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit
+
   def clear(): Unit
 }
 
@@ -27,25 +40,20 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML revokedField: JFXToggleButton,
                        @FXML confidenceField: JFXTextField,
                        @FXML langField: JFXTextField,
-                       @FXML labelsView: JFXListView[String],
+                       @FXML labelsView: JFXListView[Item],
                        @FXML createdByField: JFXTextField,
                        @FXML objMarkingsField: JFXTextField,
                        @FXML externalRefField: JFXTextField) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
   var onLoad = false
+  val labelsData = ObservableBuffer[Item](for (lbl <- Utils.commonLabels) yield Item(false, lbl, currentForm))
 
   init()
 
   def init(): Unit = {
-    labelsView.getSelectionModel.selectionMode = SelectionMode.Multiple
-    labelsView.setItems(ObservableBuffer[String](Utils.commonLabels))
-    labelsView.getSelectionModel.selectedItems.onChange { (oldList, newList) =>
-      if (currentForm != null && !onLoad) {
-        currentForm.labels.clear()
-        currentForm.labels ++= labelsView.getSelectionModel.getSelectedItems
-      }
-    }
+    labelsView.setItems(labelsData)
+    labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
   }
 
   override def clear(): Unit = {
@@ -54,7 +62,10 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText("")
     confidenceField.setText("")
     langField.setText("")
-    labelsView.getSelectionModel.clearSelection()
+    labelsView.getItems.foreach(item => {
+      item.form = null
+      item.selected.value = false
+    })
     createdByField.setText("")
     objMarkingsField.setText("")
     externalRefField.setText("")
@@ -67,10 +78,13 @@ class CommonController(@FXML idButton: JFXButton,
     modifiedField.setText(currentForm.modified.value)
     confidenceField.setText(currentForm.confidence.value.toString)
     langField.setText(currentForm.lang.value)
-    onLoad = true
-    labelsView.getSelectionModel.clearSelection()
-    onLoad = false
-    currentForm.labels.foreach(lbl => labelsView.getSelectionModel.select(lbl))
+    labelsView.getItems.foreach(item => {
+      item.form = currentForm
+      if (currentForm.labels.contains(item.name))
+        item.selected.value = true
+      else
+        item.selected.value = false
+    })
     createdByField.setText(currentForm.created_by_ref.value)
     objMarkingsField.setText("")
     externalRefField.setText("")
@@ -88,6 +102,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.revoked.unbind()
       currentForm.id.unbind()
       currentForm = null
+      labelsView.getItems.foreach(item => item.form = null)
     }
   }
 
