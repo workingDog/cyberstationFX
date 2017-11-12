@@ -2,9 +2,18 @@ package cyber
 
 import com.kodekutters.stix._
 import util.Utils
+
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
+
+import scala.collection.mutable
+
+case class CyberItem(init: Boolean, name: String) {
+  val selected = BooleanProperty(init)
+
+  override def toString: String = name
+}
 
 /**
   * representing the common attributes of an SDO as a set of properties, a form
@@ -18,7 +27,7 @@ trait CyberObj {
   val modified = StringProperty("")
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
-  val labels = ListBuffer[String]()
+  val labels = mutable.Set[String]()
   val confidence = IntegerProperty(0)
   val external_references = ObservableBuffer[String]() // List[ExternalReference]
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
@@ -67,19 +76,17 @@ class IndicatorForm() extends CyberObj {
     Option(List()), Option(lang.value),
     Option(List()), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
-
-  override def toString() = {
-    name.value + ", " + labels + ", " + id.value
-  }
-
 }
 
-//  Option(this.object_marking_refs.toList)
 /**
   * convert a StixObj into a corresponding CyberObj
   */
 object CyberConverter {
 
+  /**
+    * convert a StixObj into a corresponding CyberObj
+    * @param theStix
+    */
   def toCyberObj(theStix: StixObj): CyberObj = {
     theStix match {
       case stix: Indicator => new IndicatorForm {
@@ -88,7 +95,7 @@ object CyberConverter {
         name.value = stix.name.getOrElse("")
         created.value = stix.created.toString()
         lang.value = stix.lang.getOrElse("")
-        stix.labels.getOrElse(List()).foreach(lbl => labels += lbl)
+        stix.labels.getOrElse(List()).foreach(lbl => labels +: lbl)
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()

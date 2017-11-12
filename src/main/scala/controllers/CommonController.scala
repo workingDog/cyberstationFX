@@ -43,7 +43,7 @@ class CommonController(@FXML idButton: JFXButton,
     labelsView.getSelectionModel.selectedItems.onChange { (oldList, newList) =>
       if (currentForm != null && !onLoad) {
         currentForm.labels.clear()
-        currentForm.labels.appendAll(labelsView.getSelectionModel.getSelectedItems)
+        currentForm.labels ++= labelsView.getSelectionModel.getSelectedItems
       }
     }
   }
@@ -87,7 +87,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
-      currentForm = null // needed see labelsView.getSelectionModel.selectedItems.onChange
+      currentForm = null
     }
   }
 
