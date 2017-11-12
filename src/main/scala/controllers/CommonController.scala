@@ -22,7 +22,6 @@ case class Item(init: Boolean, name: String, var form: CyberObj) {
       if (newValue) form.labels += name else form.labels -= name
     }
   }
-
   override def toString: String = name
 }
 
@@ -102,7 +101,10 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.revoked.unbind()
       currentForm.id.unbind()
       currentForm = null
-      labelsView.getItems.foreach(item => item.form = null)
+      labelsView.getItems.foreach(item => {
+        item.form = null
+        item.selected.value = false
+      })
     }
   }
 

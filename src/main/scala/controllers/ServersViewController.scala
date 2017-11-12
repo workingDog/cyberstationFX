@@ -21,6 +21,7 @@ import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.cell.TextFieldListCell
+import scalafx.scene.text.Text
 
 
 trait ServersViewControllerInterface {
@@ -91,6 +92,7 @@ class ServersViewController(@FXML addButton: JFXButton,
       })
     // setup the collectionsListView
     collectionsListView.setItems(collectionList)
+    collectionsListView.editable = false
     collectionsListView.cellFactory = { _ =>
       new ListCell[TaxiiCollection] {
         item.onChange { (_, _, taxiiCol) => {
@@ -98,7 +100,11 @@ class ServersViewController(@FXML addButton: JFXButton,
             val canread = if (taxiiCol.can_read) "can read" else "cannot read"
             val canwrite = if (taxiiCol.can_write) "can write to" else "cannot write to"
             val description = taxiiCol.description.getOrElse("")
-            text = taxiiCol.title + "\n" + description + "\n" + taxiiCol.id + "\n" + "(" + canread + " - " + canwrite + ")"
+            val theText = taxiiCol.title + "\n" + description + "\n" + taxiiCol.id + "\n" + "(" + canread + " - " + canwrite + ")"
+            val text = new Text(theText)
+            text.wrappingWidthProperty.bind(collectionsListView.widthProperty.subtract(15))
+            prefWidth = 0
+            graphic = text
           } else
             text = ""
         }}

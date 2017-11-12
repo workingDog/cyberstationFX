@@ -1,7 +1,10 @@
 package controllers
 
+import javafx.fxml.FXML
+
+import com.jfoenix.controls.JFXSpinner
 import cyber.{CyberConverter, CyberObj}
-import taxii.{Collection, TaxiiCollection, TaxiiConnection}
+import taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalafxml.core.macros.sfxml
@@ -20,7 +23,8 @@ trait ObjectsViewControllerInterface {
 }
 
 @sfxml
-class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsViewControllerInterface {
+class ObjectsViewController(objectsTable: TableView[CyberObj],
+                            @FXML objSpinner: JFXSpinner) extends ObjectsViewControllerInterface {
 
   val objects = ObservableBuffer[CyberObj]()
   var apirootInfo = ""
@@ -40,6 +44,7 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
   }
 
   override def init(): Unit = {
+    objSpinner.setVisible(false)
     // setup the table of objects
     objectsTable.setItems(objects)
     objectsTable.editable = false
@@ -79,6 +84,7 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
   }
 
   def getObjects(taxiiCol: TaxiiCollection): Unit = {
+    objSpinner.setVisible(true)
     objects.clear()
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
@@ -87,9 +93,10 @@ class ObjectsViewController(objectsTable: TableView[CyberObj]) extends ObjectsVi
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
           col.conn.close()
+          objSpinner.setVisible(false)
         })
       })
-    }
+    } else objSpinner.setVisible(false)
   }
 
 }
