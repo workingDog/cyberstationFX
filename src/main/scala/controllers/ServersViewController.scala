@@ -19,6 +19,7 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
+import scalafx.geometry.Insets
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.cell.TextFieldListCell
 import scalafx.scene.text.Text
@@ -95,6 +96,7 @@ class ServersViewController(@FXML addButton: JFXButton,
     collectionsListView.editable = false
     collectionsListView.cellFactory = { _ =>
       new ListCell[TaxiiCollection] {
+        padding = Insets(16.0, 0.0, 0.0, 0.0) // top, right, bottom, left
         item.onChange { (_, _, taxiiCol) => {
           if (taxiiCol != null) {
             val canread = if (taxiiCol.can_read) "can read" else "cannot read"
@@ -107,7 +109,8 @@ class ServersViewController(@FXML addButton: JFXButton,
             graphic = text
           } else
             text = ""
-        }}
+        }
+        }
       }
     }
     // setup the apirootsListView

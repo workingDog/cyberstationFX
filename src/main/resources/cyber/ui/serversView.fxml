@@ -40,8 +40,8 @@
                </VBox.margin></AnchorPane>
             <HBox prefHeight="328.0" VBox.vgrow="ALWAYS">
                <children>
-                        <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
-                  <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS" />
+                  <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
+                  <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS"></JFXListView>
                </children>
                <VBox.margin>
                   <Insets right="8.0" />
