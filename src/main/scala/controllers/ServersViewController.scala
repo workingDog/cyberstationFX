@@ -44,7 +44,7 @@ class ServersViewController(@FXML addButton: JFXButton,
 
   var connOpt: Option[TaxiiConnection] = None
   val serverInfoItems = ObservableBuffer[InfoTableEntry]()
-  val srvList = ObservableBuffer[String]("https://test.freetaxii.com:8000", "https://test.freetaxii.com:8001")
+  val srvList = ObservableBuffer[String]("https://test.freetaxii.com:8000")
   val apirootList = ObservableBuffer[String]()
   val collectionList = ObservableBuffer[TaxiiCollection]()
 

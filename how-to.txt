@@ -1,0 +1,31 @@
+---------------------------------------------
+// install mongoDB
+//see: https://docs.mongodb.com/manual/
+
+// make sure the mongo server is running, in a terminal:
+mongod
+
+// in another terminal, the mongo shell:
+mongo
+
+// the name of the mongo database to use
+use orange
+
+// to show what is in the database
+show collections
+
+// to create a collection
+db.createCollection("accounts")
+db.createCollection("clientmsg")
+
+// to delete a collection
+db.accounts.drop()
+db.clientmsg.drop()
+
+// to list what is in a collection
+db.accounts.find().pretty()
+db.clientmsg.find().pretty()
+---------------------------------------------
+
+
+
