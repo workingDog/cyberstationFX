@@ -15,8 +15,8 @@
                <children>
                   <HBox prefHeight="46.0" prefWidth="255.0" spacing="8.0">
                      <children>
-                        <JFXButton fx:id="addButton" buttonType="RAISED" text="Add" />
-                        <JFXButton fx:id="deleteButton" buttonType="RAISED" text="Delete" />
+                        <JFXButton fx:id="addButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Add" />
+                        <JFXButton fx:id="deleteButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Delete" />
                   <JFXSpinner fx:id="serverSpinner" visible="false" />
                      </children>
                      <padding>
@@ -41,7 +41,7 @@
             <HBox prefHeight="328.0" VBox.vgrow="ALWAYS">
                <children>
                   <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
-                  <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS"></JFXListView>
+                  <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" />

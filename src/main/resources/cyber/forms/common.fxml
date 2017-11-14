@@ -8,51 +8,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane hgap="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="581.0" prefWidth="811.0" vgap="12.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommonController">
+
+<GridPane hgap="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" prefWidth="789.0" vgap="12.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommonController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="66.0" />
   </columnConstraints>
   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="125.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="202.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="407.0" minHeight="90.0" prefHeight="207.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="243.0" minHeight="9.0" prefHeight="40.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <JFXTextField fx:id="createdField" labelFloat="true" promptText="created" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets left="8.0" />
-         </GridPane.margin></JFXTextField>
+            <Insets left="6.0" />
+         </GridPane.margin>
+      </JFXTextField>
       <JFXTextField fx:id="modifiedField" labelFloat="true" promptText="modified" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="8.0" />
-         </GridPane.margin></JFXTextField>
+         </GridPane.margin>
+      </JFXTextField>
       <JFXToggleButton fx:id="revokedField" text="revoked" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets left="8.0" />
+            <Insets />
          </GridPane.margin>
       </JFXToggleButton>
-      <JFXTextField fx:id="langField" labelFloat="true" promptText="language" text="en" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <JFXTextField fx:id="confidenceField" labelFloat="true" promptText="confidence" GridPane.rowIndex="2">
-         <GridPane.margin>
-            <Insets left="8.0" />
-         </GridPane.margin>
-      </JFXTextField>
       <JFXTextField fx:id="createdByField" labelFloat="true" promptText="created by" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <GridPane.margin>
-            <Insets left="8.0" />
+            <Insets left="6.0" right="8.0" />
          </GridPane.margin>
       </JFXTextField>
-      <JFXTextField fx:id="objMarkingsField" labelFloat="true" promptText="object marking references" GridPane.rowIndex="4" />
-      <JFXTextField fx:id="externalRefField" labelFloat="true" promptText="external references" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <JFXTextField fx:id="idField" labelFloat="true" text="Id" GridPane.columnSpan="2" />
-      <JFXButton fx:id="idButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="renew" GridPane.columnIndex="2">
+      <JFXTextField fx:id="idField" labelFloat="true" text="id" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets left="6.0" />
+         </GridPane.margin>
+      </JFXTextField>
+      <JFXButton fx:id="idButton" buttonType="RAISED" style="-fx-background-color: lightBlue; -fx-background-radius: 5em;" text="renew" GridPane.columnIndex="2">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -77,6 +76,68 @@
                </padding>
             </Label>
             <JFXListView fx:id="labelsView" editable="true" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+      <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <children>
+            <JFXTextField fx:id="langField" labelFloat="true" promptText="language" text="en">
+               <HBox.margin>
+                  <Insets left="8.0" right="8.0" top="12.0" />
+               </HBox.margin>
+            </JFXTextField>
+            <JFXTextField fx:id="confidenceField" labelFloat="true" promptText="confidence" text="0">
+               <HBox.margin>
+                  <Insets left="8.0" top="12.0" />
+               </HBox.margin>
+            </JFXTextField>
+         </children>
+      </HBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <HBox prefHeight="60.0" spacing="12.0">
+               <children>
+                  <JFXButton fx:id="addExtRefButton" buttonType="RAISED" style="-fx-background-color: lightBlue; -fx-background-radius: 5em; -fx-min-width: 44; -fx-min-height: 33; -fx-max-width: 44; -fx-max-height: 33;" text="Add" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <Label prefWidth="3333.0" text="external refs" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets top="8.0" />
+                     </HBox.margin>
+                  </Label>
+                  <JFXButton fx:id="deleteExtRefButton" buttonType="RAISED" style="-fx-background-color: lightBlue; -fx-background-radius: 5em; -fx-min-width: 66; -fx-min-height: 33; -fx-max-width: 66; -fx-max-height: 33;" text="Delete" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <JFXListView fx:id="externalRefsView" prefHeight="205.0" prefWidth="257.0" />
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+         <children>
+            <HBox prefHeight="60.0" spacing="12.0">
+               <children>
+                  <JFXButton fx:id="addMarkingButton" buttonType="RAISED" style="-fx-background-color: lightBlue; -fx-background-radius: 5em; -fx-min-width: 44; -fx-min-height: 33; -fx-max-width: 44; -fx-max-height: 33;" text="Add" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <Label prefWidth="3333.0" text="object markings" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets top="8.0" />
+                     </HBox.margin>
+                  </Label>
+                  <JFXButton fx:id="deleteMarkingButton" buttonType="RAISED" style="-fx-background-color: lightBlue; -fx-background-radius: 5em; -fx-min-width: 66; -fx-min-height: 33; -fx-max-width: 66; -fx-max-height: 33;" text="Delete" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <JFXListView fx:id="objectMarkingsView" prefHeight="203.0" prefWidth="257.0" />
          </children>
       </VBox>
    </children>

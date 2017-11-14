@@ -20,9 +20,9 @@
          <children>
             <HBox prefHeight="48.0" prefWidth="260.0" spacing="8.0" VBox.vgrow="NEVER">
                <children>
-                  <JFXButton fx:id="addButton" buttonType="RAISED" text="Add" />
-                  <JFXButton fx:id="deleteButton" buttonType="RAISED" text="Delete" />
-                  <JFXButton fx:id="sendButton" buttonType="RAISED" text="Send to server" />
+                  <JFXButton fx:id="addButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Add" />
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Delete" />
+                  <JFXButton fx:id="sendButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Send to server" />
                   <JFXSpinner fx:id="serverSpinner" visible="false" />
                </children>
                <padding>

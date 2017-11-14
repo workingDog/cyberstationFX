@@ -1,6 +1,7 @@
 package controllers
 
 import javafx.fxml.FXML
+import javafx.scene.shape.Circle
 
 import com.jfoenix.controls._
 import com.kodekutters.stix.Identifier
@@ -41,8 +42,12 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML langField: JFXTextField,
                        @FXML labelsView: JFXListView[Item],
                        @FXML createdByField: JFXTextField,
-                       @FXML objMarkingsField: JFXTextField,
-                       @FXML externalRefField: JFXTextField) extends CommonControllerInterface {
+                       @FXML addMarkingButton: JFXButton,
+                       @FXML deleteMarkingButton: JFXButton,
+                       @FXML addExtRefButton: JFXButton,
+                       @FXML deleteExtRefButton: JFXButton,
+                       @FXML objectMarkingsView: JFXListView[Item],
+                       @FXML externalRefsView: JFXListView[Item]) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
   var onLoad = false
@@ -66,8 +71,8 @@ class CommonController(@FXML idButton: JFXButton,
       item.selected.value = false
     })
     createdByField.setText("")
-    objMarkingsField.setText("")
-    externalRefField.setText("")
+    //objMarkingsField.setText("")
+   // externalRefField.setText("")
     revokedField.setSelected(false)
     idField.setText("")
   }
@@ -85,8 +90,8 @@ class CommonController(@FXML idButton: JFXButton,
         item.selected.value = false
     })
     createdByField.setText(currentForm.created_by_ref.value)
-    objMarkingsField.setText("")
-    externalRefField.setText("")
+   // objMarkingsField.setText("")
+  //  externalRefField.setText("")
     revokedField.setSelected(currentForm.revoked.value)
     idField.setText(currentForm.id.value)
   }
