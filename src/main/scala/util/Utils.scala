@@ -21,13 +21,13 @@ object Utils {
   }
 
   // determine if v is a case class
-  def isCaseClass(v: Any): Boolean = {
-    import reflect.runtime.universe._
-    val typeMirror = runtimeMirror(v.getClass.getClassLoader)
-    val instanceMirror = typeMirror.reflect(v)
-    val symbol = instanceMirror.symbol
-    symbol.isCaseClass
-  }
+//  def isCaseClass(v: Any): Boolean = {
+//    import reflect.runtime.universe._
+//    val typeMirror = runtimeMirror(v.getClass.getClassLoader)
+//    val instanceMirror = typeMirror.reflect(v)
+//    val symbol = instanceMirror.symbol
+//    symbol.isCaseClass
+//  }
 
   // generate a 4 letters random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString

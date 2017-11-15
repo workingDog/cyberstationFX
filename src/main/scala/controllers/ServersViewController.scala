@@ -115,6 +115,7 @@ class ServersViewController(@FXML addButton: JFXButton,
     }
     // setup the apirootsListView
     apirootsListView.setItems(apirootList)
+    apirootsListView.getSelectionModel.setSelectionMode(SelectionMode.Single)
     apirootsListView.getSelectionModel.selectedItem.onChange { (_, _, newValue) =>
       collectionList.clear()
       serverSpinner.setVisible(true)
@@ -141,19 +142,30 @@ class ServersViewController(@FXML addButton: JFXButton,
     }
     connOpt.map(conn => {
       val cols = Collections(apiroot, conn)
-      collectionList.clear()
-      cols.collections().map(theList => {
-        theList.foreach(col => {
-          // have to do this because we are inside a FX-UI thread
-          Platform.runLater(() => {
-            collectionList.append(col.taxiiCollection)
-            if (collectionList.length > 0) collectionsListView.getSelectionModel.selectFirst()
-            serverSpinner.setVisible(false)
-          })
-        })
-        // close the connection
-        conn.close()
-      })
+      // get the future response
+      cols.response onComplete {
+
+        case Success(theResponse) =>
+          serverSpinner.setVisible(false)
+          theResponse match {
+            case Right(taxiiCollections) =>
+              collectionList.clear()
+              taxiiCollections.collections.map(theList => {
+                theList.foreach(taxiCol => {
+                  // have to do this because we are not inside a FX-UI thread
+                  Platform.runLater(() => {
+                    collectionList.append(taxiCol)
+                    if (collectionList.length > 0) collectionsListView.getSelectionModel.selectFirst()
+                    serverSpinner.setVisible(false)
+                  })
+                })
+              })
+
+            case Left(taxiiErrorMessage) => showAlert(taxiiErrorMessage)
+          }
+
+        case Failure(t) => serverSpinner.setVisible(false)
+      }
     })
   }
 

@@ -1,7 +1,6 @@
 package controllers
 
 import javafx.fxml.FXML
-import javafx.scene.shape.Circle
 
 import com.jfoenix.controls._
 import com.kodekutters.stix.Identifier

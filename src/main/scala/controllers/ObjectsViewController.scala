@@ -77,18 +77,18 @@ class ObjectsViewController(objCountLabel: Label,
         editable = false
         cellValueFactory = _.value.created_by_ref
       },
-    new TableColumn[CyberObj, String]() {
-      text = "Id"
-      prefWidth = 350
-      editable = false
-      cellValueFactory = _.value.id
-    })
+      new TableColumn[CyberObj, String]() {
+        text = "Id"
+        prefWidth = 350
+        editable = false
+        cellValueFactory = _.value.id
+      })
   }
 
   def getObjects(taxiiCol: TaxiiCollection): Unit = {
     objSpinner.setVisible(true)
     objects.clear()
-    objCountLabel.setText("Objects: ")
+    objCountLabel.setText("")
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo)
@@ -99,7 +99,7 @@ class ObjectsViewController(objCountLabel: Label,
           Platform.runLater(() => {
             objSpinner.setVisible(false)
             val count = (theBundle.objects.length).toString
-            objCountLabel.setText("Objects: " + count)
+            objCountLabel.setText(count + " objects")
           })
         })
       })

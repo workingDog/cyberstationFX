@@ -11,7 +11,7 @@
    <children>
       <HBox prefHeight="72.0" prefWidth="600.0" spacing="12.0" VBox.vgrow="NEVER">
          <children>
-            <Label fx:id="objCountLabel" minWidth="250.0" text="Objects: ">
+            <Label fx:id="objCountLabel" minWidth="250.0">
                <HBox.margin>
                   <Insets left="12.0" top="14.0" />
                </HBox.margin>
