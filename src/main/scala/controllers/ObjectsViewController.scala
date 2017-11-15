@@ -7,11 +7,12 @@ import cyber.{CyberConverter, CyberObj}
 import taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scalafx.application.Platform
 import scalafxml.core.macros.sfxml
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
-import scalafx.scene.control.{TableColumn, TableView}
+import scalafx.scene.control.{Label, TableColumn, TableView}
 
 
 trait ObjectsViewControllerInterface {
@@ -23,7 +24,8 @@ trait ObjectsViewControllerInterface {
 }
 
 @sfxml
-class ObjectsViewController(objectsTable: TableView[CyberObj],
+class ObjectsViewController(objCountLabel: Label,
+                            objectsTable: TableView[CyberObj],
                             @FXML objSpinner: JFXSpinner) extends ObjectsViewControllerInterface {
 
   val objects = ObservableBuffer[CyberObj]()
@@ -86,6 +88,7 @@ class ObjectsViewController(objectsTable: TableView[CyberObj],
   def getObjects(taxiiCol: TaxiiCollection): Unit = {
     objSpinner.setVisible(true)
     objects.clear()
+    objCountLabel.setText("Objects: ")
     if (taxiiCol == null) return
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo)
@@ -93,7 +96,11 @@ class ObjectsViewController(objectsTable: TableView[CyberObj],
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
           col.conn.close()
-          objSpinner.setVisible(false)
+          Platform.runLater(() => {
+            objSpinner.setVisible(false)
+            val count = (theBundle.objects.length).toString
+            objCountLabel.setText("Objects: " + count)
+          })
         })
       })
     } else objSpinner.setVisible(false)

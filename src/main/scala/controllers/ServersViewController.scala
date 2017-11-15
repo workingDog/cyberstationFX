@@ -148,9 +148,9 @@ class ServersViewController(@FXML addButton: JFXButton,
           Platform.runLater(() => {
             collectionList.append(col.taxiiCollection)
             if (collectionList.length > 0) collectionsListView.getSelectionModel.selectFirst()
+            serverSpinner.setVisible(false)
           })
         })
-        serverSpinner.setVisible(false)
         // close the connection
         conn.close()
       })

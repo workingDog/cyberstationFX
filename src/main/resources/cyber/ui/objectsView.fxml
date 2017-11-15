@@ -2,13 +2,24 @@
 
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ObjectsViewController">
    <children>
-      <JFXSpinner fx:id="objSpinner" />
-      <TableView fx:id="objectsTable" prefHeight="402.0" prefWidth="600.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS" />
+      <HBox prefHeight="72.0" prefWidth="600.0" spacing="12.0" VBox.vgrow="NEVER">
+         <children>
+            <Label fx:id="objCountLabel" minWidth="250.0" text="Objects: ">
+               <HBox.margin>
+                  <Insets left="12.0" top="14.0" />
+               </HBox.margin>
+            </Label>
+            <JFXSpinner fx:id="objSpinner" />
+         </children>
+      </HBox>
+      <TableView fx:id="objectsTable" prefHeight="403.0" prefWidth="600.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS" />
    </children>
    <padding>
       <Insets top="4.0" />
