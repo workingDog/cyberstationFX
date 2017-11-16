@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -20,13 +21,22 @@
          <children>
             <HBox prefHeight="48.0" prefWidth="260.0" spacing="8.0" VBox.vgrow="NEVER">
                <children>
-                  <JFXButton fx:id="addButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Add" />
-                  <JFXButton fx:id="deleteButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Delete" />
-                  <JFXButton fx:id="sendButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Send to server" />
+                  <JFXButton fx:id="addButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
+                     <tooltip>
+                        <Tooltip text="add a new bundle" />
+                     </tooltip></JFXButton>
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
+                     <tooltip>
+                        <Tooltip text="delete selected bundle" />
+                     </tooltip></JFXButton>
+                  <JFXButton fx:id="sendButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/upload.png');">
+                     <tooltip>
+                        <Tooltip text="send selected bundle to server" />
+                     </tooltip></JFXButton>
                   <JFXSpinner fx:id="serverSpinner" visible="false" />
                </children>
                <padding>
-                  <Insets bottom="4.0" left="12.0" right="4.0" top="10.0" />
+                  <Insets bottom="4.0" left="12.0" right="4.0" top="6.0" />
                </padding>
             </HBox>
             <JFXListView fx:id="bundlesListView" editable="true" prefHeight="551.0" prefWidth="320.0" VBox.vgrow="ALWAYS">
@@ -44,7 +54,7 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="33.0" prefHeight="33.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -54,10 +64,13 @@
                      </GridPane.margin></Label>
                   <JFXTextField fx:id="bundleId" labelFloat="true" text="Id" GridPane.rowIndex="1" />
                   <JFXTextField fx:id="bundleVersion" labelFloat="true" prefWidth="100.0" text="Version" GridPane.rowIndex="2" />
-                  <JFXButton fx:id="idButton" buttonType="RAISED" style="-fx-background-radius: 5em; -fx-min-width: 60; -fx-min-height: 30; -fx-max-width: 60; -fx-max-height: 30; -fx-background-color: lightBlue;" text="renew" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <JFXButton fx:id="idButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/redo-blue.png');" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="6.0" />
                      </GridPane.margin>
+                     <tooltip>
+                        <Tooltip text="renew bundle id" />
+                     </tooltip>
                   </JFXButton>
                </children>
             </GridPane>

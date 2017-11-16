@@ -15,8 +15,8 @@
                <children>
                   <HBox prefHeight="46.0" prefWidth="255.0" spacing="8.0">
                      <children>
-                        <JFXButton fx:id="addButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Add" />
-                        <JFXButton fx:id="deleteButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Delete" />
+                        <JFXButton fx:id="addButton" buttonType="RAISED" defaultButton="true" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');" />
+                        <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');" />
                   <JFXSpinner fx:id="serverSpinner" visible="false" />
                      </children>
                      <padding>

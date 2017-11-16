@@ -15,11 +15,11 @@
          <children>
             <HBox prefHeight="61.0" prefWidth="300.0" spacing="8.0" VBox.vgrow="NEVER">
                <children>
-                  <JFXButton fx:id="addButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Add">
+                  <JFXButton fx:id="addButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
                      <HBox.margin>
                         <Insets top="12.0" />
                      </HBox.margin></JFXButton>
-                  <JFXButton fx:id="deleteButton" buttonType="RAISED" style="-fx-background-color: lightBlue;" text="Delete">
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
                      <HBox.margin>
                         <Insets top="12.0" />
                      </HBox.margin></JFXButton>
