@@ -35,7 +35,7 @@ trait CyberObj {
   * a Bundle form
   */
 class CyberBundle() {
-  val name = StringProperty("bundle " + Utils.randName)
+  val name = StringProperty("bundle_" + Utils.randDigits)
   val `type`: StringProperty = StringProperty(Bundle.`type`)
   var id: StringProperty = StringProperty(Identifier(Bundle.`type`).toString())
   val spec_version = StringProperty("2.0")
@@ -55,7 +55,7 @@ class CyberBundle() {
 class IndicatorForm() extends CyberObj {
   `type`.value = Indicator.`type`
   id.value = Identifier(Indicator.`type`).toString()
-  name.value = "indicator " + Utils.randName
+  name.value = "indicator_" + Utils.randDigits
 
   val pattern = StringProperty("")
   val valid_from = StringProperty("")

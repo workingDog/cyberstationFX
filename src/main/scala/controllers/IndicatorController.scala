@@ -8,7 +8,6 @@ import cyber.IndicatorForm
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
-import scalafx.event.ActionEvent
 import scalafx.scene.control.Label
 import scalafx.scene.control.cell.TextFieldListCell
 import scalafx.scene.input.MouseEvent

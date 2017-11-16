@@ -1,11 +1,9 @@
 package util
 
 import java.net.URL
-
 import com.kodekutters.stix._
-
 import scala.util.Random
-import scalafx.collections.ObservableBuffer
+
 
 object Utils {
 
@@ -20,17 +18,11 @@ object Utils {
     }
   }
 
-  // determine if v is a case class
-//  def isCaseClass(v: Any): Boolean = {
-//    import reflect.runtime.universe._
-//    val typeMirror = runtimeMirror(v.getClass.getClassLoader)
-//    val instanceMirror = typeMirror.reflect(v)
-//    val symbol = instanceMirror.symbol
-//    symbol.isCaseClass
-//  }
-
   // generate a 4 letters random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString
+
+  // generate a 4 digit random name
+  def randDigits: String = Random.alphanumeric.filter(_.isDigit).take(4).mkString
 
   val commonLabels = List[String]("anomalous-activity", "anonymization", "benign",
     "organization", "compromised", "malicious-activity", "attribution")
