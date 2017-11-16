@@ -10,7 +10,7 @@ import util.Utils
 import scalafx.Includes._
 import scalafx.beans.property.BooleanProperty
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.cell.CheckBoxListCell
+import scalafx.scene.control.cell.{CheckBoxListCell, TextFieldListCell}
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 
@@ -47,7 +47,7 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML deleteMarkingButton: JFXButton,
                        @FXML addExtRefButton: JFXButton,
                        @FXML deleteExtRefButton: JFXButton,
-                       @FXML objectMarkingsView: JFXListView[Item],
+                       @FXML objectMarkingsView: JFXListView[String],
                        @FXML externalRefsView: JFXListView[Item]) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
@@ -59,11 +59,31 @@ class CommonController(@FXML idButton: JFXButton,
   def init(): Unit = {
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
+    // created and modified timestamps
     renewCreated.setOnMouseClicked((_: MouseEvent) => {
       createdField.setText(Timestamp.now().toString())
     })
     renewModified.setOnMouseClicked((_: MouseEvent) => {
       modifiedField.setText(Timestamp.now().toString())
+    })
+    // external references
+    addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
+      val toAdd = Item(false, "xxxxxx", currentForm)
+      externalRefsView.getItems.add(toAdd)
+    })
+    deleteExtRefButton.setOnMouseClicked((_: MouseEvent) => {
+      val toRemove = externalRefsView.getSelectionModel.getSelectedItem
+      externalRefsView.getItems.remove(toRemove)
+    })
+    // object marking references
+    objectMarkingsView.cellFactory = TextFieldListCell.forListView()
+    addMarkingButton.setOnMouseClicked((_: MouseEvent) => {
+      val toAdd = "xxxxxxzzz"
+      objectMarkingsView.getItems.add(toAdd)
+    })
+    deleteMarkingButton.setOnMouseClicked((_: MouseEvent) => {
+      val toRemove = objectMarkingsView.getSelectionModel.getSelectedItem
+      objectMarkingsView.getItems.remove(toRemove)
     })
   }
 

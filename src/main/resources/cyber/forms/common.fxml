@@ -102,7 +102,7 @@
                   </JFXButton>
                </children>
             </HBox>
-            <JFXListView fx:id="externalRefsView" prefHeight="205.0" prefWidth="257.0" />
+            <JFXListView fx:id="externalRefsView" editable="true" prefHeight="205.0" prefWidth="257.0" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
@@ -126,7 +126,7 @@
                   </JFXButton>
                </children>
             </HBox>
-            <JFXListView fx:id="objectMarkingsView" prefHeight="203.0" prefWidth="257.0" />
+            <JFXListView fx:id="objectMarkingsView" editable="true" prefHeight="203.0" prefWidth="257.0" />
          </children>
       </VBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">

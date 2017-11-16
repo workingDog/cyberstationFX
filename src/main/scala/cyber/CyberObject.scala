@@ -26,8 +26,8 @@ trait CyberObj {
   val confidence = IntegerProperty(0)
   val external_references = ObservableBuffer[String]() // List[ExternalReference]
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
-  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
-  // to get the Stix object of the Cyber Object
+  val granular_markings = ObservableBuffer[String]()   // List[GranularMarking]
+  // to get the Stix object that the Cyber Object represents
   def toStix: StixObj
 }
 
@@ -60,13 +60,14 @@ class IndicatorForm() extends CyberObj {
   val pattern = StringProperty("")
   val valid_from = StringProperty("")
   val valid_until = StringProperty("")
-  val kill_chain_phases = List[KillChainPhase]()
+  val kill_chain_phases = mutable.ListBuffer[KillChainPhase]()
   val description = StringProperty("")
 
-  def toStix = new Indicator(Indicator.`type`, Identifier.stringToIdentifier(id.value),
+  def toStix = new Indicator(
+    Indicator.`type`, Identifier.stringToIdentifier(id.value),
     Timestamp(created.value), Timestamp(modified.value), pattern.value,
     Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
-    Option(labels.toList), Option(kill_chain_phases), Option(description.value),
+    Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
     Option(revoked.value), Option(confidence.value),
     Option(List()), Option(lang.value),
     Option(List()), Option(List()),
