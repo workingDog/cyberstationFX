@@ -3,7 +3,7 @@ package controllers
 import javafx.fxml.FXML
 
 import com.jfoenix.controls._
-import com.kodekutters.stix.Identifier
+import com.kodekutters.stix.{Identifier, Timestamp}
 import cyber.CyberObj
 import util.Utils
 
@@ -35,6 +35,8 @@ trait CommonControllerInterface {
 class CommonController(@FXML idButton: JFXButton,
                        @FXML idField: JFXTextField,
                        @FXML createdField: JFXTextField,
+                       @FXML renewCreated: JFXButton,
+                       @FXML renewModified: JFXButton,
                        @FXML modifiedField: JFXTextField,
                        @FXML revokedField: JFXToggleButton,
                        @FXML confidenceField: JFXTextField,
@@ -57,6 +59,12 @@ class CommonController(@FXML idButton: JFXButton,
   def init(): Unit = {
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
+    renewCreated.setOnMouseClicked((_: MouseEvent) => {
+      createdField.setText(Timestamp.now().toString())
+    })
+    renewModified.setOnMouseClicked((_: MouseEvent) => {
+      modifiedField.setText(Timestamp.now().toString())
+    })
   }
 
   override def clear(): Unit = {
@@ -127,9 +135,11 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.id <== idField.textProperty()
       // set the id button new id action
       idButton.setOnMouseClicked((_: MouseEvent) => {
-        idField.setText(Identifier(currentForm.`type`.value).toString())
-        // force a refresh
-        controller.map(_.getBundleStixView.refresh())
+        if(currentForm != null) {
+          idField.setText(Identifier(currentForm.`type`.value).toString())
+          // force a refresh
+          controller.map(_.getBundleStixView.refresh())
+        }
       })
     }
   }

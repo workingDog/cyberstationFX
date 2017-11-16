@@ -150,7 +150,7 @@
                   <Insets top="6.0" />
                </HBox.margin>
             </JFXTextField>
-            <JFXButton fx:id="renewCreated1" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/redo-blue.png');">
+            <JFXButton fx:id="renewModified" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/redo-blue.png');">
                <HBox.margin>
                   <Insets left="6.0" top="6.0" />
                </HBox.margin>
