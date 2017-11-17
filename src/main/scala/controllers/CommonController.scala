@@ -66,7 +66,7 @@ class CommonController(@FXML idButton: JFXButton,
     renewModified.setOnMouseClicked((_: MouseEvent) => {
       modifiedField.setText(Timestamp.now().toString())
     })
-    // external references
+    // todo external references
     addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val toAdd = Item(false, "xxxxxx", currentForm)
       externalRefsView.getItems.add(toAdd)
@@ -75,7 +75,7 @@ class CommonController(@FXML idButton: JFXButton,
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
       externalRefsView.getItems.remove(toRemove)
     })
-    // object marking references
+    // todo object marking references
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((_: MouseEvent) => {
       val toAdd = "xxxxxxzzz"

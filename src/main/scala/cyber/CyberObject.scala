@@ -19,7 +19,7 @@ trait CyberObj {
   val name = StringProperty("")
   val lang = StringProperty("")
   val created = StringProperty(Timestamp.now().toString())
-  val modified = StringProperty("")
+  val modified = StringProperty(Timestamp.now().toString())
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
@@ -91,7 +91,7 @@ object CyberConverter {
         name.value = stix.name.getOrElse("")
         created.value = stix.created.toString()
         lang.value = stix.lang.getOrElse("")
-        stix.labels.getOrElse(List()).foreach(lbl => labels +: lbl)
+        labels ++= stix.labels.getOrElse(List())
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()
