@@ -26,7 +26,7 @@ trait CyberObj {
   val confidence = IntegerProperty(0)
   val external_references = ObservableBuffer[String]() // List[ExternalReference]
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
-  val granular_markings = ObservableBuffer[String]()   // List[GranularMarking]
+  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
   // to get the Stix object that the Cyber Object represents
   def toStix: StixObj
 }
@@ -75,12 +75,13 @@ class IndicatorForm() extends CyberObj {
 }
 
 /**
-  * convert a StixObj into a corresponding CyberObj
+  * conversions utilities
   */
 object CyberConverter {
 
   /**
     * convert a StixObj into a corresponding CyberObj
+    *
     * @param theStix
     */
   def toCyberObj(theStix: StixObj): CyberObj = {
@@ -113,3 +114,22 @@ object CyberConverter {
   }
 
 }
+
+case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
+  val selected = BooleanProperty(init)
+  selected.onChange { (_, _, newValue) =>
+    if (form != null && newValue) form.labels += name else form.labels -= name
+  }
+
+  override def toString: String = name
+}
+
+case class ExtRefItem(init: Boolean, name: String, var form: CyberObj) {
+  val selected = BooleanProperty(init)
+  selected.onChange { (_, _, newValue) =>
+    if (form != null && newValue) form.external_references += name else form.external_references -= name
+  }
+
+  override def toString: String = name
+}
+
