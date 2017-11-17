@@ -70,7 +70,7 @@ class CommonController(@FXML idButton: JFXButton,
       externalRefsView.getItems.remove(toRemove)
     })
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
-    addMarkingButton.setOnMouseClicked((_: MouseEvent) => {
+    addMarkingButton.setOnMouseClicked((ev: MouseEvent) => {
       if (currentForm != null) currentForm.object_marking_refs += Utils.randName
     })
     deleteMarkingButton.setOnMouseClicked((_: MouseEvent) => {

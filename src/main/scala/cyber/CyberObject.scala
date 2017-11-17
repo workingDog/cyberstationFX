@@ -17,16 +17,16 @@ trait CyberObj {
   val `type` = StringProperty("")
   val id = StringProperty("")
   val name = StringProperty("")
-  val lang = StringProperty("")
+  val lang = StringProperty("en")
   val created = StringProperty(Timestamp.now().toString())
   val modified = StringProperty(Timestamp.now().toString())
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
-  val confidence = StringProperty("")
-  val external_references = ObservableBuffer[String]() // List[ExternalReference]
-  val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
-  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
+  val confidence = StringProperty("0")
+  val external_references = ObservableBuffer[String]()  // List[ExternalReference]
+  val object_marking_refs = ObservableBuffer[String]()  // List[Identifier]
+  val granular_markings = ObservableBuffer[String]()    // List[GranularMarking]
   // to get the Stix object that the Cyber Object represents
   def toStix: StixObj
 }
@@ -68,12 +68,13 @@ class IndicatorForm() extends CyberObj {
     Timestamp(created.value), Timestamp(modified.value), pattern.value,
     Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
     Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
-    Option(revoked.value), Option(Integer.parseInt(confidence.value)),
+    Option(revoked.value),
+    Option(if(confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     Option(List()), Option(lang.value),
-    Option(List()), Option(List()),
+    Option(Utils.toIdentifierList(object_marking_refs)), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
 }
-
+// Utils.toIdentifierList(stix.object_marking_refs.getOrElse(List()))
 /**
   * conversions utilities
   */
@@ -91,8 +92,13 @@ object CyberConverter {
         id.value = stix.id.toString()
         name.value = stix.name.getOrElse("")
         created.value = stix.created.toString()
+        modified.value = stix.modified.toString()
         lang.value = stix.lang.getOrElse("")
+        confidence.value = stix.confidence.getOrElse(0).toString
         labels ++= stix.labels.getOrElse(List())
+        created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+        revoked.value = stix.revoked.getOrElse(false)
+        object_marking_refs ++= Utils.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()
