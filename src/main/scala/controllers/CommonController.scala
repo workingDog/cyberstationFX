@@ -1,5 +1,6 @@
 package controllers
 
+import java.text.NumberFormat
 import javafx.fxml.FXML
 
 import com.jfoenix.controls._
@@ -9,8 +10,10 @@ import util.Utils
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
+import scalafx.scene.control.TextFormatter
 import scalafx.scene.control.cell.{CheckBoxListCell, TextFieldListCell}
 import scalafx.scene.input.MouseEvent
+import scalafx.util.converter.NumberStringConverter
 import scalafxml.core.macros.sfxml
 
 
@@ -45,6 +48,9 @@ class CommonController(@FXML idButton: JFXButton,
   init()
 
   def init(): Unit = {
+    // make sure only integers can be in the confidenceField
+    confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
+    //
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
     // created and modified timestamps
@@ -63,7 +69,6 @@ class CommonController(@FXML idButton: JFXButton,
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
       externalRefsView.getItems.remove(toRemove)
     })
-    // todo object marking references
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((_: MouseEvent) => {
       if (currentForm != null) currentForm.object_marking_refs += Utils.randName
@@ -86,7 +91,7 @@ class CommonController(@FXML idButton: JFXButton,
     })
     createdByField.setText("")
     objectMarkingsView.setItems(null)
-  //  externalRefsView.setItems(null)
+    //  externalRefsView.setItems(null)
     revokedField.setSelected(false)
     idField.setText("")
   }
@@ -94,7 +99,7 @@ class CommonController(@FXML idButton: JFXButton,
   private def loadValues(): Unit = {
     createdField.setText(currentForm.created.value)
     modifiedField.setText(currentForm.modified.value)
-    confidenceField.setText(currentForm.confidence.value.toString)
+    confidenceField.setText(currentForm.confidence.value)
     langField.setText(currentForm.lang.value)
     labelsView.getItems.foreach(item => {
       item.form = currentForm
@@ -141,7 +146,7 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.lang <== langField.textProperty()
       currentForm.created <== createdField.textProperty()
       currentForm.modified <== modifiedField.textProperty()
-      //form.confidence <== confidenceField.IntegerProperty()
+      currentForm.confidence <== confidenceField.textProperty()
       currentForm.created_by_ref <== createdByField.textProperty()
       currentForm.revoked <== revokedField.selectedProperty()
       currentForm.id <== idField.textProperty()

@@ -23,7 +23,7 @@ trait CyberObj {
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
-  val confidence = IntegerProperty(0)
+  val confidence = StringProperty("")
   val external_references = ObservableBuffer[String]() // List[ExternalReference]
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
   val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
@@ -68,7 +68,7 @@ class IndicatorForm() extends CyberObj {
     Timestamp(created.value), Timestamp(modified.value), pattern.value,
     Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
     Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
-    Option(revoked.value), Option(confidence.value),
+    Option(revoked.value), Option(Integer.parseInt(confidence.value)),
     Option(List()), Option(lang.value),
     Option(List()), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)

@@ -1,0 +1,21 @@
+
+// log info storage
+
+userid, time saved into db, bundle id, stix object id,
+time sent to server, server/api-root/collection_id info,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
