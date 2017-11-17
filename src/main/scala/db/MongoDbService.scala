@@ -1,14 +1,13 @@
 package db
 
 import reactivemongo.api.{DefaultDB, MongoConnection, MongoDriver}
+import reactivemongo.play.json.collection.JSONCollection
+import util.Utils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
-
 import scala.language.{implicitConversions, postfixOps}
 import scala.collection.JavaConverters._
-
 
 
 /*
@@ -102,12 +101,19 @@ object MongoDbService {
     } yield db
 
     database.onComplete {
-      case resolution =>
-        //  println(s"DB resolution: $resolution")
+      case theDB =>
+        println(s"theDB: $theDB")
         println("Mongodb connected")
       //  driver.close()
     }
 
+  }
+
+  /**
+    * create all collections from the STIX objects type names
+    */
+  def createStixCollections(): Unit = {
+    database.map(db => Utils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
   }
 
 }

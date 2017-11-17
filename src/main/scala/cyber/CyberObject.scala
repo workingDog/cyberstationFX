@@ -4,7 +4,7 @@ import com.kodekutters.stix._
 import util.Utils
 
 import scala.collection.mutable.ListBuffer
-import scalafx.beans.property.{BooleanProperty, IntegerProperty, StringProperty}
+import scalafx.beans.property.{BooleanProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 
 import scala.collection.mutable
@@ -74,7 +74,7 @@ class IndicatorForm() extends CyberObj {
     Option(Utils.toIdentifierList(object_marking_refs)), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
 }
-// Utils.toIdentifierList(stix.object_marking_refs.getOrElse(List()))
+
 /**
   * conversions utilities
   */

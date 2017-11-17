@@ -4,8 +4,6 @@ import java.net.URL
 
 import com.kodekutters.stix._
 
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 import scala.util.Random
 import scalafx.collections.ObservableBuffer
 
@@ -19,7 +17,7 @@ object Utils {
       checkUrl.toURI() // does the extra checking required for validation of URI
       true
     } catch {
-      case x => false
+      case x: Throwable => false
     }
   }
 
@@ -48,6 +46,9 @@ object Utils {
     Vulnerability.`type`,
     MarkingDefinition.`type`,
     LanguageContent.`type`)
+  //  ExternalReference.`type`,
+  //  KillChainPhase.`type`,
+  //  GranularMarking.`type`)  // Identifier.`type`
 
 
   def toIdentifierOpt(s: String): Option[Identifier] = {
