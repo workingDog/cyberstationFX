@@ -119,7 +119,6 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
-      currentForm = null
       objectMarkingsView.setItems(null)
       labelsView.getItems.foreach(item => {
         item.form = null
@@ -129,6 +128,7 @@ class CommonController(@FXML idButton: JFXButton,
         item.form = null
         item.selected.value = false
       })
+      currentForm = null
     }
   }
 

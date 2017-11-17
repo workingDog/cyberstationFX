@@ -58,7 +58,7 @@ class IndicatorForm() extends CyberObj {
   name.value = "indicator_" + Utils.randDigits
 
   val pattern = StringProperty("")
-  val valid_from = StringProperty("")
+  val valid_from = StringProperty(Timestamp.now().toString())
   val valid_until = StringProperty("")
   val kill_chain_phases = mutable.ListBuffer[KillChainPhase]()
   val description = StringProperty("")
@@ -118,7 +118,8 @@ object CyberConverter {
 case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
   val selected = BooleanProperty(init)
   selected.onChange { (_, _, newValue) =>
-    if (form != null && newValue) form.labels += name else form.labels -= name
+    if (form != null)
+      if (newValue) form.labels += name else form.labels -= name
   }
 
   override def toString: String = name
@@ -127,7 +128,8 @@ case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
 case class ExtRefItem(init: Boolean, name: String, var form: CyberObj) {
   val selected = BooleanProperty(init)
   selected.onChange { (_, _, newValue) =>
-    if (form != null && newValue) form.external_references += name else form.external_references -= name
+    if (form != null)
+      if (newValue) form.external_references += name else form.external_references -= name
   }
 
   override def toString: String = name
