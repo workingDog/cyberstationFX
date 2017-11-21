@@ -5,8 +5,7 @@ import util.Utils
 
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, StringProperty}
-import scalafx.collections.ObservableBuffer
-
+import scalafx.collections.{ObservableBuffer, ObservableMap}
 import scala.collection.mutable
 
 
@@ -24,9 +23,9 @@ trait CyberObj {
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
   val confidence = StringProperty("0")
-  val external_references = ObservableBuffer[String]()  // List[ExternalReference]
-  val object_marking_refs = ObservableBuffer[String]()  // List[Identifier]
-  val granular_markings = ObservableBuffer[String]()    // List[GranularMarking]
+  val external_references = ObservableBuffer[String]() // List[ExternalReference]
+  val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
+  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
   // to get the Stix object that the Cyber Object represents
   def toStix: StixObj
 }
@@ -69,10 +68,37 @@ class IndicatorForm() extends CyberObj {
     Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
     Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
     Option(revoked.value),
-    Option(if(confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
+    Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     Option(List()), Option(lang.value),
     Option(Utils.toIdentifierList(object_marking_refs)), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
+}
+
+/**
+  * an ExternalReference form
+  */
+class ExternalRefForm() {
+  val source_name = StringProperty("")
+  val description = StringProperty("")
+  val url = StringProperty("")
+  val external_id = StringProperty("")
+  val hashes = ObservableMap.empty[String, String]
+
+  /*
+    hashes.onChange((map, change) => {
+    println("hashes = " + hashes.mkString("[", ", ", "]"))
+    println(prettyChange(change))
+  })
+
+  hashes("SHA256") = "something"
+   */
+
+  def toStix = new ExternalReference(
+    source_name = source_name.value,
+    Option(description.value),
+    Option(external_id.value),
+    Option(url.value),
+    Option(hashes.toMap))
 }
 
 /**
