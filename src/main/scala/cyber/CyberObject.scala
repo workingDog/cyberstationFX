@@ -23,7 +23,7 @@ trait CyberObj {
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
   val confidence = StringProperty("0")
-  val external_references = ObservableBuffer[String]() // List[ExternalReference]
+  val external_references = ObservableBuffer[ExternalRefForm]()
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
   val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
   // to get the Stix object that the Cyber Object represents
@@ -99,6 +99,7 @@ class ExternalRefForm() {
     Option(external_id.value),
     Option(url.value),
     Option(hashes.toMap))
+
 }
 
 /**
@@ -124,6 +125,7 @@ object CyberConverter {
         labels ++= stix.labels.getOrElse(List())
         created_by_ref.value = stix.created_by_ref.getOrElse("").toString
         revoked.value = stix.revoked.getOrElse(false)
+    //    external_references = stix.external_references
         object_marking_refs ++= Utils.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
       case stix: AttackPattern => new IndicatorForm()
@@ -152,16 +154,6 @@ case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
   selected.onChange { (_, _, newValue) =>
     if (form != null)
       if (newValue) form.labels += name else form.labels -= name
-  }
-
-  override def toString: String = name
-}
-
-case class ExtRefItem(init: Boolean, name: String, var form: CyberObj) {
-  val selected = BooleanProperty(init)
-  selected.onChange { (_, _, newValue) =>
-    if (form != null)
-      if (newValue) form.external_references += name else form.external_references -= name
   }
 
   override def toString: String = name

@@ -2,19 +2,25 @@ package controllers
 
 import java.text.NumberFormat
 import javafx.fxml.FXML
+import java.io.IOException
 
 import com.jfoenix.controls._
 import com.kodekutters.stix.{Identifier, Timestamp}
-import cyber.{CyberObj, ExtRefItem, LabelItem}
+import cyber._
 import util.Utils
 
+import scala.language.implicitConversions
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.TextFormatter
+import scalafx.scene.Scene
+import scalafx.scene.control.{ListCell, TextFormatter}
 import scalafx.scene.control.cell.{CheckBoxListCell, TextFieldListCell}
-import scalafx.scene.input.MouseEvent
+import scalafx.scene.input.{MouseButton, MouseEvent}
+import scalafx.stage.{Modality, Stage}
+import scalafx.util.StringConverter
 import scalafx.util.converter.NumberStringConverter
-import scalafxml.core.macros.sfxml
+import scalafxml.core.{DependenciesByType, FXMLLoader}
+import scalafxml.core.macros.{nested, sfxml}
 
 
 trait CommonControllerInterface {
@@ -40,7 +46,7 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML addExtRefButton: JFXButton,
                        @FXML deleteExtRefButton: JFXButton,
                        @FXML objectMarkingsView: JFXListView[String],
-                       @FXML externalRefsView: JFXListView[ExtRefItem]) extends CommonControllerInterface {
+                       @FXML externalRefsView: JFXListView[ExternalRefForm]) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
   val labelsData = ObservableBuffer[LabelItem](for (lbl <- Utils.commonLabels) yield LabelItem(false, lbl, currentForm))
@@ -60,15 +66,35 @@ class CommonController(@FXML idButton: JFXButton,
     renewModified.setOnMouseClicked((_: MouseEvent) => {
       modifiedField.setText(Timestamp.now().toString())
     })
-    // todo external references
+
+    // external references
+    externalRefsView.cellFactory = { _ =>
+      new ListCell[ExternalRefForm] {
+        item.onChange { (_, _, extRef) => if (extRef != null) text = extRef.source_name.value }
+      }
+    }
+
     addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
-      val toAdd = ExtRefItem(false, "xxxxxx", currentForm)
-      externalRefsView.getItems.add(toAdd)
+      val newForm = new ExternalRefForm() {
+        source_name.value = "new name"
+      }
+      if (showExtRefDialog(newForm)) externalRefsView.getItems.add(newForm)
     })
+
     deleteExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
       externalRefsView.getItems.remove(toRemove)
     })
+
+    // double click on a externalRefsView entry to edit the selected external reference
+    externalRefsView.setOnMouseClicked((event: MouseEvent) => {
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2)) {
+        showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
+      }
+    })
+    // (event.getTarget.isInstanceOf[JFXTextField] ||
+    // event.getTarget.asInstanceOf[javafx.scene.layout.StackPane].getChildren.size > 0)) {
+
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((ev: MouseEvent) => {
       if (currentForm != null) currentForm.object_marking_refs += Utils.randName
@@ -91,7 +117,7 @@ class CommonController(@FXML idButton: JFXButton,
     })
     createdByField.setText("")
     objectMarkingsView.setItems(null)
-    //  externalRefsView.setItems(null)
+    externalRefsView.setItems(null)
     revokedField.setSelected(false)
     idField.setText("")
   }
@@ -109,7 +135,7 @@ class CommonController(@FXML idButton: JFXButton,
         item.selected.value = false
     })
     objectMarkingsView.setItems(currentForm.object_marking_refs)
-    //  externalRefsView.items = currentForm.external_references
+    externalRefsView.items = currentForm.external_references
     createdByField.setText(currentForm.created_by_ref.value)
     revokedField.setSelected(currentForm.revoked.value)
     idField.setText(currentForm.id.value)
@@ -129,10 +155,7 @@ class CommonController(@FXML idButton: JFXButton,
         item.form = null
         item.selected.value = false
       })
-      externalRefsView.getItems.foreach(item => {
-        item.form = null
-        item.selected.value = false
-      })
+      externalRefsView.setItems(null)
       currentForm = null
     }
   }
@@ -161,4 +184,44 @@ class CommonController(@FXML idButton: JFXButton,
     }
   }
 
+  // popup the external reference editor dialog
+  def showExtRefDialog(extRefForm: ExternalRefForm): Boolean =
+    try {
+      // load the fxml file and create a new stage for the popup dialog
+      val resource = CyberStationApp.getClass.getResource("forms/extRefDialog.fxml")
+      if (resource == null) {
+        throw new IOException("Cannot load resource: forms/extRefDialog.fxml")
+      }
+      val loader = new FXMLLoader(resource, new DependenciesByType(Map.empty))
+      val pane = loader.load.asInstanceOf[javafx.scene.layout.GridPane]
+      val scene = new Scene(pane)
+      // create the dialog Stage
+      val theStage = new Stage()
+      theStage.setTitle("external reference")
+      theStage.initModality(Modality.WindowModal)
+      theStage.initOwner(CyberStationApp.stage)
+      theStage.setScene(scene)
+      // set the stage and external reference into the controller
+      val controller = loader.getController[ExternalRefControllerInterface]()
+      controller.setDialogStage(theStage)
+      controller.setExternalRef(extRefForm)
+      // show the dialog and wait until the user closes it
+      theStage.showAndWait
+      controller.isOkClicked
+    } catch {
+      case e: IOException =>
+        e.printStackTrace()
+        false
+    }
+
+  // for use in externalRefsView
+  val extRefStringConverter = new StringConverter[ExternalRefForm] {
+
+    def fromString(newName: String): ExternalRefForm = {
+      externalRefsView.getSelectionModel.getSelectedItem.source_name.value = newName
+      externalRefsView.getSelectionModel.getSelectedItem
+    }
+
+    def toString(bndl: ExternalRefForm): String = bndl.source_name.value
+  }
 }

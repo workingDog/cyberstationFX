@@ -86,10 +86,10 @@ class ObjectsViewController(objCountLabel: Label,
   }
 
   def getObjects(taxiiCol: TaxiiCollection): Unit = {
-    objSpinner.setVisible(true)
     objects.clear()
     objCountLabel.setText("")
     if (taxiiCol == null) return
+    objSpinner.setVisible(true)
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo)
       col.getObjects().map(bndl => {
