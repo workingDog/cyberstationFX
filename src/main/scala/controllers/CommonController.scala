@@ -87,11 +87,11 @@ class CommonController(@FXML idButton: JFXButton,
     })
     // double click on a externalRefsView entry to edit the selected external reference
     externalRefsView.setOnMouseClicked((event: MouseEvent) => {
-      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && (event.getTarget.isInstanceOf[Text])) {
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && event.getTarget.isInstanceOf[Text]) {
         if (currentForm != null) {
-            showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
-            externalRefsView.refresh()
-          }
+          showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
+          externalRefsView.refresh()
+        }
       }
     })
 
