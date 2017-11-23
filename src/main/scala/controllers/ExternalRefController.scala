@@ -4,7 +4,6 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
 import cyber.ExternalRefForm
-import util.Utils
 
 import scalafx.stage.Stage
 import scalafxml.core.macros.{nested, sfxml}

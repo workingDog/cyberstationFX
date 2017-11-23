@@ -3,6 +3,7 @@ package controllers
 import java.text.NumberFormat
 import javafx.fxml.FXML
 import java.io.IOException
+import javafx.scene.text.Text
 
 import com.jfoenix.controls._
 import com.kodekutters.stix.{Identifier, Timestamp}
@@ -53,9 +54,9 @@ class CommonController(@FXML idButton: JFXButton,
   init()
 
   def init(): Unit = {
-    // make sure only integers can be in the confidenceField
+    // make sure only integers can be entered in the confidenceField
     confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
-    //
+    // labels list
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
     // created and modified timestamps
@@ -65,7 +66,6 @@ class CommonController(@FXML idButton: JFXButton,
     renewModified.setOnMouseClicked((_: MouseEvent) => {
       modifiedField.setText(Timestamp.now().toString())
     })
-
     // external references
     externalRefsView.cellFactory = { _ =>
       new ListCell[ExternalRefForm] {
@@ -75,28 +75,27 @@ class CommonController(@FXML idButton: JFXButton,
         }
       }
     }
-
     addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val newForm = new ExternalRefForm() {
         source_name.value = "new name"
       }
       if (showExtRefDialog(newForm) && currentForm != null) currentForm.external_references += newForm
     })
-
     deleteExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
       if (currentForm != null) currentForm.external_references -= toRemove
     })
-
     // double click on a externalRefsView entry to edit the selected external reference
     externalRefsView.setOnMouseClicked((event: MouseEvent) => {
-      if ((event.button == MouseButton.Primary) && (event.clickCount == 2)) {
-        if (currentForm != null) showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && (event.getTarget.isInstanceOf[Text])) {
+        if (currentForm != null) {
+            showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
+            externalRefsView.refresh()
+          }
       }
     })
-    // (event.getTarget.isInstanceOf[JFXTextField] ||
-    // event.getTarget.asInstanceOf[javafx.scene.layout.StackPane].getChildren.size > 0)) {
 
+    // object markings list
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((ev: MouseEvent) =>
       if (currentForm != null) currentForm.object_marking_refs += Utils.randName
@@ -210,6 +209,7 @@ class CommonController(@FXML idButton: JFXButton,
       controller.setExternalRef(extRefForm)
       // show the dialog and wait until the user closes it
       theStage.showAndWait
+      // return true if the ok button was clicked else false
       controller.isOkClicked
     } catch {
       case e: IOException =>

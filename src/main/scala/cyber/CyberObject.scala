@@ -26,7 +26,7 @@ trait CyberObj {
   val external_references = ObservableBuffer[ExternalRefForm]()
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
   val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
-  // to get the Stix object that the Cyber Object represents
+  // to convert into the Stix object that the Cyber Object represents
   def toStix: StixObj
 }
 
@@ -69,9 +69,34 @@ class IndicatorForm() extends CyberObj {
     Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
     Option(revoked.value),
     Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
-    Option(List()), Option(lang.value),
-    Option(Utils.toIdentifierList(object_marking_refs)), Option(List()),
+    Option(ExternalRefForm.toExternalRefList(external_references)), Option(lang.value),
+    Option(IndicatorForm.toIdentifierList(object_marking_refs)), Option(List()),
     Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
+}
+
+object IndicatorForm {
+
+  def toIdentifierOpt(s: String): Option[Identifier] = {
+    if (s.isEmpty) None
+    else {
+      val part = s.split("--")
+      if (part(0).isEmpty) None
+      else if (part(1).isEmpty) None
+      else Option(new Identifier(part(0), part(1)))
+    }
+  }
+
+  def toIdentifier(s: String): Identifier = {
+    val part = s.split("--")
+    new Identifier(part(0), part(1))
+  }
+
+  def toIdentifierList(theList: ObservableBuffer[String]): List[Identifier] =
+    (for (s <- theList) yield toIdentifier(s)).toList
+
+  def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] =
+    (for (s <- theList) yield s.toString()).to[ObservableBuffer]
+
 }
 
 /**
@@ -113,6 +138,13 @@ object ExternalRefForm {
       //  hashes = ObservableMap.empty[String, String]
     }
   }
+
+  def toExternalRefList(theList: ObservableBuffer[ExternalRefForm]): List[ExternalReference] =
+    (for (s <- theList) yield s.toStix).toList
+
+  def fromExternalRefList(theList: List[ExternalReference]): ObservableBuffer[ExternalRefForm] =
+    (for (s <- theList) yield ExternalRefForm.fromStix(s)).to[ObservableBuffer]
+
 }
 
 /**
@@ -138,8 +170,8 @@ object CyberConverter {
         labels ++= stix.labels.getOrElse(List())
         created_by_ref.value = stix.created_by_ref.getOrElse("").toString
         revoked.value = stix.revoked.getOrElse(false)
-        external_references ++= Utils.fromExternalRefList(stix.external_references.getOrElse(List()))
-        object_marking_refs ++= Utils.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+        external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+        object_marking_refs ++= IndicatorForm.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()
