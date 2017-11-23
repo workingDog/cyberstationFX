@@ -76,10 +76,12 @@ class CommonController(@FXML idButton: JFXButton,
       }
     }
     addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
-      val newForm = new ExternalRefForm() {
-        source_name.value = "new name"
+      if (currentForm != null) {
+        val newForm = new ExternalRefForm() {
+          source_name.value = "new name"
+        }
+        if (showExtRefDialog(newForm)) currentForm.external_references += newForm
       }
-      if (showExtRefDialog(newForm) && currentForm != null) currentForm.external_references += newForm
     })
     deleteExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
