@@ -4,6 +4,7 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
 import cyber.ExternalRefForm
+import util.Utils
 
 import scalafx.stage.Stage
 import scalafxml.core.macros.{nested, sfxml}
@@ -12,8 +13,6 @@ import scalafx.scene.input.MouseEvent
 
 
 trait ExternalRefControllerInterface {
-  def init(): Unit
-
   def setDialogStage(theStage: Stage): Unit
 
   def setExternalRef(extRef: ExternalRefForm): Unit
@@ -36,16 +35,12 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
 
   override def isOkClicked: Boolean = isOk
 
-  override def init(): Unit = {
-
-  }
-
   override def setDialogStage(theStage: Stage): Unit = {
     dialogStage = theStage
   }
 
   override def setExternalRef(extRef: ExternalRefForm): Unit = {
-    unbindAll()
+    clear()
     if (extRef != null) {
       theForm = extRef
       loadValues()
@@ -59,14 +54,14 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
   }
 
   okButton.setOnMouseClicked((_: MouseEvent) => {
-    // val toAdd = ExtRefItem(false, "xxxxxx", currentForm)
-    // externalRefsView.getItems.add(toAdd)
     isOk = true
+    clear()
     dialogStage.close()
   })
 
   cancelButton.setOnMouseClicked((_: MouseEvent) => {
     isOk = false
+    clear()
     dialogStage.close()
   })
 
@@ -75,13 +70,13 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
     urlField.setText(theForm.url.value)
     externalIdField.setText(theForm.external_id.value)
     descriptionField.setText(theForm.description.value)
-    hashesListView.getItems.foreach(item => {
-      //      item.form = theForm
-      //      if (theForm.hashes.contains(item))
-      //        item.selected.value = true
-      //      else
-      //        item.selected.value = false
-    })
+    //  hashesListView.getItems.foreach(item => {
+    //      item.form = theForm
+    //      if (theForm.hashes.contains(item))
+    //        item.selected.value = true
+    //      else
+    //        item.selected.value = false
+    //  })
   }
 
   private def unbindAll(): Unit = {
@@ -92,6 +87,14 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
       theForm.description.unbind()
       // hashes
     }
+  }
+
+  private def clear(): Unit = {
+    unbindAll()
+    sourceNameField.setText("")
+    urlField.setText("")
+    externalIdField.setText("")
+    descriptionField.setText("")
   }
 
 }

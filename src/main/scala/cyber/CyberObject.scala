@@ -102,6 +102,19 @@ class ExternalRefForm() {
 
 }
 
+object ExternalRefForm {
+
+  def fromStix(stix: ExternalReference): ExternalRefForm = {
+    new ExternalRefForm() {
+      source_name.value = stix.source_name
+      description.value = stix.description.getOrElse("")
+      url.value = stix.url.getOrElse("")
+      external_id.value = stix.external_id.getOrElse("")
+      //  hashes = ObservableMap.empty[String, String]
+    }
+  }
+}
+
 /**
   * conversions utilities
   */
@@ -125,7 +138,7 @@ object CyberConverter {
         labels ++= stix.labels.getOrElse(List())
         created_by_ref.value = stix.created_by_ref.getOrElse("").toString
         revoked.value = stix.revoked.getOrElse(false)
-    //    external_references = stix.external_references
+        external_references ++= Utils.fromExternalRefList(stix.external_references.getOrElse(List()))
         object_marking_refs ++= Utils.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
       case stix: AttackPattern => new IndicatorForm()

@@ -3,6 +3,7 @@ package util
 import java.net.URL
 
 import com.kodekutters.stix._
+import cyber.ExternalRefForm
 
 import scala.util.Random
 import scalafx.collections.ObservableBuffer
@@ -62,14 +63,18 @@ object Utils {
   }
 
   def toIdentifier(s: String): Identifier = {
-      val part = s.split("--")
-      new Identifier(part(0), part(1))
+    val part = s.split("--")
+    new Identifier(part(0), part(1))
   }
 
   def toIdentifierList(theList: ObservableBuffer[String]): List[Identifier] =
-    (for(s <- theList) yield toIdentifier(s)).toList
+    (for (s <- theList) yield toIdentifier(s)).toList
 
   def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] =
-    (for(s <- theList) yield s.toString()).to[ObservableBuffer]
+    (for (s <- theList) yield s.toString()).to[ObservableBuffer]
+
+  def fromExternalRefList(theList: List[ExternalReference]): ObservableBuffer[ExternalRefForm] =
+    (for (s <- theList) yield ExternalRefForm.fromStix(s)).to[ObservableBuffer]
+
 
 }

@@ -17,7 +17,6 @@ import scalafx.scene.control.{ListCell, TextFormatter}
 import scalafx.scene.control.cell.{CheckBoxListCell, TextFieldListCell}
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.stage.{Modality, Stage}
-import scalafx.util.StringConverter
 import scalafx.util.converter.NumberStringConverter
 import scalafxml.core.{DependenciesByType, FXMLLoader}
 import scalafxml.core.macros.{nested, sfxml}
@@ -70,7 +69,10 @@ class CommonController(@FXML idButton: JFXButton,
     // external references
     externalRefsView.cellFactory = { _ =>
       new ListCell[ExternalRefForm] {
-        item.onChange { (_, _, extRef) => if (extRef != null) text = extRef.source_name.value }
+        item.onChange { (_, _, extRef) =>
+          if (extRef != null) text = extRef.source_name.value
+          else text = ""
+        }
       }
     }
 
@@ -78,27 +80,27 @@ class CommonController(@FXML idButton: JFXButton,
       val newForm = new ExternalRefForm() {
         source_name.value = "new name"
       }
-      if (showExtRefDialog(newForm)) externalRefsView.getItems.add(newForm)
+      if (showExtRefDialog(newForm) && currentForm != null) currentForm.external_references += newForm
     })
 
     deleteExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = externalRefsView.getSelectionModel.getSelectedItem
-      externalRefsView.getItems.remove(toRemove)
+      if (currentForm != null) currentForm.external_references -= toRemove
     })
 
     // double click on a externalRefsView entry to edit the selected external reference
     externalRefsView.setOnMouseClicked((event: MouseEvent) => {
       if ((event.button == MouseButton.Primary) && (event.clickCount == 2)) {
-        showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
+        if (currentForm != null) showExtRefDialog(externalRefsView.getSelectionModel.getSelectedItem)
       }
     })
     // (event.getTarget.isInstanceOf[JFXTextField] ||
     // event.getTarget.asInstanceOf[javafx.scene.layout.StackPane].getChildren.size > 0)) {
 
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
-    addMarkingButton.setOnMouseClicked((ev: MouseEvent) => {
+    addMarkingButton.setOnMouseClicked((ev: MouseEvent) =>
       if (currentForm != null) currentForm.object_marking_refs += Utils.randName
-    })
+    )
     deleteMarkingButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = objectMarkingsView.getSelectionModel.getSelectedItem
       if (currentForm != null) currentForm.object_marking_refs -= toRemove
@@ -135,7 +137,7 @@ class CommonController(@FXML idButton: JFXButton,
         item.selected.value = false
     })
     objectMarkingsView.setItems(currentForm.object_marking_refs)
-    externalRefsView.items = currentForm.external_references
+    externalRefsView.setItems(currentForm.external_references)
     createdByField.setText(currentForm.created_by_ref.value)
     revokedField.setSelected(currentForm.revoked.value)
     idField.setText(currentForm.id.value)
@@ -155,6 +157,7 @@ class CommonController(@FXML idButton: JFXButton,
         item.form = null
         item.selected.value = false
       })
+      externalRefsView.items.unbind()
       externalRefsView.setItems(null)
       currentForm = null
     }
@@ -187,7 +190,7 @@ class CommonController(@FXML idButton: JFXButton,
   // popup the external reference editor dialog
   def showExtRefDialog(extRefForm: ExternalRefForm): Boolean =
     try {
-      // load the fxml file and create a new stage for the popup dialog
+      // load the fxml file
       val resource = CyberStationApp.getClass.getResource("forms/extRefDialog.fxml")
       if (resource == null) {
         throw new IOException("Cannot load resource: forms/extRefDialog.fxml")
@@ -201,7 +204,7 @@ class CommonController(@FXML idButton: JFXButton,
       theStage.initModality(Modality.WindowModal)
       theStage.initOwner(CyberStationApp.stage)
       theStage.setScene(scene)
-      // set the stage and external reference into the controller
+      // give the stage and external reference to the controller
       val controller = loader.getController[ExternalRefControllerInterface]()
       controller.setDialogStage(theStage)
       controller.setExternalRef(extRefForm)
@@ -214,14 +217,4 @@ class CommonController(@FXML idButton: JFXButton,
         false
     }
 
-  // for use in externalRefsView
-  val extRefStringConverter = new StringConverter[ExternalRefForm] {
-
-    def fromString(newName: String): ExternalRefForm = {
-      externalRefsView.getSelectionModel.getSelectedItem.source_name.value = newName
-      externalRefsView.getSelectionModel.getSelectedItem
-    }
-
-    def toString(bndl: ExternalRefForm): String = bndl.source_name.value
-  }
 }
