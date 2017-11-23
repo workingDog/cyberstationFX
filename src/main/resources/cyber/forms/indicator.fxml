@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.IndicatorController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.IndicatorController">
    <children>
       <VBox prefWidth="300.0" HBox.hgrow="NEVER">
          <children>
@@ -42,7 +42,7 @@
       </VBox>
       <ScrollPane HBox.hgrow="ALWAYS">
          <content>
-            <VBox prefWidth="418.0">
+            <VBox>
                <children>
                   <Label fx:id="bundleLabel" maxWidth="1.7976931348623157E308" text="Part of bundle: ">
                      <padding>
@@ -52,12 +52,12 @@
                         <Insets top="26.0" />
                      </VBox.margin>
                   </Label>
-                  <AnchorPane prefHeight="400.0" VBox.vgrow="ALWAYS">
+                  <AnchorPane VBox.vgrow="ALWAYS">
                   <children>
                      <fx:include fx:id="common" source="common.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                  <AnchorPane VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </content>

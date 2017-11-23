@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <GridPane prefHeight="239.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ExternalRefController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -45,7 +44,7 @@
       </JFXTextField>
       <JFXTextArea fx:id="descriptionField" labelFloat="true" promptText="description" wrapText="true" GridPane.columnIndex="1" GridPane.rowSpan="2">
          <GridPane.margin>
-            <Insets bottom="12.0" left="4.0" top="12.0" />
+            <Insets bottom="12.0" left="4.0" right="4.0" top="12.0" />
          </GridPane.margin>
          <opaqueInsets>
             <Insets />
@@ -56,6 +55,9 @@
             <Insets left="8.0" right="4.0" />
          </GridPane.margin>
       </JFXTextField>
-      <JFXListView fx:id="hashesListView" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <JFXListView fx:id="hashesListView" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="8.0" right="4.0" />
+         </GridPane.margin></JFXListView>
    </children>
 </GridPane>
