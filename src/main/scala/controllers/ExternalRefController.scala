@@ -4,11 +4,11 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
 import cyber.ExternalRefForm
-import util.Utils
 
 import scalafx.stage.Stage
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
+import scalafx.collections.ObservableBuffer
 import scalafx.scene.input.MouseEvent
 
 
@@ -77,6 +77,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
     //      else
     //        item.selected.value = false
     //  })
+    hashesListView.setItems(ObservableBuffer[String]("hashes to do"))
   }
 
   private def unbindAll(): Unit = {
