@@ -1,5 +1,6 @@
 package db
 
+import com.kodekutters.stix.Bundle
 import reactivemongo.api.{DefaultDB, MongoConnection, MongoDriver}
 import reactivemongo.play.json.collection.JSONCollection
 import util.Utils
@@ -110,10 +111,18 @@ object MongoDbService {
   }
 
   /**
-    * create all collections from the STIX objects type names
+    * create all collections from the STIX objects type names (including Bundle)
     */
   def createStixCollections(): Unit = {
     database.map(db => Utils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
+  }
+
+  def save(bndlList: List[Bundle]) = {
+    println("---> saving the bundles: \n" + bndlList)
+  }
+
+  def load(bndlList: List[Bundle]) = {
+    println("---> loading the bundles: \n" + bndlList)
   }
 
 }

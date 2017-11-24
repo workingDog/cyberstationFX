@@ -69,15 +69,16 @@ class IndicatorForm() extends CyberObj {
     Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
     Option(revoked.value),
     Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
-    Option(ExternalRefForm.toExternalRefList(external_references)), Option(lang.value),
-    Option(IndicatorForm.toIdentifierList(object_marking_refs)), Option(List()),
-    Option(Identifier.stringToIdentifier(created_by_ref.value)), None)
+    ExternalRefForm.toExternalRefListOpt(external_references), Option(lang.value),
+    IndicatorForm.toIdentifierListOpt(object_marking_refs), Option(List()),
+    IndicatorForm.toIdentifierOpt(created_by_ref.value), None)
+
 }
 
 object IndicatorForm {
 
   def toIdentifierOpt(s: String): Option[Identifier] = {
-    if (s.isEmpty) None
+    if (s == null || s.isEmpty) None
     else {
       val part = s.split("--")
       if (part(0).isEmpty) None
@@ -91,11 +92,20 @@ object IndicatorForm {
     new Identifier(part(0), part(1))
   }
 
-  def toIdentifierList(theList: ObservableBuffer[String]): List[Identifier] =
-    (for (s <- theList) yield toIdentifier(s)).toList
+  def toIdentifierListOpt(theList: ObservableBuffer[String]): Option[List[Identifier]] = {
+    if (theList == null)
+      None
+    else
+      Option((for (s <- theList) yield toIdentifier(s)).toList)
+  }
 
-  def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] =
-    (for (s <- theList) yield s.toString()).to[ObservableBuffer]
+  def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] = {
+    if (theList == null)
+      ObservableBuffer[String]()
+    else
+      (for (s <- theList) yield s.toString()).to[ObservableBuffer]
+  }
+
 
 }
 
@@ -139,11 +149,19 @@ object ExternalRefForm {
     }
   }
 
-  def toExternalRefList(theList: ObservableBuffer[ExternalRefForm]): List[ExternalReference] =
-    (for (s <- theList) yield s.toStix).toList
+  def toExternalRefListOpt(theList: ObservableBuffer[ExternalRefForm]): Option[List[ExternalReference]] = {
+    if (theList == null)
+      None
+    else
+      Option((for (s <- theList) yield s.toStix).toList)
+  }
 
-  def fromExternalRefList(theList: List[ExternalReference]): ObservableBuffer[ExternalRefForm] =
-    (for (s <- theList) yield ExternalRefForm.fromStix(s)).to[ObservableBuffer]
+  def fromExternalRefList(theList: List[ExternalReference]): ObservableBuffer[ExternalRefForm] = {
+    if (theList == null)
+      ObservableBuffer[ExternalRefForm]()
+    else
+      (for (s <- theList) yield ExternalRefForm.fromStix(s)).to[ObservableBuffer]
+  }
 
 }
 

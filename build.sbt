@@ -5,7 +5,7 @@ name := "cyberstation"
 
 version := "0.1"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
 version := (version in ThisBuild).value
 

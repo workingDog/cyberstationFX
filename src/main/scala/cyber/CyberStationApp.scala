@@ -5,6 +5,7 @@ import java.security.Security
 import javafx.{fxml => jfxf, scene => jfxs}
 
 import controllers.CyberStationControllerInterface
+import db.MongoDbService
 import taxii.TaxiiConnection
 
 import scalafx.Includes._
@@ -24,6 +25,8 @@ object CyberStationApp extends JFXApp {
   // needed for (SSL) TLS-1.2 in https, requires jdk1.8.0_152
   Security.setProperty("crypto.policy", "unlimited")
 
+  val dbService = MongoDbService
+
   val resource = getClass.getResource("ui/mainView.fxml")
   if (resource == null) {
     throw new IOException("Cannot load resource: ui/mainView.fxml")
@@ -41,8 +44,13 @@ object CyberStationApp extends JFXApp {
     scene = new Scene(root)
   }
 
-  // close properly before exiting
+  // save the data and close properly before exiting
   override def stopApp(): Unit = {
+    // todo --> save the current state
+
+    // save the bundles
+    dbService.save(controller.getAllBundles())
+
     TaxiiConnection.closeSystem()
     super.stopApp
     System.exit(0)

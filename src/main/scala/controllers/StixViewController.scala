@@ -12,6 +12,7 @@ trait StixViewControllerInterface {
   def setSelectedServer(theSelectedServer: StringProperty): Unit
   def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
   def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
+  def getBundleController(): BundleViewControllerInterface
 }
 
 @sfxml
@@ -43,5 +44,7 @@ class StixViewController(bundleHBox: HBox,
     theSelectedCollection.onChange { (_, oldValue, newValue) =>
     }
   }
+
+  override def getBundleController(): BundleViewControllerInterface = bundleViewController
 
 }

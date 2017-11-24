@@ -4,6 +4,7 @@ package controllers
 import javafx.fxml.FXML
 
 import com.jfoenix.controls.JFXTabPane
+import com.kodekutters.stix.Bundle
 
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
@@ -11,7 +12,7 @@ import scalafxml.core.macros.{nested, sfxml}
 
 
 trait CyberStationControllerInterface {
-
+  def getAllBundles(): List[Bundle]
 }
 
 @sfxml
@@ -35,5 +36,7 @@ class CyberStationController(mainMenu: VBox,
   // give the server info properties to the ObjectsViewController
   objectsViewController.setSelectedApiroot(serversViewController.apirootInfo)
   objectsViewController.setSelectedCollection(serversViewController.collectionInfo)
+
+  override def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
 }

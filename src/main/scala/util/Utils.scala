@@ -46,9 +46,7 @@ object Utils {
     Tool.`type`,
     Vulnerability.`type`,
     MarkingDefinition.`type`,
-    LanguageContent.`type`)
-  //  ExternalReference.`type`,
-  //  KillChainPhase.`type`,
-  //  GranularMarking.`type`)  // Identifier.`type`
+    LanguageContent.`type`,
+    Bundle.`type`)
 
 }

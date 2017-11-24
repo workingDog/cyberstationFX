@@ -37,6 +37,8 @@ trait BundleViewControllerInterface {
   def getCurrentBundle(): ReadOnlyObjectProperty[CyberBundle]
 
   def getBundleStixView(): JFXListView[CyberObj]
+
+  def getAllBundles(): List[Bundle]
 }
 
 @sfxml
@@ -241,6 +243,10 @@ class BundleViewController(bundleViewBox: VBox,
 
   def makeNameFrom(obj: CyberObj): String = {
     if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
+  }
+
+  override def getAllBundles(): List[Bundle] = {
+    (for(item <- bundlesListView.getItems) yield item.toStix).toList
   }
 
 }
