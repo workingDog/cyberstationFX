@@ -90,7 +90,7 @@ object MongoDbService {
     //  val conOpts = MongoConnectionOptions(/* connection options */)
     //  val connection4 = driver1.connection(List("localhost"), options = conOpts)
 
-    val mongoUri = "mongodb://localhost:27017/cyberstixdb"
+    val mongoUri = "mongodb://localhost:27017/cyberstix"
 
     val driver = new MongoDriver
     database = for {

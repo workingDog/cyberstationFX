@@ -5,8 +5,7 @@ import javafx.fxml.FXML
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
-import taxii.{Collection, TaxiiCollection, TaxiiConnection}
-import util.NameMaker
+import taxii.{Collection, TaxiiCollection}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.Includes._
@@ -171,7 +170,7 @@ class BundleViewController(bundleViewBox: VBox,
     bundleStixView.setDepth(1)
     bundleStixView.cellFactory = { _ =>
       new ListCell[CyberObj] {
-        item.onChange { (_, _, stix) => text = NameMaker.from(stix) }
+        item.onChange { (_, _, stix) => text = makeNameFrom(stix) }
       }
     }
     // start with a disable sendButton
@@ -238,6 +237,10 @@ class BundleViewController(bundleViewBox: VBox,
     }
 
     def toString(bndl: CyberBundle): String = bndl.name.value
+  }
+
+  def makeNameFrom(obj: CyberObj): String = {
+    if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
   }
 
 }
