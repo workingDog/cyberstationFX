@@ -4,7 +4,10 @@ java -jar /Users/ringo/stix2/taxiiclient/taxii2client/cyberstationfx/target/scal
 
 java -jar CyberStationApp.jar
 
+Error:(98, 34) No Json serializer as JsObject found for type com.kodekutters.stix.StixObj.
+ Try to implement an implicit OWrites or OFormat for this type.
 
+        theError <- stxCol.insert(stix)
 
 //    bundlesListView.cellFactory = { p => {
 //      val cell = new TextFieldListCell[CyberBundle]

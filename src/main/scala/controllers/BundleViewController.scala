@@ -5,7 +5,9 @@ import javafx.fxml.FXML
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
+import db.MongoDbService
 import taxii.{Collection, TaxiiCollection}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.Includes._
@@ -18,7 +20,6 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.VBox
 import scalafx.util.StringConverter
 import scalafxml.core.macros.sfxml
-
 
 
 trait BundleViewControllerInterface {
@@ -105,7 +106,7 @@ class BundleViewController(bundleViewBox: VBox,
       if (newValue != null) {
         taxiiCol = Option(newValue)
         val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
-        sendButton.setDisable(!newValue.can_write)
+  //      sendButton.setDisable(!newValue.can_write)
         connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
       }
       else {
@@ -143,10 +144,10 @@ class BundleViewController(bundleViewBox: VBox,
         bundleVersion.text = ""
       }
     }
-//    if (bundleList.isEmpty) {
-//      bundleList += new CyberBundle()
-//      bundlesListView.getSelectionModel.selectFirst()
-//    }
+    //    if (bundleList.isEmpty) {
+    //      bundleList += new CyberBundle()
+    //      bundlesListView.getSelectionModel.selectFirst()
+    //    }
 
     // setup the table of connection info
     wipeConnInfo()
@@ -178,7 +179,7 @@ class BundleViewController(bundleViewBox: VBox,
       }
     }
     // start with a disable sendButton
-    sendButton.setDisable(true)
+  //  sendButton.setDisable(true)
     sendButton.setOnMouseClicked((_: MouseEvent) => {
       serverSpinner.setVisible(true)
       Future {
@@ -198,6 +199,9 @@ class BundleViewController(bundleViewBox: VBox,
           col.addObjects(theBundle.toStix)
           col.conn.close()
           serverSpinner.setVisible(false)
+          // save the bundle of stix and the user log to the db
+          MongoDbService.saveServerSent(theBundle.toStix, col.basePath)
+          // todo show message on messageBar
         })
       })
     }

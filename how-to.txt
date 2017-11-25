@@ -20,11 +20,12 @@ db.createCollection("clientmsg")
 
 // to delete a collection
 db.bundles.drop()
-db.clientmsg.drop()
+db.indicator.drop()
 
 // to list what is in a collection
 db.bundles.find().pretty()
-db.clientmsg.find().pretty()
+db.userLog.find().pretty()
+db.indicator.find().pretty()
 ---------------------------------------------
 
 

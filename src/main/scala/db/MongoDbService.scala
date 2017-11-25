@@ -1,17 +1,15 @@
 package db
 
-import com.kodekutters.stix.{Bundle, Timestamp}
-import play.api.libs.json.Json
+import util.Utils
+import play.api.libs.json._
+import com.kodekutters.stix.StixObj._
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.kodekutters.stix._
 import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.api._
-import reactivemongo.play.json.collection.JSONCollection
-import util.Utils
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
-import scala.language.{implicitConversions, postfixOps}
 import reactivemongo.play.json._
-
+import reactivemongo.play.json.collection._
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import cyber.{BundleInfo, CyberBundle}
@@ -24,18 +22,31 @@ import scala.util.{Failure, Success}
   */
 object MongoDbService {
 
+  // needed for StixObj json write
+  implicit val stixObjFormats = new OFormat[StixObj] {
+    override def reads(json: JsValue): JsResult[StixObj] = fmt.reads(json)
+    override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
+  }
+
   val config: Config = ConfigFactory.load
 
   var database: Future[DefaultDB] = _
+
+  // todo need to get rid of this config
 
   private var bundlesCol = config.getString("mongo.collection.bundles")
   bundlesCol = if (bundlesCol.isEmpty || bundlesCol == null) "bundles" else bundlesCol
   private var bundlesInf = config.getString("mongo.collection.bundlesInfo")
   bundlesInf = if (bundlesInf.isEmpty || bundlesInf == null) "bundlesInfo" else bundlesInf
+  private var userLogCol = config.getString("mongo.collection.userLog")
+  println("----> userLogCol=" + userLogCol)
+  userLogCol = if (userLogCol.isEmpty || userLogCol == null) "userLog" else userLogCol
 
   def bundlesF: Future[JSONCollection] = database.map(_.collection[JSONCollection](bundlesCol))
 
   def bundlesInfoF: Future[JSONCollection] = database.map(_.collection[JSONCollection](bundlesInf))
+
+  def userLogF: Future[JSONCollection] = database.map(_.collection[JSONCollection](userLogCol))
 
   val mongoUri = config.getString("mongodb.uri")
 
@@ -64,6 +75,33 @@ object MongoDbService {
     */
   def createStixCollections(): Unit = {
     database.map(db => Utils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
+  }
+
+  def saveServerSent(bundle: Bundle, colPath: String): Unit = {
+    // save the bundle of stix
+    saveBundleAsStixs(bundle)
+    // save the log to the db
+    saveUserLog(bundle, colPath)
+  }
+
+  def saveUserLog(bundle: Bundle, colPath: String): Unit = {
+    for (stix <- bundle.objects) {
+      // todo user-id
+      val userlog = UserLog("user_id", bundle.id.toString(), stix.id.toString(), Timestamp.now().toString(), colPath)
+      for {
+        userCol <- userLogF
+        theError <- userCol.insert(userlog)
+      } yield theError
+    }
+  }
+
+  def saveBundleAsStixs(bundle: Bundle): Unit = {
+    for (stix <- bundle.objects) {
+      for {
+        stxCol <- database.map(_.collection[JSONCollection](stix.`type`))
+        theError <- stxCol.insert(stix)
+      } yield theError
+    }
   }
 
   def saveBundle(bundle: Bundle): Future[WriteResult] = for {
