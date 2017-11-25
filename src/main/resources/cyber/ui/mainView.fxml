@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -23,7 +24,23 @@
    <bottom>
       <Pane prefHeight="38.0" prefWidth="711.0">
          <children>
-            <Label fx:id="messageLabel" layoutX="14.0" layoutY="11.0" prefHeight="18.0" prefWidth="338.0" />
+            <HBox prefHeight="38.0" prefWidth="1031.0" spacing="22.0">
+               <children>
+                  <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" prefHeight="33.0">
+                     <padding>
+                        <Insets left="6.0" />
+                     </padding>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <JFXSpinner fx:id="msgBarSpinner">
+                     <HBox.margin>
+                        <Insets left="22.0" />
+                     </HBox.margin>
+                  </JFXSpinner>
+               </children>
+            </HBox>
          </children></Pane>
    </bottom>
    <center>

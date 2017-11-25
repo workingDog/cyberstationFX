@@ -17,6 +17,9 @@ java -jar CyberStationApp.jar
 //    }
 //    }
 
+    //  println(":::press a key to stop: ")
+    //  var inx = scala.io.StdIn.readLine()
+
 
  <fx:include source="ServersTab.fxml" fx:id="serversView"/>
 

@@ -3,7 +3,7 @@ package controllers
 
 import javafx.fxml.FXML
 
-import com.jfoenix.controls.JFXTabPane
+import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import com.kodekutters.stix.Bundle
 import cyber.CyberBundle
 
@@ -15,6 +15,8 @@ import scalafxml.core.macros.{nested, sfxml}
 trait CyberStationControllerInterface {
   def getAllBundles(): List[CyberBundle]
   def setBundles(bundleList: List[CyberBundle])
+  def messageBar(): Label
+  def messageBarSpin(): JFXSpinner
 }
 
 @sfxml
@@ -23,6 +25,7 @@ class CyberStationController(mainMenu: VBox,
                              messageLabel: Label,
                              serversView: HBox,
                              objectsView: VBox,
+                             @FXML msgBarSpinner: JFXSpinner,
                              @FXML stixView: JFXTabPane,
                              @nested[ObjectsViewController] objectsViewController: ObjectsViewControllerInterface,
                              @nested[MainMenuController] mainMenuController: MainMenuControllerInterface,
@@ -43,4 +46,8 @@ class CyberStationController(mainMenu: VBox,
 
   override def setBundles(bundleList: List[CyberBundle]): Unit =
     stixViewController.getBundleController().setBundles(bundleList)
+
+  override def messageBar(): Label = messageLabel
+
+  override def messageBarSpin(): JFXSpinner = msgBarSpinner
 }

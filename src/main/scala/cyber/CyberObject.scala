@@ -1,7 +1,5 @@
 package cyber
 
-import java.util.UUID
-
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json.Json
 import util.Utils
@@ -34,7 +32,7 @@ trait CyberObj {
 }
 
 /**
-  * a Bundle form
+  * a Cyber Bundle form
   */
 class CyberBundle() {
   val name = StringProperty("bundle_" + Utils.randDigits)
@@ -73,7 +71,14 @@ object CyberBundle {
 
 }
 
-// to store the bundle name and extra info
+/**
+  * to store the bundle name and extra info
+  *
+  * @param user_id   the user id of this session
+  * @param bundle_id the bundle id stored
+  * @param name      the name of the bundle
+  * @param timestamp the ime at which this info was put in the database
+  */
 case class BundleInfo(user_id: String, bundle_id: String, name: String, timestamp: String)
 
 object BundleInfo {
@@ -107,42 +112,8 @@ class IndicatorForm() extends CyberObj {
     Option(revoked.value),
     Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     ExternalRefForm.toExternalRefListOpt(external_references), Option(lang.value),
-    IndicatorForm.toIdentifierListOpt(object_marking_refs), Option(List()),
-    IndicatorForm.toIdentifierOpt(created_by_ref.value), None)
-
-}
-
-object IndicatorForm {
-
-  def toIdentifierOpt(s: String): Option[Identifier] = {
-    if (s == null || s.isEmpty) None
-    else {
-      val part = s.split("--")
-      if (part(0).isEmpty) None
-      else if (part(1).isEmpty) None
-      else Option(new Identifier(part(0), part(1)))
-    }
-  }
-
-  def toIdentifier(s: String): Identifier = {
-    val part = s.split("--")
-    new Identifier(part(0), part(1))
-  }
-
-  def toIdentifierListOpt(theList: ObservableBuffer[String]): Option[List[Identifier]] = {
-    if (theList == null)
-      None
-    else
-      Option((for (s <- theList) yield toIdentifier(s)).toList)
-  }
-
-  def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] = {
-    if (theList == null)
-      ObservableBuffer[String]()
-    else
-      (for (s <- theList) yield s.toString()).to[ObservableBuffer]
-  }
-
+    CyberConverter.toIdentifierListOpt(object_marking_refs), Option(List()),
+    CyberConverter.toIdentifierOpt(created_by_ref.value), None)
 
 }
 
@@ -226,7 +197,7 @@ object CyberConverter {
         created_by_ref.value = stix.created_by_ref.getOrElse("").toString
         revoked.value = stix.revoked.getOrElse(false)
         external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
-        object_marking_refs ++= IndicatorForm.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+        object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
       case stix: AttackPattern => new IndicatorForm()
       case stix: Identity => new IndicatorForm()
@@ -245,6 +216,35 @@ object CyberConverter {
       case stix: LanguageContent => new IndicatorForm()
       case _ => new IndicatorForm()
     }
+  }
+
+  def toIdentifierOpt(s: String): Option[Identifier] = {
+    if (s == null || s.isEmpty) None
+    else {
+      val part = s.split("--")
+      if (part(0).isEmpty) None
+      else if (part(1).isEmpty) None
+      else Option(new Identifier(part(0), part(1)))
+    }
+  }
+
+  def toIdentifier(s: String): Identifier = {
+    val part = s.split("--")
+    new Identifier(part(0), part(1))
+  }
+
+  def toIdentifierListOpt(theList: ObservableBuffer[String]): Option[List[Identifier]] = {
+    if (theList == null)
+      None
+    else
+      Option((for (s <- theList) yield toIdentifier(s)).toList)
+  }
+
+  def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] = {
+    if (theList == null)
+      ObservableBuffer[String]()
+    else
+      (for (s <- theList) yield s.toString()).to[ObservableBuffer]
   }
 
 }

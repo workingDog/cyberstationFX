@@ -9,7 +9,7 @@ import db.MongoDbService
 import taxii.TaxiiConnection
 
 import scalafx.Includes._
-import scalafx.application.JFXApp
+import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.{Parent, Scene}
 import scalafxml.core.{DependenciesByType, FXMLLoader, FXMLView, NoDependencyResolver}
@@ -18,6 +18,7 @@ import scala.util.{Failure, Success}
 import scala.language.{implicitConversions, postfixOps}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scalafx.scene.paint.Color
 
 
 /**
@@ -48,21 +49,32 @@ object CyberStationApp extends JFXApp {
     scene = new Scene(root)
   }
 
+  showThis("Trying to connect to database: " + MongoDbService.mongoUri)
+  spinThis(true)
+
   // try to connect to the mongo db
-  try {
+  Future(try {
     // start a db connection
     MongoDbService.init()
     // wait here for the connection to complete
     Await.result(MongoDbService.database, 20 seconds)
     // load the data
     MongoDbService.loadCyberBundles().onComplete {
-      case Success(theList) => controller.setBundles(theList)
-      case Failure(err) => println("---> bundles loading failure: " + err)
+      case Success(theList) =>
+        showThis("Connected to database: " + MongoDbService.mongoUri)
+        controller.setBundles(theList)
+      case Failure(err) =>
+        showThis("Fail to load data from database: " + MongoDbService.mongoUri)
+        println("---> bundles loading failure: " + err)
     }
+    spinThis(false)
     hasDB = true
   } catch {
-    case ex => hasDB = false
-  }
+    case ex: Throwable =>
+      showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved")
+      spinThis(false)
+      hasDB = false
+  })
 
   // save the data and close properly before exiting
   private def stopAppWithDB(): Unit = {
@@ -86,6 +98,10 @@ object CyberStationApp extends JFXApp {
     }
   }
 
+  private def showThis(text: String) = Platform.runLater(() => {controller.messageBar().setText(text)})
+
+  private def spinThis(onof: Boolean) = Platform.runLater(() => {controller.messageBarSpin().setVisible(onof)})
+
   // close properly before exiting
   override def stopApp(): Unit = {
     if (hasDB) {
@@ -93,12 +109,11 @@ object CyberStationApp extends JFXApp {
       stopAppWithDB()
     }
     else {
+      // just close
       TaxiiConnection.closeSystem()
       super.stopApp
       System.exit(0)
     }
-    //  println(":::press a key to stop: ")
-    //  var inx = scala.io.StdIn.readLine()
   }
 
 }
