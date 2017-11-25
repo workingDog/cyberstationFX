@@ -1,10 +1,8 @@
-
 package controllers
 
 import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
-import com.kodekutters.stix.Bundle
 import cyber.CyberBundle
 
 import scalafx.scene.control._

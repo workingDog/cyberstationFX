@@ -11,7 +11,7 @@ import taxii.TaxiiConnection
 import scalafx.Includes._
 import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.{Parent, Scene}
+import scalafx.scene.Scene
 import scalafxml.core.{DependenciesByType, FXMLLoader, FXMLView, NoDependencyResolver}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -49,7 +49,7 @@ object CyberStationApp extends JFXApp {
     scene = new Scene(root)
   }
 
-  showThis("Trying to connect to database: " + MongoDbService.mongoUri)
+  showThis("Trying to connect to database: " + MongoDbService.mongoUri, Color.Black)
   spinThis(true)
 
   // try to connect to the mongo db
@@ -61,17 +61,17 @@ object CyberStationApp extends JFXApp {
     // load the data
     MongoDbService.loadCyberBundles().onComplete {
       case Success(theList) =>
-        showThis("Connected to database: " + MongoDbService.mongoUri)
+        showThis("Connected to database: " + MongoDbService.mongoUri, Color.Black)
         controller.setBundles(theList)
       case Failure(err) =>
-        showThis("Fail to load data from database: " + MongoDbService.mongoUri)
+        showThis("Fail to load data from database: " + MongoDbService.mongoUri, Color.Red)
         println("---> bundles loading failure: " + err)
     }
     spinThis(false)
     hasDB = true
   } catch {
     case ex: Throwable =>
-      showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved")
+      showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved", Color.Red)
       spinThis(false)
       hasDB = false
   })
@@ -98,7 +98,10 @@ object CyberStationApp extends JFXApp {
     }
   }
 
-  private def showThis(text: String) = Platform.runLater(() => {controller.messageBar().setText(text)})
+  private def showThis(text: String, color: Color) = Platform.runLater(() => {
+    controller.messageBar().setTextFill(color)
+    controller.messageBar().setText(text)
+  })
 
   private def spinThis(onof: Boolean) = Platform.runLater(() => {controller.messageBarSpin().setVisible(onof)})
 
