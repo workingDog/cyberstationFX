@@ -38,7 +38,9 @@ trait BundleViewControllerInterface {
 
   def getBundleStixView(): JFXListView[CyberObj]
 
-  def getAllBundles(): List[Bundle]
+  def getAllBundles(): List[CyberBundle]
+
+  def setBundles(theBundles: List[CyberBundle])
 }
 
 @sfxml
@@ -141,10 +143,10 @@ class BundleViewController(bundleViewBox: VBox,
         bundleVersion.text = ""
       }
     }
-    if (bundleList.isEmpty) {
-      bundleList += new CyberBundle()
-      bundlesListView.getSelectionModel.selectFirst()
-    }
+//    if (bundleList.isEmpty) {
+//      bundleList += new CyberBundle()
+//      bundlesListView.getSelectionModel.selectFirst()
+//    }
 
     // setup the table of connection info
     wipeConnInfo()
@@ -245,9 +247,9 @@ class BundleViewController(bundleViewBox: VBox,
     if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
   }
 
-  override def getAllBundles(): List[Bundle] = {
-    (for(item <- bundlesListView.getItems) yield item.toStix).toList
-  }
+  override def getAllBundles(): List[CyberBundle] = bundlesListView.getItems.toList
+
+  override def setBundles(theBundles: List[CyberBundle]): Unit = bundleList ++= theBundles
 
 }
 

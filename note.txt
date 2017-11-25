@@ -1,10 +1,10 @@
 
-// userlog info storage
-
+// userlog
 userid, time saved into db, bundle id, stix object id,
 time sent to server, server/api-root/collection_id info,
 
-
+// bundleInfo
+userid, time saved into db, bundle id, bundle name
 
 
 

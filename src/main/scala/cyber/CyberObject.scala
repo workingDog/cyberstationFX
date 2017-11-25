@@ -1,6 +1,9 @@
 package cyber
 
-import com.kodekutters.stix._
+import java.util.UUID
+
+import com.kodekutters.stix.{Bundle, _}
+import play.api.libs.json.Json
 import util.Utils
 
 import scala.collection.mutable.ListBuffer
@@ -44,6 +47,40 @@ class CyberBundle() {
     val stixList = (for (obj <- objects) yield obj.toStix).to[ListBuffer]
     new Bundle(this.`type`.value, Identifier.stringToIdentifier(this.id.value), this.spec_version.value, stixList)
   }
+}
+
+object CyberBundle {
+
+  def fromStix(stix: Bundle): CyberBundle = {
+    new CyberBundle() {
+      name.value = "no-name"
+      `type`.value = stix.`type`
+      id.value = stix.id.toString()
+      spec_version.value = stix.spec_version
+      objects ++= (for (obj <- stix.objects) yield CyberConverter.toCyberObj(obj))
+    }
+  }
+
+  def fromStix(stix: Bundle, bndlName: String): CyberBundle = {
+    new CyberBundle() {
+      name.value = bndlName
+      `type`.value = stix.`type`
+      id.value = stix.id.toString()
+      spec_version.value = stix.spec_version
+      objects ++= (for (obj <- stix.objects) yield CyberConverter.toCyberObj(obj))
+    }
+  }
+
+}
+
+// to store the bundle name and extra info
+case class BundleInfo(user_id: String, bundle_id: String, name: String, timestamp: String)
+
+object BundleInfo {
+  val `type` = "bundleInfo"
+  implicit val fmt = Json.format[BundleInfo]
+
+  def emptyInfo() = new BundleInfo("", "", "", "")
 }
 
 // Indicator, ObservedData, Relationship, Sighting, LanguageContent, Bundle

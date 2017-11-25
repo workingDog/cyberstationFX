@@ -15,15 +15,15 @@ use orange
 show collections
 
 // to create a collection
-db.createCollection("accounts")
+db.createCollection("bundles")
 db.createCollection("clientmsg")
 
 // to delete a collection
-db.accounts.drop()
+db.bundles.drop()
 db.clientmsg.drop()
 
 // to list what is in a collection
-db.accounts.find().pretty()
+db.bundles.find().pretty()
 db.clientmsg.find().pretty()
 ---------------------------------------------
 

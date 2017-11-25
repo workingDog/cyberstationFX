@@ -5,6 +5,7 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.JFXTabPane
 import com.kodekutters.stix.Bundle
+import cyber.CyberBundle
 
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
@@ -12,7 +13,8 @@ import scalafxml.core.macros.{nested, sfxml}
 
 
 trait CyberStationControllerInterface {
-  def getAllBundles(): List[Bundle]
+  def getAllBundles(): List[CyberBundle]
+  def setBundles(bundleList: List[CyberBundle])
 }
 
 @sfxml
@@ -39,4 +41,6 @@ class CyberStationController(mainMenu: VBox,
 
   override def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
+  override def setBundles(bundleList: List[CyberBundle]): Unit =
+    stixViewController.getBundleController().setBundles(bundleList)
 }
