@@ -4,7 +4,9 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import cyber.CyberBundle
+import taxii.TaxiiCollection
 
+import scalafx.beans.property.{StringProperty, ObjectProperty}
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
 import scalafxml.core.macros.{nested, sfxml}
@@ -12,9 +14,18 @@ import scalafxml.core.macros.{nested, sfxml}
 
 trait CyberStationControllerInterface {
   def getAllBundles(): List[CyberBundle]
+
   def setBundles(bundleList: List[CyberBundle])
+
   def messageBar(): Label
+
   def messageBarSpin(): JFXSpinner
+
+  def getSelectedServer(): StringProperty
+
+  def getSelectedApiroot(): StringProperty
+
+  def getSelectedCollection(): ObjectProperty[TaxiiCollection]
 }
 
 @sfxml
@@ -31,16 +42,17 @@ class CyberStationController(mainMenu: VBox,
                              @nested[StixViewController] stixViewController: StixViewControllerInterface)
   extends CyberStationControllerInterface {
 
-  // give the server info properties to the stixViewController
-  stixViewController.setSelectedServer(serversViewController.serverInfo)
-  stixViewController.setSelectedApiroot(serversViewController.apirootInfo)
-  stixViewController.setSelectedCollection(serversViewController.collectionInfo)
+  override def getSelectedServer() = serversViewController.serverInfo
 
+  override def getSelectedApiroot() = serversViewController.apirootInfo
+
+  override def getSelectedCollection() = serversViewController.collectionInfo
+
+  // give this controller to the stixViewController
   stixViewController.setCyberStationController(this)
 
-  // give the server info properties to the ObjectsViewController
-  objectsViewController.setSelectedApiroot(serversViewController.apirootInfo)
-  objectsViewController.setSelectedCollection(serversViewController.collectionInfo)
+  // give this controller to the ObjectsViewController
+  objectsViewController.setCyberStationController(this)
 
   override def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 

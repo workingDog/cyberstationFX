@@ -228,7 +228,7 @@ object CyberConverter {
     }
   }
 
-  def toIdentifier(s: String): Identifier = {
+  private def toIdentifier(s: String): Identifier = {
     val part = s.split("--")
     new Identifier(part(0), part(1))
   }
@@ -236,8 +236,18 @@ object CyberConverter {
   def toIdentifierListOpt(theList: ObservableBuffer[String]): Option[List[Identifier]] = {
     if (theList == null)
       None
-    else
-      Option((for (s <- theList) yield toIdentifier(s)).toList)
+    else {
+      val identifierList = mutable.ListBuffer[Identifier]()
+      for (s <- theList) {
+        try {
+          val ident = toIdentifier(s)
+          identifierList += ident
+        } catch {
+          case x: Throwable => println("---> incorrect identifier removed: " + s)
+        }
+      }
+      Option(identifierList.toList)
+    }
   }
 
   def fromIdentifierList(theList: List[Identifier]): ObservableBuffer[String] = {

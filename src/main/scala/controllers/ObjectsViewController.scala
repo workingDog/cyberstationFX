@@ -9,7 +9,6 @@ import taxii.{Collection, TaxiiCollection}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalafx.application.Platform
 import scalafxml.core.macros.sfxml
-import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control.{Label, TableColumn, TableView}
@@ -18,9 +17,7 @@ import scalafx.scene.control.{Label, TableColumn, TableView}
 trait ObjectsViewControllerInterface {
   def init(): Unit
 
-  def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
-
-  def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
 }
 
 @sfxml
@@ -32,18 +29,6 @@ class ObjectsViewController(objCountLabel: Label,
   var apirootInfo = ""
 
   init()
-
-  override def setSelectedApiroot(theSelectedApiroot: StringProperty) {
-    theSelectedApiroot.onChange { (_, oldValue, newValue) =>
-      apirootInfo = newValue
-    }
-  }
-
-  override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
-    theSelectedCollection.onChange { (_, oldValue, newValue) =>
-      getObjects(newValue)
-    }
-  }
 
   override def init(): Unit = {
     objSpinner.setVisible(false)
@@ -83,6 +68,15 @@ class ObjectsViewController(objCountLabel: Label,
         editable = false
         cellValueFactory = _.value.id
       })
+  }
+
+  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+    cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) =>
+      apirootInfo = newValue
+    }
+    cyberStationController.getSelectedCollection().onChange { (_, oldValue, newValue) =>
+      getObjects(newValue)
+    }
   }
 
   def getObjects(taxiiCol: TaxiiCollection): Unit = {

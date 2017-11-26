@@ -39,7 +39,6 @@ object MongoDbService {
   private var bundlesInf = config.getString("mongo.collection.bundlesInfo")
   bundlesInf = if (bundlesInf.isEmpty || bundlesInf == null) "bundlesInfo" else bundlesInf
   private var userLogCol = config.getString("mongo.collection.userLog")
-  println("----> userLogCol=" + userLogCol)
   userLogCol = if (userLogCol.isEmpty || userLogCol == null) "userLog" else userLogCol
 
   def bundlesF: Future[JSONCollection] = database.map(_.collection[JSONCollection](bundlesCol))

@@ -4,7 +4,6 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
-import cyber.CyberStationApp.controller
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
 import db.MongoDbService
 import taxii.{Collection, TaxiiCollection}
@@ -13,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.Includes._
 import scalafx.application.Platform
-import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty, StringProperty}
+import scalafx.beans.property.ReadOnlyObjectProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control.{Label, ListCell, TableColumn, TableView}
@@ -27,12 +26,6 @@ import scalafxml.core.macros.sfxml
 
 trait BundleViewControllerInterface {
   def init(): Unit
-
-  def setSelectedServer(theSelectedServer: StringProperty): Unit
-
-  def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
-
-  def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
 
   def addStixToBundle(stix: CyberObj)
 
@@ -87,40 +80,6 @@ class BundleViewController(bundleViewBox: VBox,
   override def removeStixFromBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects -= stix
-  }
-
-  override def setSelectedServer(theSelectedServer: StringProperty) {
-    theSelectedServer.onChange { (_, oldValue, newValue) =>
-      connInfo.update(0, new InfoTableEntry("Server", newValue))
-    }
-  }
-
-  override def setSelectedApiroot(theSelectedApiroot: StringProperty) {
-    theSelectedApiroot.onChange { (_, oldValue, newValue) => {
-      if (newValue != null) {
-        taxiiApiroot = Option(newValue)
-        connInfo.update(1, new InfoTableEntry("Api root", newValue))
-      } else {
-        taxiiApiroot = None
-      }
-    }
-    }
-  }
-
-  override def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]) {
-    theSelectedCollection.onChange { (_, oldValue, newValue) =>
-      if (newValue != null) {
-        taxiiCol = Option(newValue)
-        val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
-        //      sendButton.setDisable(!newValue.can_write)
-        connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
-      }
-      else {
-        taxiiCol = None
-        sendButton.setDisable(true)
-        connInfo.update(2, new InfoTableEntry("Collection", ""))
-      }
-    }
   }
 
   override def init() {
@@ -265,8 +224,36 @@ class BundleViewController(bundleViewBox: VBox,
 
   override def setBundles(theBundles: List[CyberBundle]): Unit = bundleList ++= theBundles
 
-  override def setCyberStationController(cyberController: CyberStationControllerInterface) = {
+  override def setCyberStationController(cyberController: CyberStationControllerInterface): Unit = {
     cyberStationController = cyberController
+
+    cyberStationController.getSelectedServer().onChange { (_, oldValue, newValue) =>
+      connInfo.update(0, new InfoTableEntry("Server", newValue))
+    }
+
+    cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) => {
+      if (newValue != null) {
+        taxiiApiroot = Option(newValue)
+        connInfo.update(1, new InfoTableEntry("Api root", newValue))
+      } else {
+        taxiiApiroot = None
+      }
+    }
+    }
+
+    cyberStationController.getSelectedCollection().onChange { (_, oldValue, newValue) =>
+      if (newValue != null) {
+        taxiiCol = Option(newValue)
+        val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
+        //      sendButton.setDisable(!newValue.can_write)
+        connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
+      }
+      else {
+        taxiiCol = None
+        sendButton.setDisable(true)
+        connInfo.update(2, new InfoTableEntry("Collection", ""))
+      }
+    }
   }
 
   private def showThis(text: String, color: Color) = Platform.runLater(() => {
