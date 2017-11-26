@@ -6,10 +6,11 @@ import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
 import db.MongoDbService
-import taxii.{Collection, TaxiiCollection}
+import taxii.{Collection, TaxiiCollection, TaxiiStatus}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 import scalafx.Includes._
 import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
@@ -179,7 +180,7 @@ class BundleViewController(bundleViewBox: VBox,
       }
     }
     // start with a disable sendButton
-  //  sendButton.setDisable(true)
+    //  sendButton.setDisable(true)
     sendButton.setOnMouseClicked((_: MouseEvent) => {
       serverSpinner.setVisible(true)
       Future {
@@ -196,9 +197,11 @@ class BundleViewController(bundleViewBox: VBox,
       taxiiCol.map(colInfo => {
         taxiiApiroot.map(apiroot => {
           val col = Collection(colInfo, apiroot)
-          col.addObjects(theBundle.toStix)
-          col.conn.close()
-          serverSpinner.setVisible(false)
+          col.addObjects(theBundle.toStix).map(status => {
+            println("----> server status: " + status.getOrElse("bundle could not be sent"))
+            col.conn.close()
+            serverSpinner.setVisible(false)
+          })
           // save the bundle of stix and the user log to the db
           MongoDbService.saveServerSent(theBundle.toStix, col.basePath)
           // todo show message on messageBar
