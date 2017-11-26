@@ -4,7 +4,7 @@ import util.Utils
 import play.api.libs.json._
 import com.kodekutters.stix.StixObj._
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.kodekutters.stix._
 import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
@@ -15,7 +15,8 @@ import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{BundleInfo, CyberBundle}
 
 import scala.util.{Failure, Success}
-
+import scala.language.{implicitConversions, postfixOps}
+import scala.concurrent.duration._
 
 /**
   * the MongoDbService support
@@ -58,23 +59,27 @@ object MongoDbService {
     * initialise this singleton
     */
   def init(): Unit = {
-    println("trying to connect to: " + mongoUri)
-    val driver = new MongoDriver()
-    database = for {
-      uri <- Future.fromTry(MongoConnection.parseURI(mongoUri))
-      con = driver.connection(uri)
-      dn <- Future(uri.db.get)
-      db <- con.database(dn)
-    } yield db
-    database.onComplete {
-      case Success(theDB) => println(s"mongodb connected to: $theDB")
-      case Failure(err) => println(s"mongodb fail to connect, error: $err")
+    try {
+      println("trying to connect to: " + mongoUri)
+      val driver = new MongoDriver()
+      database = for {
+        uri <- Future.fromTry(MongoConnection.parseURI(mongoUri))
+        con = driver.connection(uri)
+        dn <- Future(uri.db.get)
+        db <- con.database(dn)
+      } yield db
+      database.onComplete {
+        case Success(theDB) => hasDB = true; println(s"mongodb connected to: $theDB")
+        case Failure(err) => hasDB = false; println(s"mongodb fail to connect, error: $err")
+      }
+    } catch {
+      case ex: Throwable => hasDB = false
     }
+    // wait here for the connection to complete
+    Await.result(MongoDbService.database, 20 seconds)
   }
 
   def close(): Unit = database.map(db => db.connection.close())
-
-  def hasDB(hasIt: Boolean): Unit = hasDB = hasIt
 
   /**
     * create all collections from the STIX objects type names (including Bundle)

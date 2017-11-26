@@ -16,8 +16,7 @@ import scalafxml.core.{DependenciesByType, FXMLLoader, FXMLView, NoDependencyRes
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 import scala.language.{implicitConversions, postfixOps}
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
+import scala.concurrent.Future
 import scalafx.scene.paint.Color
 
 
@@ -30,9 +29,6 @@ object CyberStationApp extends JFXApp {
 
   // needed for (SSL) TLS-1.2 in https, requires jdk1.8.0_152
   Security.setProperty("crypto.policy", "unlimited")
-
-  // determine if have a db
-  var hasDB = false
 
   // create the application
   val resource = getClass.getResource("ui/mainView.fxml")
@@ -55,9 +51,8 @@ object CyberStationApp extends JFXApp {
   // try to connect to the mongo db
   Future(try {
     // start a db connection
+    // will wait here for the connection to complete or throw an exception
     MongoDbService.init()
-    // wait here for the connection to complete
-    Await.result(MongoDbService.database, 20 seconds)
     // load the data
     MongoDbService.loadCyberBundles().onComplete {
       case Success(theList) =>
@@ -68,14 +63,10 @@ object CyberStationApp extends JFXApp {
         println("---> bundles loading failure: " + err)
     }
     spinThis(false)
-    hasDB = true
-    MongoDbService.hasDB(true)
   } catch {
     case ex: Throwable =>
       showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved", Color.Red)
       spinThis(false)
-      hasDB = false
-      MongoDbService.hasDB(false)
   })
 
   // save the data and close properly before exiting
@@ -109,7 +100,7 @@ object CyberStationApp extends JFXApp {
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    if (hasDB) {
+    if (MongoDbService.hasDB) {
       // save the data and close
       stopAppWithDB()
     }
