@@ -36,6 +36,8 @@ class CyberStationController(mainMenu: VBox,
   stixViewController.setSelectedApiroot(serversViewController.apirootInfo)
   stixViewController.setSelectedCollection(serversViewController.collectionInfo)
 
+  stixViewController.setCyberStationController(this)
+
   // give the server info properties to the ObjectsViewController
   objectsViewController.setSelectedApiroot(serversViewController.apirootInfo)
   objectsViewController.setSelectedCollection(serversViewController.collectionInfo)

@@ -4,14 +4,15 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
+import cyber.CyberStationApp.controller
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
 import db.MongoDbService
-import taxii.{Collection, TaxiiCollection, TaxiiStatus}
+import taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 import scalafx.Includes._
+import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
@@ -19,6 +20,7 @@ import scalafx.scene.control.{Label, ListCell, TableColumn, TableView}
 import scalafx.scene.control.cell.TextFieldListCell
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.VBox
+import scalafx.scene.paint.Color
 import scalafx.util.StringConverter
 import scalafxml.core.macros.sfxml
 
@@ -43,6 +45,8 @@ trait BundleViewControllerInterface {
   def getAllBundles(): List[CyberBundle]
 
   def setBundles(theBundles: List[CyberBundle])
+
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface)
 }
 
 @sfxml
@@ -67,6 +71,7 @@ class BundleViewController(bundleViewBox: VBox,
   val connInfo = ObservableBuffer[InfoTableEntry]()
   var taxiiApiroot: Option[String] = None
   var taxiiCol: Option[TaxiiCollection] = None
+  var cyberStationController: CyberStationControllerInterface = null
 
   init()
 
@@ -107,7 +112,7 @@ class BundleViewController(bundleViewBox: VBox,
       if (newValue != null) {
         taxiiCol = Option(newValue)
         val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
-  //      sendButton.setDisable(!newValue.can_write)
+        //      sendButton.setDisable(!newValue.can_write)
         connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
       }
       else {
@@ -198,13 +203,15 @@ class BundleViewController(bundleViewBox: VBox,
         taxiiApiroot.map(apiroot => {
           val col = Collection(colInfo, apiroot)
           col.addObjects(theBundle.toStix).map(status => {
-            println("----> server status: " + status.getOrElse("bundle could not be sent"))
+            println("----> status: " + status.getOrElse(theBundle.name.value + " could not be sent to the server"))
+            showThis("status: " + status.getOrElse(theBundle.name.value + " could not be sent to the server"), Color.Red)
             col.conn.close()
             serverSpinner.setVisible(false)
           })
           // save the bundle of stix and the user log to the db
           MongoDbService.saveServerSent(theBundle.toStix, col.basePath)
-          // todo show message on messageBar
+          // show message on messageBar
+          showThis(theBundle.name.value + " sent to the server", Color.Black)
         })
       })
     }
@@ -257,6 +264,17 @@ class BundleViewController(bundleViewBox: VBox,
   override def getAllBundles(): List[CyberBundle] = bundlesListView.getItems.toList
 
   override def setBundles(theBundles: List[CyberBundle]): Unit = bundleList ++= theBundles
+
+  override def setCyberStationController(cyberController: CyberStationControllerInterface) = {
+    cyberStationController = cyberController
+  }
+
+  private def showThis(text: String, color: Color) = Platform.runLater(() => {
+    if (cyberStationController != null) {
+      cyberStationController.messageBar().setTextFill(color)
+      cyberStationController.messageBar().setText(text)
+    }
+  })
 
 }
 

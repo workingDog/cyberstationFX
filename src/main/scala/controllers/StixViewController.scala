@@ -13,6 +13,8 @@ trait StixViewControllerInterface {
   def setSelectedApiroot(theSelectedApiroot: StringProperty): Unit
   def setSelectedCollection(theSelectedCollection: ObjectProperty[TaxiiCollection]): Unit
   def getBundleController(): BundleViewControllerInterface
+
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
 }
 
 @sfxml
@@ -46,5 +48,9 @@ class StixViewController(bundleHBox: HBox,
   }
 
   override def getBundleController(): BundleViewControllerInterface = bundleViewController
+
+  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+    bundleViewController.setCyberStationController(cyberStationController)
+  }
 
 }
