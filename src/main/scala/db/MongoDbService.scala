@@ -3,6 +3,7 @@ package db
 import util.Utils
 import play.api.libs.json._
 import com.kodekutters.stix.StixObj._
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.kodekutters.stix._
@@ -10,8 +11,7 @@ import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.api._
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{BundleInfo, CyberBundle}
 
 import scala.util.{Failure, Success}
@@ -25,6 +25,7 @@ object MongoDbService {
   // needed for StixObj json write
   implicit val stixObjFormats = new OFormat[StixObj] {
     override def reads(json: JsValue): JsResult[StixObj] = fmt.reads(json)
+
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
 
@@ -32,14 +33,18 @@ object MongoDbService {
 
   var database: Future[DefaultDB] = _
 
-  // todo need to get rid of this config
+  var hasDB = false
 
-  private var bundlesCol = config.getString("mongo.collection.bundles")
-  bundlesCol = if (bundlesCol.isEmpty || bundlesCol == null) "bundles" else bundlesCol
-  private var bundlesInf = config.getString("mongo.collection.bundlesInfo")
-  bundlesInf = if (bundlesInf.isEmpty || bundlesInf == null) "bundlesInfo" else bundlesInf
-  private var userLogCol = config.getString("mongo.collection.userLog")
-  userLogCol = if (userLogCol.isEmpty || userLogCol == null) "userLog" else userLogCol
+  private var bundlesCol = "bundles"
+  private var bundlesInf = "bundlesInfo"
+  private var userLogCol = "userLog"
+  try {
+    bundlesCol = config.getString("mongo.collection.bundles")
+    bundlesInf = config.getString("mongo.collection.bundlesInfo")
+    userLogCol = config.getString("mongo.collection.userLog")
+  } catch {
+    case e: Throwable => println("---> config error: " + e)
+  }
 
   def bundlesF: Future[JSONCollection] = database.map(_.collection[JSONCollection](bundlesCol))
 
@@ -69,6 +74,8 @@ object MongoDbService {
 
   def close(): Unit = database.map(db => db.connection.close())
 
+  def hasDB(hasIt: Boolean): Unit = hasDB = hasIt
+
   /**
     * create all collections from the STIX objects type names (including Bundle)
     */
@@ -77,10 +84,12 @@ object MongoDbService {
   }
 
   def saveServerSent(bundle: Bundle, colPath: String): Unit = {
-    // save the bundle of stix
-    saveBundleAsStixs(bundle)
-    // save the log to the db
-    saveUserLog(bundle, colPath)
+    if (hasDB) {
+      // save the bundle of stix
+      saveBundleAsStixs(bundle)
+      // save the log to the db
+      saveUserLog(bundle, colPath)
+    }
   }
 
   def saveUserLog(bundle: Bundle, colPath: String): Unit = {

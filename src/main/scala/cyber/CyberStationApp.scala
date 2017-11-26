@@ -69,11 +69,13 @@ object CyberStationApp extends JFXApp {
     }
     spinThis(false)
     hasDB = true
+    MongoDbService.hasDB(true)
   } catch {
     case ex: Throwable =>
       showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved", Color.Red)
       spinThis(false)
       hasDB = false
+      MongoDbService.hasDB(false)
   })
 
   // save the data and close properly before exiting
@@ -112,7 +114,7 @@ object CyberStationApp extends JFXApp {
       stopAppWithDB()
     }
     else {
-      // just close
+      // close and exit
       TaxiiConnection.closeSystem()
       super.stopApp
       System.exit(0)
