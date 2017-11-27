@@ -3,21 +3,13 @@ package cyber
 import java.io.IOException
 import java.security.Security
 import javafx.{fxml => jfxf, scene => jfxs}
-
 import controllers.CyberStationControllerInterface
-import db.MongoDbService
-import taxii.TaxiiConnection
-
 import scalafx.Includes._
-import scalafx.application.{JFXApp, Platform}
+import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafxml.core.{DependenciesByType, FXMLLoader, FXMLView, NoDependencyResolver}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
 import scala.language.{implicitConversions, postfixOps}
-import scala.concurrent.Future
-import scalafx.scene.paint.Color
 
 
 /**
@@ -45,71 +37,13 @@ object CyberStationApp extends JFXApp {
     scene = new Scene(root)
   }
 
-  showThis("Trying to connect to database: " + MongoDbService.mongoUri, Color.Black)
-  spinThis(true)
-
-  // try to connect to the mongo db
-  Future(try {
-    // start a db connection
-    // will wait here for the connection to complete or throw an exception
-    MongoDbService.init()
-    // load the data
-    MongoDbService.loadCyberBundles().onComplete {
-      case Success(theList) =>
-        showThis("Connected to database: " + MongoDbService.mongoUri, Color.Black)
-        controller.setBundles(theList)
-      case Failure(err) =>
-        showThis("Fail to load data from database: " + MongoDbService.mongoUri, Color.Red)
-        println("---> bundles loading failure: " + err)
-    }
-    spinThis(false)
-  } catch {
-    case ex: Throwable =>
-      showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved", Color.Red)
-      spinThis(false)
-  })
-
-  // save the data and close properly before exiting
-  private def stopAppWithDB(): Unit = {
-    // delete the old bundles collection
-    MongoDbService.dropAllBundles()
-    // save the current bundles
-    MongoDbService.saveAllBundles(controller.getAllBundles()).onComplete {
-      case Success(result) =>
-        println("---> bundles saved")
-        MongoDbService.close()
-        TaxiiConnection.closeSystem()
-        super.stopApp
-        System.exit(0)
-
-      case Failure(err) =>
-        println("---> bundles saving failure: " + err)
-        MongoDbService.close()
-        TaxiiConnection.closeSystem()
-        super.stopApp
-        System.exit(0)
-    }
-  }
-
-  private def showThis(text: String, color: Color) = Platform.runLater(() => {
-    controller.messageBar().setTextFill(color)
-    controller.messageBar().setText(text)
-  })
-
-  private def spinThis(onof: Boolean) = Platform.runLater(() => {controller.messageBarSpin().setVisible(onof)})
+  // initialise the main controller, db etc...
+  controller.init()
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    if (MongoDbService.hasDB) {
-      // save the data and close
-      stopAppWithDB()
-    }
-    else {
-      // close and exit
-      TaxiiConnection.closeSystem()
-      super.stopApp
-      System.exit(0)
-    }
+    super.stopApp
+    controller.stopApp()
   }
 
 }

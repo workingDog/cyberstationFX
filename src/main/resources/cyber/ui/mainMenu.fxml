@@ -13,18 +13,17 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <MenuItem fx:id="newItem" mnemonicParsing="false" text="New" />
+                        <MenuItem fx:id="loadItem" mnemonicParsing="false" onAction="#loadAction" text="Open…" />
                         <Menu mnemonicParsing="false" text="Open Recent" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                         <MenuItem mnemonicParsing="false" text="Save As…" />
                         <MenuItem mnemonicParsing="false" text="Revert" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
+                        <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitAction" text="Quit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -43,7 +42,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About CyberStation" />
+                        <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#aboutAction" text="About CyberStation" />
                     </items>
                 </Menu>
             </menus>

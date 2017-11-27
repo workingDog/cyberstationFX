@@ -18,6 +18,7 @@ import scala.util.{Failure, Success}
 import scala.language.{implicitConversions, postfixOps}
 import scala.concurrent.duration._
 
+
 /**
   * the MongoDbService support
   */
@@ -79,7 +80,7 @@ object MongoDbService {
     Await.result(MongoDbService.database, 20 seconds)
   }
 
-  def close(): Unit = database.map(db => db.connection.close())
+  def close(): Unit = if(database != null && hasDB) database.map(db => db.connection.close())
 
   /**
     * create all collections from the STIX objects type names (including Bundle)
