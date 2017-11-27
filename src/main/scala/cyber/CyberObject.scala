@@ -2,7 +2,7 @@ package cyber
 
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json.Json
-import util.Utils
+import util.CyberUtils
 
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, StringProperty}
@@ -35,7 +35,7 @@ trait CyberObj {
   * a Cyber Bundle form
   */
 class CyberBundle() {
-  val name = StringProperty("bundle_" + Utils.randDigits)
+  val name = StringProperty("bundle_" + CyberUtils.randDigits)
   val `type`: StringProperty = StringProperty(Bundle.`type`)
   var id: StringProperty = StringProperty(Identifier(Bundle.`type`).toString())
   val spec_version = StringProperty("2.0")
@@ -96,7 +96,7 @@ object BundleInfo {
 class IndicatorForm() extends CyberObj {
   `type`.value = Indicator.`type`
   id.value = Identifier(Indicator.`type`).toString()
-  name.value = "indicator_" + Utils.randDigits
+  name.value = "indicator_" + CyberUtils.randDigits
 
   val pattern = StringProperty("")
   val valid_from = StringProperty(Timestamp.now().toString())

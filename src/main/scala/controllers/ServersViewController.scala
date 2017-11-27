@@ -12,7 +12,7 @@ import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
 import taxii._
-import util.Utils
+import util.CyberUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -171,7 +171,7 @@ class ServersViewController(@FXML addButton: JFXButton,
 
   def getServerInfo(url: String) {
     // check that the url is valid
-    if (url == null || url.isEmpty || !Utils.urlValid(url)) {
+    if (url == null || url.isEmpty || !CyberUtils.urlValid(url)) {
       serverSpinner.setVisible(false)
       return
     }

@@ -8,7 +8,7 @@ import scala.util.Random
 
 
 
-object Utils {
+object CyberUtils {
 
   // check that the url is valid
   def urlValid(url: String): Boolean = {

@@ -1,6 +1,6 @@
 package db
 
-import util.Utils
+import util.CyberUtils
 import play.api.libs.json._
 import com.kodekutters.stix.StixObj._
 
@@ -86,7 +86,7 @@ object MongoDbService {
     * create all collections from the STIX objects type names (including Bundle)
     */
   def createStixCollections(): Unit = {
-    database.map(db => Utils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
+    database.map(db => CyberUtils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
   }
 
   def saveServerSent(bundle: Bundle, colPath: String): Unit = {

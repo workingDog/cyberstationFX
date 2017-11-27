@@ -8,7 +8,7 @@ import javafx.scene.text.Text
 import com.jfoenix.controls._
 import com.kodekutters.stix.{Identifier, Timestamp}
 import cyber._
-import util.Utils
+import util.CyberUtils
 
 import scala.language.implicitConversions
 import scalafx.Includes._
@@ -49,7 +49,7 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML externalRefsView: JFXListView[ExternalRefForm]) extends CommonControllerInterface {
 
   var currentForm: CyberObj = null
-  val labelsData = ObservableBuffer[LabelItem](for (lbl <- Utils.commonLabels) yield LabelItem(false, lbl, currentForm))
+  val labelsData = ObservableBuffer[LabelItem](for (lbl <- CyberUtils.commonLabels) yield LabelItem(false, lbl, currentForm))
 
   init()
 
@@ -100,7 +100,7 @@ class CommonController(@FXML idButton: JFXButton,
     // object markings list
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((ev: MouseEvent) =>
-      if (currentForm != null) currentForm.object_marking_refs += Utils.randName
+      if (currentForm != null) currentForm.object_marking_refs += CyberUtils.randName
     )
     deleteMarkingButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = objectMarkingsView.getSelectionModel.getSelectedItem
