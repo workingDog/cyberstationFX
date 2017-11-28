@@ -7,11 +7,11 @@ import cyber.CyberBundle
 import play.api.libs.json.Json
 import java.io.FileWriter
 import java.io.IOException
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
 import scala.io.Source
 import scalafx.scene.control.MenuItem
 import scalafx.scene.paint.Color
+import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scalafxml.core.macros.sfxml
 
@@ -57,22 +57,26 @@ class MainMenuController(loadItem: MenuItem,
 
   override def saveAction() {
     println("---> in saveAction")
-    val fileChooser = new FileChooser()
-    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("files", "*.json"))
-    // show save file dialog
-    val file = new FileChooser().showSaveDialog(new Stage())
+    val file = new FileChooser {
+      title = "Save bundle file"
+      extensionFilters.addAll(
+        new ExtensionFilter("json", "*.json"),
+        new ExtensionFilter("text", "*.txt"),
+        new ExtensionFilter("all", "*.*")
+      )
+    }.showSaveDialog(new Stage())
     if (file != null) {
       println("---> in saveAction file: " + file.getName)
       // save the data to file
       // scala.tools.nsc.io.File("filename").writeAll("hello world")
-//      try {
-//        val theData = cyberController.getAllBundles()
-//        val fileWriter = new FileWriter(file)
-//        fileWriter.write(theData)
-//        fileWriter.close()
-//      } catch {
-//        case ex: IOException =>
-//      }
+      //      try {
+      //        val theData = cyberController.getAllBundles()
+      //        val fileWriter = new FileWriter(file)
+      //        fileWriter.write(theData)
+      //        fileWriter.close()
+      //      } catch {
+      //        case ex: IOException =>
+      //      }
     }
   }
 
