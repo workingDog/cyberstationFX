@@ -6,7 +6,6 @@ import reactivemongo.api.commands.MultiBulkWriteResult
 import scala.concurrent.Future
 
 
-
 trait DbService {
   def init(): Unit
 
