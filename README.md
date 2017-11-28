@@ -2,6 +2,10 @@
 
 java -jar CyberStationApp.jar
 
+### Requirements
+
+java 1.8.0_152
+
 ### Status
 
 work in progress, not yet useful
