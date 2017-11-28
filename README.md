@@ -1,6 +1,6 @@
 ### CyberStation
 
-
+java -jar CyberStationApp.jar
 
 ### Status
 
