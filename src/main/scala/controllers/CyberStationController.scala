@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import cyber.CyberBundle
-import db.MongoDbService
+import db.DbService
 import taxii.{TaxiiCollection, TaxiiConnection}
 
 import scala.concurrent.Future
@@ -79,26 +79,26 @@ class CyberStationController(mainMenu: VBox,
   override def messageBarSpin(): JFXSpinner = msgBarSpinner
 
   override def init() {
-    showThis("Trying to connect to database: " + MongoDbService.mongoUri, Color.Black)
+    showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
     messageBarSpin().setVisible(true)
     // try to connect to the mongo db
     Future(try {
       // start a db connection
       // will wait here for the connection to complete or throw an exception
-      MongoDbService.init()
+      DbService.init()
       // load the data
-      MongoDbService.loadCyberBundles().onComplete {
+      DbService.loadLocalBundles().onComplete {
         case Success(theList) =>
-          showThis("Connected to database: " + MongoDbService.mongoUri, Color.Black)
+          showThis("Connected to database: " + DbService.dbUri, Color.Black)
           stixViewController.getBundleController().setBundles(theList)
         case Failure(err) =>
-          showThis("Fail to load data from database: " + MongoDbService.mongoUri, Color.Red)
+          showThis("Fail to load data from database: " + DbService.dbUri, Color.Red)
           println("---> bundles loading failure: " + err)
       }
       messageBarSpin().setVisible(false)
     } catch {
       case ex: Throwable =>
-        showThis("Fail to connect to database: " + MongoDbService.mongoUri + " --> data will not be saved", Color.Red)
+        showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved", Color.Red)
         messageBarSpin().setVisible(false)
     })
   }
@@ -107,9 +107,9 @@ class CyberStationController(mainMenu: VBox,
   def saveAndStop(): Unit = {
     // todo redo this
     // delete the old bundles collection
-    MongoDbService.dropAllBundles()
+    DbService.dropLocalBundles()
     // save the current bundles
-    MongoDbService.saveAllBundles(getAllBundles()).onComplete {
+    DbService.saveLocalBundles(getAllBundles()).onComplete {
       case Success(result) =>
         println("---> bundles saved")
         doClose()
@@ -125,14 +125,14 @@ class CyberStationController(mainMenu: VBox,
   })
 
   private def doClose() {
-    MongoDbService.close()
+    DbService.close()
     TaxiiConnection.closeSystem()
     System.exit(0)
   }
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    if (MongoDbService.hasDB)
+    if (DbService.isConnected)
       saveAndStop()
     else
       doClose()

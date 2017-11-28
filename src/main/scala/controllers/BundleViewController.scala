@@ -5,7 +5,7 @@ import javafx.fxml.FXML
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
-import db.MongoDbService
+import db.DbService
 import taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -169,7 +169,7 @@ class BundleViewController(bundleViewBox: VBox,
             serverSpinner.setVisible(false)
           })
           // save the bundle of stix and the user log to the db
-          MongoDbService.saveServerSent(theBundle.toStix, col.basePath)
+          DbService.saveServerBundle(theBundle.toStix, col.basePath)
           // show message on messageBar
           showThis(theBundle.name.value + " sent to the server", Color.Black)
         })

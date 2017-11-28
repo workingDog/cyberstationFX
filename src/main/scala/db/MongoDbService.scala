@@ -22,7 +22,7 @@ import scala.concurrent.duration._
 /**
   * the MongoDbService support
   */
-object MongoDbService {
+object MongoDbService extends DbService {
 
   // needed for StixObj json write
   implicit val stixObjFormats = new OFormat[StixObj] {
@@ -35,7 +35,7 @@ object MongoDbService {
 
   var database: Future[DefaultDB] = _
 
-  var hasDB = false
+  var isConnected = false
 
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
@@ -54,43 +54,43 @@ object MongoDbService {
 
   def userLogF: Future[JSONCollection] = database.map(_.collection[JSONCollection](userLogCol))
 
-  val mongoUri = config.getString("mongodb.uri")
+  val dbUri = config.getString("mongodb.uri")
 
   /**
     * initialise this singleton
     */
   def init(): Unit = {
     try {
-      println("trying to connect to: " + mongoUri)
+      println("trying to connect to: " + dbUri)
       val driver = new MongoDriver()
       database = for {
-        uri <- Future.fromTry(MongoConnection.parseURI(mongoUri))
+        uri <- Future.fromTry(MongoConnection.parseURI(dbUri))
         con = driver.connection(uri)
         dn <- Future(uri.db.get)
         db <- con.database(dn)
       } yield db
       database.onComplete {
-        case Success(theDB) => hasDB = true; println(s"mongodb connected to: $theDB")
-        case Failure(err) => hasDB = false; println(s"mongodb fail to connect, error: $err")
+        case Success(theDB) => isConnected = true; println(s"mongodb connected to: $theDB")
+        case Failure(err) => isConnected = false; println(s"mongodb fail to connect, error: $err")
       }
     } catch {
-      case ex: Throwable => hasDB = false
+      case ex: Throwable => isConnected = false
     }
     // wait here for the connection to complete
     Await.result(MongoDbService.database, 20 seconds)
   }
 
-  def close(): Unit = if(database != null && hasDB) database.map(db => db.connection.close())
+  def close(): Unit = if(database != null && isConnected) database.map(db => db.connection.close())
 
   /**
     * create all collections from the STIX objects type names (including Bundle)
     */
-  def createStixCollections(): Unit = {
+  private def createStixCollections(): Unit = {
     database.map(db => CyberUtils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
   }
 
-  def saveServerSent(bundle: Bundle, colPath: String): Unit = {
-    if (hasDB) {
+  def saveServerBundle(bundle: Bundle, colPath: String): Unit = {
+    if (isConnected) {
       // save the bundle of stix
       saveBundleAsStixs(bundle)
       // save the log to the db
@@ -98,7 +98,7 @@ object MongoDbService {
     }
   }
 
-  def saveUserLog(bundle: Bundle, colPath: String): Unit = {
+  private def saveUserLog(bundle: Bundle, colPath: String): Unit = {
     for (stix <- bundle.objects) {
       // todo user-id
       val userlog = UserLog("user_id", bundle.id.toString(), stix.id.toString(), Timestamp.now().toString(), colPath)
@@ -109,7 +109,7 @@ object MongoDbService {
     }
   }
 
-  def saveBundleAsStixs(bundle: Bundle): Unit = {
+  private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
       for {
         stxCol <- database.map(_.collection[JSONCollection](stix.`type`))
@@ -118,12 +118,12 @@ object MongoDbService {
     }
   }
 
-  def saveBundle(bundle: Bundle): Future[WriteResult] = for {
+  private def saveBundle(bundle: Bundle): Future[WriteResult] = for {
     bundles <- bundlesF
     lastError <- bundles.insert(bundle)
   } yield lastError
 
-  def saveAllBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = {
+  def saveLocalBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = {
     // the list of STIX bundles
     val bundleList = for (item <- cyberList) yield item.toStix
     // create the bundles info list
@@ -139,21 +139,21 @@ object MongoDbService {
     } yield (infErrors, errors)
   }
 
-  def loadBundlesInfo(): Future[List[BundleInfo]] = for {
+  private def loadBundlesInfo(): Future[List[BundleInfo]] = for {
     bundleInfo <- bundlesInfoF
     theList <- bundleInfo.find(Json.obj()).
       cursor[BundleInfo](ReadPreference.nearest).
       collect[List](-1, Cursor.FailOnError[List[BundleInfo]]())
   } yield theList
 
-  def loadBundles(): Future[List[Bundle]] = for {
+  private def loadBundles(): Future[List[Bundle]] = for {
     bundles <- bundlesF
     bundleList <- bundles.find(Json.obj()).
       cursor[Bundle](ReadPreference.nearest).
       collect[List](-1, Cursor.FailOnError[List[Bundle]]())
   } yield bundleList
 
-  def loadCyberBundles(): Future[List[CyberBundle]] = for {
+  def loadLocalBundles(): Future[List[CyberBundle]] = for {
     bundles <- loadBundles()
     infoList <- loadBundlesInfo()
     cyberBundles <- Future(for (bndl <- bundles) yield {
@@ -162,11 +162,11 @@ object MongoDbService {
     })
   } yield cyberBundles
 
-  def dropBundles(): Unit = bundlesF.map(bndls => bndls.drop(true))
+  private def dropBundles(): Unit = bundlesF.map(bndls => bndls.drop(true))
 
-  def dropBundlesInfo(): Unit = bundlesInfoF.map(bndls => bndls.drop(true))
+  private def dropBundlesInfo(): Unit = bundlesInfoF.map(bndls => bndls.drop(true))
 
-  def dropAllBundles(): Unit = {
+  def dropLocalBundles(): Unit = {
     dropBundles()
     dropBundlesInfo()
   }

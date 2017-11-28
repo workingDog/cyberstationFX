@@ -52,7 +52,7 @@ class MainMenuController(loadItem: MenuItem,
 
   override def loadAction() {
     // select the bundle file to load
-    Option(new FileChooser().showOpenDialog(new Stage())).map(file => loadCyberBundle(file))
+    Option(new FileChooser().showOpenDialog(new Stage())).map(file => loadLocalBundle(file))
   }
 
   override def saveAction() {
@@ -60,7 +60,7 @@ class MainMenuController(loadItem: MenuItem,
     val fileChooser = new FileChooser()
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("files", "*.json"))
     // show save file dialog
-    val file = fileChooser.showSaveDialog(new Stage())
+    val file = new FileChooser().showSaveDialog(new Stage())
     if (file != null) {
       println("---> in saveAction file: " + file.getName)
       // save the data to file
@@ -88,7 +88,7 @@ class MainMenuController(loadItem: MenuItem,
     cyberController.stopApp()
   }
 
-  private def loadCyberBundle(theFile: File) {
+  private def loadLocalBundle(theFile: File) {
     cyberController.showThis("Loading bundle from file: " + theFile.getName, Color.Black)
     cyberController.messageBarSpin().setVisible(true)
     // try to load the data from file
