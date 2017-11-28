@@ -27,7 +27,7 @@ trait CyberObj {
   val external_references = ObservableBuffer[ExternalRefForm]()
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
   val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
-  // to convert into the Stix object that the Cyber Object represents
+  // convert to the associated Stix object
   def toStix: StixObj
 }
 
@@ -49,14 +49,12 @@ class CyberBundle() {
 
 object CyberBundle {
 
-  def fromStix(stix: Bundle, bndlName: String = "no-name"): CyberBundle = {
-    new CyberBundle() {
-      name.value = bndlName
-      `type`.value = stix.`type`
-      id.value = stix.id.toString()
-      spec_version.value = stix.spec_version
-      objects ++= (for (obj <- stix.objects) yield CyberConverter.toCyberObj(obj))
-    }
+  def fromStix(stix: Bundle, bndlName: String = "no-name"): CyberBundle = new CyberBundle() {
+    name.value = bndlName
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    spec_version.value = stix.spec_version
+    objects ++= (for (obj <- stix.objects) yield CyberConverter.toCyberObj(obj))
   }
 
 }
@@ -103,7 +101,51 @@ class IndicatorForm() extends CyberObj {
     Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     ExternalRefForm.toExternalRefListOpt(external_references), Option(lang.value),
     CyberConverter.toIdentifierListOpt(object_marking_refs), Option(List()),
-    CyberConverter.toIdentifierOpt(created_by_ref.value), None)
+    CyberConverter.toIdentifierOpt(created_by_ref.value), None
+  )
+
+}
+
+object IndicatorForm {
+
+  def fromStix(stix: Indicator): IndicatorForm = new IndicatorForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name.getOrElse("")
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    lang.value = stix.lang.getOrElse("")
+    confidence.value = stix.confidence.getOrElse(0).toString
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
+class AttackPatternForm() extends CyberObj {
+  `type`.value = AttackPattern.`type`
+  id.value = Identifier(AttackPattern.`type`).toString()
+  name.value = "attack-pattern_" + CyberUtils.randDigits
+
+  def toStix = new AttackPattern(
+    AttackPattern.`type`, Identifier.stringToIdentifier(id.value),
+    Timestamp(created.value), Timestamp(modified.value),
+    name.value)
+}
+
+object AttackPatternForm {
+
+  def fromStix(stix: AttackPattern) = new AttackPatternForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    lang.value = stix.lang.getOrElse("")
+  }
 
 }
 
@@ -163,26 +205,28 @@ object ExternalRefForm {
 
 }
 
-class AttackPatternForm() extends CyberObj {
-  `type`.value = AttackPattern.`type`
-  id.value = Identifier(Indicator.`type`).toString()
-  name.value = "attack-pattern_" + CyberUtils.randDigits
-
-  def toStix = new AttackPattern(
-    AttackPattern.`type`, Identifier.stringToIdentifier(id.value),
-    Timestamp(created.value), Timestamp(modified.value),
-    name.value)
-}
-
 class IdentityForm() extends CyberObj {
   `type`.value = Identity.`type`
-  id.value = Identifier(Indicator.`type`).toString()
+  id.value = Identifier(Identity.`type`).toString()
   name.value = "identity_" + CyberUtils.randDigits
 
   def toStix = new Identity(
     Identity.`type`, Identifier.stringToIdentifier(id.value),
     Timestamp(created.value), Timestamp(modified.value),
     name.value, "identity_class")
+}
+
+object IdentityForm {
+
+  def fromStix(stix: Identity) = new IdentityForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    lang.value = stix.lang.getOrElse("")
+  }
+
 }
 
 /**
@@ -197,22 +241,9 @@ object CyberConverter {
     */
   def toCyberObj(theStix: StixObj): CyberObj = {
     theStix match {
-      case stix: Indicator => new IndicatorForm {
-        `type`.value = stix.`type`
-        id.value = stix.id.toString()
-        name.value = stix.name.getOrElse("")
-        created.value = stix.created.toString()
-        modified.value = stix.modified.toString()
-        lang.value = stix.lang.getOrElse("")
-        confidence.value = stix.confidence.getOrElse(0).toString
-        labels ++= stix.labels.getOrElse(List())
-        created_by_ref.value = stix.created_by_ref.getOrElse("").toString
-        revoked.value = stix.revoked.getOrElse(false)
-        external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
-        object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
-      }
-      case stix: AttackPattern => new AttackPatternForm()
-      case stix: Identity => new IdentityForm()
+      case stix: Indicator => IndicatorForm.fromStix(stix)
+      case stix: AttackPattern => AttackPatternForm.fromStix(stix)
+      case stix: Identity => IdentityForm.fromStix(stix)
 
       case stix: Campaign => new IndicatorForm()
       case stix: CourseOfAction => new IndicatorForm()

@@ -66,8 +66,8 @@ class MainMenuController(loadItem: MenuItem,
       // save the data to file
       // scala.tools.nsc.io.File("filename").writeAll("hello world")
 //      try {
-//        val fileWriter = new FileWriter(file)
 //        val theData = cyberController.getAllBundles()
+//        val fileWriter = new FileWriter(file)
 //        fileWriter.write(theData)
 //        fileWriter.close()
 //      } catch {
@@ -91,7 +91,7 @@ class MainMenuController(loadItem: MenuItem,
   private def loadCyberBundle(theFile: File) {
     cyberController.showThis("Loading bundle from file: " + theFile.getName, Color.Black)
     cyberController.messageBarSpin().setVisible(true)
-    // try to load
+    // try to load the data from file
     try {
       // make a bundle name from the file name
       val bundleName = theFile.getName.toLowerCase match {
@@ -118,6 +118,5 @@ class MainMenuController(loadItem: MenuItem,
         cyberController.messageBarSpin().setVisible(false)
     }
   }
-
 
 }

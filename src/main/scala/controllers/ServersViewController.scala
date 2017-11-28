@@ -72,6 +72,9 @@ class ServersViewController(@FXML addButton: JFXButton,
         getServerInfo(newValue)
       }
     }
+    // todo remove this, select the first server
+    serversListView.getSelectionModel.select(0)
+
     // setup the table of server info
     serverInfoTable.setItems(serverInfoItems)
     wipeInfo()

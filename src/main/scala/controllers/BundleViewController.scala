@@ -109,10 +109,11 @@ class BundleViewController(bundleViewBox: VBox,
         bundleVersion.text = ""
       }
     }
-    //    if (bundleList.isEmpty) {
-    //      bundleList += new CyberBundle()
-    //      bundlesListView.getSelectionModel.selectFirst()
-    //    }
+    // todo remove this
+    if (bundleList.isEmpty) {
+      bundleList += new CyberBundle()
+      bundlesListView.getSelectionModel.selectFirst()
+    }
 
     // setup the table of connection info
     wipeConnInfo()
