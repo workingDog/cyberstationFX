@@ -19,7 +19,6 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                         <MenuItem mnemonicParsing="false" text="Save As…" />
-                        <MenuItem mnemonicParsing="false" text="Revert" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -35,9 +34,6 @@
                         <MenuItem mnemonicParsing="false" text="Copy" />
                         <MenuItem mnemonicParsing="false" text="Paste" />
                         <MenuItem mnemonicParsing="false" text="Delete" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Select All" />
-                        <MenuItem mnemonicParsing="false" text="Unselect All" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

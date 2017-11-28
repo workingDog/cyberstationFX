@@ -1,12 +1,12 @@
 package controllers
 
-import java.io.File
+import java.io.{File, FileOutputStream}
 
-import com.kodekutters.stix.{Bundle, Indicator}
+import com.kodekutters.stix.Bundle
 import cyber.CyberBundle
 import play.api.libs.json.Json
-import util.CyberUtils
-
+import java.io.FileWriter
+import java.io.IOException
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.io.Source
@@ -56,7 +56,24 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def saveAction() {
-
+    println("---> in saveAction")
+    val fileChooser = new FileChooser()
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("files", "*.json"))
+    // show save file dialog
+    val file = fileChooser.showSaveDialog(new Stage())
+    if (file != null) {
+      println("---> in saveAction file: " + file.getName)
+      // save the data to file
+      // scala.tools.nsc.io.File("filename").writeAll("hello world")
+//      try {
+//        val fileWriter = new FileWriter(file)
+//        val theData = cyberController.getAllBundles()
+//        fileWriter.write(theData)
+//        fileWriter.close()
+//      } catch {
+//        case ex: IOException =>
+//      }
+    }
   }
 
   override def aboutAction() {
@@ -76,7 +93,7 @@ class MainMenuController(loadItem: MenuItem,
     cyberController.messageBarSpin().setVisible(true)
     // try to load
     try {
-      // make a name for the bundle from the file name
+      // make a bundle name from the file name
       val bundleName = theFile.getName.toLowerCase match {
         case x if x.endsWith(".json") => x.dropRight(5)
         case x if x.endsWith(".txt") => x.dropRight(4)

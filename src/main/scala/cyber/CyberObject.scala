@@ -49,17 +49,7 @@ class CyberBundle() {
 
 object CyberBundle {
 
-  def fromStix(stix: Bundle): CyberBundle = {
-    new CyberBundle() {
-      name.value = "no-name"
-      `type`.value = stix.`type`
-      id.value = stix.id.toString()
-      spec_version.value = stix.spec_version
-      objects ++= (for (obj <- stix.objects) yield CyberConverter.toCyberObj(obj))
-    }
-  }
-
-  def fromStix(stix: Bundle, bndlName: String): CyberBundle = {
+  def fromStix(stix: Bundle, bndlName: String = "no-name"): CyberBundle = {
     new CyberBundle() {
       name.value = bndlName
       `type`.value = stix.`type`
@@ -173,6 +163,28 @@ object ExternalRefForm {
 
 }
 
+class AttackPatternForm() extends CyberObj {
+  `type`.value = AttackPattern.`type`
+  id.value = Identifier(Indicator.`type`).toString()
+  name.value = "attack-pattern_" + CyberUtils.randDigits
+
+  def toStix = new AttackPattern(
+    AttackPattern.`type`, Identifier.stringToIdentifier(id.value),
+    Timestamp(created.value), Timestamp(modified.value),
+    name.value)
+}
+
+class IdentityForm() extends CyberObj {
+  `type`.value = Identity.`type`
+  id.value = Identifier(Indicator.`type`).toString()
+  name.value = "identity_" + CyberUtils.randDigits
+
+  def toStix = new Identity(
+    Identity.`type`, Identifier.stringToIdentifier(id.value),
+    Timestamp(created.value), Timestamp(modified.value),
+    name.value, "identity_class")
+}
+
 /**
   * conversions utilities
   */
@@ -199,8 +211,9 @@ object CyberConverter {
         external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
         object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
       }
-      case stix: AttackPattern => new IndicatorForm()
-      case stix: Identity => new IndicatorForm()
+      case stix: AttackPattern => new AttackPatternForm()
+      case stix: Identity => new IdentityForm()
+
       case stix: Campaign => new IndicatorForm()
       case stix: CourseOfAction => new IndicatorForm()
       case stix: IntrusionSet => new IndicatorForm()
