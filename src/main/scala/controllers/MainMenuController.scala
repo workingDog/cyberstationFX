@@ -11,15 +11,17 @@ import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import util.CyberUtils
 
+import scala.collection.mutable
 import scala.io.Source
 import scala.language.implicitConversions
 import scala.language.postfixOps
-
 import scalafx.scene.control.MenuItem
 import scalafx.scene.paint.Color
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scalafxml.core.macros.sfxml
+import scala.collection.JavaConverters._
+import scalafx.application.Platform
 
 
 trait MainMenuControllerInterface {
@@ -57,13 +59,12 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def loadAction() {
-    // select the bundle file to load
-    Option(new FileChooser().showOpenDialog(new Stage())).map(file => loadLocalBundle(file))
+    // select the bundle zip file to load
+    Option(new FileChooser().showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
   }
 
   override def saveAction() {
     val file = new FileChooser {
-      title = "Save bundle file"
       extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
     }.showSaveDialog(new Stage())
     if (file != null) {
@@ -101,9 +102,45 @@ class MainMenuController(loadItem: MenuItem,
     cyberController.stopApp()
   }
 
+  private def showSpinner(onof: Boolean) = {
+    Platform.runLater(() => {
+      cyberController.messageBarSpin().setVisible(onof)
+    })
+  }
+
+  private def loadLocalBundles(theFile: File) {
+    cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
+    showSpinner(true)
+    // try to load the data from a zip file
+    try {
+      val rootZip = new java.util.zip.ZipFile(theFile)
+      val bundleList = mutable.ListBuffer[CyberBundle]()
+      rootZip.entries.asScala.foreach(stixFile => {
+        // read a STIX bundle from the InputStream
+        val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
+        // assume the file entries end with ".json"
+        val bundleName = stixFile.getName.toLowerCase.dropRight(5)
+        // create a bundle object
+        Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
+          case Some(bundle) => bundleList += CyberBundle.fromStix(bundle, bundleName)
+          case None =>
+            cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
+            println("---> bundle loading failure --> invalid JSON")
+        }
+      })
+      cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
+      cyberController.showThis("Bundles loaded from file: " + theFile.getName, Color.Black)
+      showSpinner(false)
+    } catch {
+      case ex: Throwable =>
+        cyberController.showThis("Fail to load bundles from file: " + theFile.getName, Color.Red)
+        showSpinner(false)
+    }
+  }
+
   private def loadLocalBundle(theFile: File) {
     cyberController.showThis("Loading bundle from file: " + theFile.getName, Color.Black)
-    cyberController.messageBarSpin().setVisible(true)
+    showSpinner(true)
     // try to load the data from file
     try {
       // make a bundle name from the file name
@@ -124,11 +161,11 @@ class MainMenuController(loadItem: MenuItem,
           cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
           println("---> bundle loading failure --> invalid JSON")
       }
-      cyberController.messageBarSpin().setVisible(false)
+      showSpinner(false)
     } catch {
       case ex: Throwable =>
         cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
-        cyberController.messageBarSpin().setVisible(false)
+        showSpinner(false)
     }
   }
 
