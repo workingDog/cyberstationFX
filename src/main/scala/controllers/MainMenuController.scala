@@ -1,14 +1,20 @@
 package controllers
 
-import java.io.{File, FileOutputStream}
+import java.io.File
 
 import com.kodekutters.stix.Bundle
 import cyber.CyberBundle
 import play.api.libs.json.Json
-import java.io.FileWriter
 import java.io.IOException
+import java.nio.file.{Files, Paths}
+import java.util.zip.{ZipEntry, ZipOutputStream}
+
+import util.CyberUtils
 
 import scala.io.Source
+import scala.language.implicitConversions
+import scala.language.postfixOps
+
 import scalafx.scene.control.MenuItem
 import scalafx.scene.paint.Color
 import scalafx.stage.FileChooser.ExtensionFilter
@@ -56,27 +62,30 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def saveAction() {
-    println("---> in saveAction")
     val file = new FileChooser {
       title = "Save bundle file"
-      extensionFilters.addAll(
-        new ExtensionFilter("json", "*.json"),
-        new ExtensionFilter("text", "*.txt"),
-        new ExtensionFilter("all", "*.*")
-      )
+      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
     }.showSaveDialog(new Stage())
     if (file != null) {
-      println("---> in saveAction file: " + file.getName)
-      // save the data to file
-      // scala.tools.nsc.io.File("filename").writeAll("hello world")
-      //      try {
-      //        val theData = cyberController.getAllBundles()
-      //        val fileWriter = new FileWriter(file)
-      //        fileWriter.write(theData)
-      //        fileWriter.close()
-      //      } catch {
-      //        case ex: IOException =>
-      //      }
+      // create the zip file
+      val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
+      // for each bundle of stix
+      cyberController.getAllBundles().foreach { bundle =>
+        val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
+          CyberUtils.randName + ".json"
+        else
+          bundle.name.value + ".json"
+        zip.putNextEntry(new ZipEntry(fileName))
+        try {
+          zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
+        } catch {
+          case e: IOException => e.printStackTrace()
+        }
+        finally {
+          zip.closeEntry()
+        }
+      }
+      zip.close()
     }
   }
 
