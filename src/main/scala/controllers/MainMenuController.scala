@@ -27,8 +27,6 @@ import scalafx.application.Platform
 trait MainMenuControllerInterface {
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
 
-  def init(): Unit
-
   def loadAction(): Unit
 
   def saveAction(): Unit
@@ -54,17 +52,14 @@ class MainMenuController(loadItem: MenuItem,
     cyberController = cyberStationController
   }
 
-  override def init() {
-
-  }
-
   /**
     * load a set of bundles from a zip file
     */
   override def loadAction() {
     // select the bundle zip file to load
     val fileChooser = new FileChooser {
-      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))}
+      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
+    }
     Option(fileChooser.showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
   }
 
@@ -103,7 +98,8 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def newAction() {
-
+    // should ask to save current bundles, then
+    // clear bundles
   }
 
   /**
@@ -121,6 +117,7 @@ class MainMenuController(loadItem: MenuItem,
 
   /**
     * read a zip file containing bundle of stix
+    *
     * @param theFile
     */
   private def loadLocalBundles(theFile: File) {
@@ -140,10 +137,12 @@ class MainMenuController(loadItem: MenuItem,
           case Some(bundle) => bundleList += CyberBundle.fromStix(bundle, bundleName)
           case None =>
             cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
-            println("---> bundle loading failure, invalid json in: "+ stixFile.getName)
+            println("---> bundle loading failure, invalid json in: " + stixFile.getName)
         }
       })
-      cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
+      Platform.runLater(() => {
+        cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
+      })
       cyberController.showThis("", Color.Black)
       showSpinner(false)
     } catch {
@@ -156,6 +155,7 @@ class MainMenuController(loadItem: MenuItem,
 
   /**
     * load one bundle from a json or text file
+    *
     * @param theFile
     */
   private def loadLocalBundle(theFile: File) {

@@ -80,7 +80,7 @@ class CyberStationController(mainMenu: VBox,
 
   override def init() {
     showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
-    messageBarSpin().setVisible(true)
+    showSpinner(true)
     // try to connect to the mongo db
     Future(try {
       // start a db connection
@@ -90,16 +90,18 @@ class CyberStationController(mainMenu: VBox,
       DbService.loadLocalBundles().onComplete {
         case Success(theList) =>
           showThis("Connected to database: " + DbService.dbUri, Color.Black)
-          stixViewController.getBundleController().setBundles(theList)
+          Platform.runLater(() => {
+            stixViewController.getBundleController().setBundles(theList)
+          })
         case Failure(err) =>
           showThis("Fail to load data from database: " + DbService.dbUri, Color.Red)
           println("---> bundles loading failure: " + err)
       }
-      messageBarSpin().setVisible(false)
+      showSpinner(false)
     } catch {
       case ex: Throwable =>
         showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved", Color.Red)
-        messageBarSpin().setVisible(false)
+        showSpinner(false)
     })
   }
 
@@ -123,6 +125,12 @@ class CyberStationController(mainMenu: VBox,
     messageBar().setTextFill(color)
     messageBar().setText(text)
   })
+
+  private def showSpinner(onof: Boolean) = {
+    Platform.runLater(() => {
+      msgBarSpinner.setVisible(onof)
+    })
+  }
 
   private def doClose() {
     DbService.close()

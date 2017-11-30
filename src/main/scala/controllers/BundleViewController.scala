@@ -246,7 +246,7 @@ class BundleViewController(bundleViewBox: VBox,
       if (newValue != null) {
         taxiiCol = Option(newValue)
         val canWrite = if (newValue.can_write) "\n(can write to)" else "\n(cannot write to)"
-        //      sendButton.setDisable(!newValue.can_write)
+        sendButton.setDisable(!newValue.can_write)
         connInfo.update(2, new InfoTableEntry("Collection", newValue.title + canWrite))
       }
       else {
