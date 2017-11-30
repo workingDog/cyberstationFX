@@ -35,7 +35,9 @@ object MongoDbService extends DbService {
 
   var database: Future[DefaultDB] = _
 
-  var isConnected = false
+  var isReady = false
+
+  def isConnected() = isReady
 
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
@@ -70,17 +72,17 @@ object MongoDbService extends DbService {
         db <- con.database(dn)
       } yield db
       database.onComplete {
-        case Success(theDB) => isConnected = true; println(s"mongodb connected to: $theDB")
-        case Failure(err) => isConnected = false; println(s"mongodb fail to connect, error: $err")
+        case Success(theDB) => isReady = true; println(s"mongodb connected to: $theDB")
+        case Failure(err) => isReady = false; println(s"mongodb fail to connect, error: $err")
       }
     } catch {
-      case ex: Throwable => isConnected = false
+      case ex: Throwable => isReady = false
     }
     // wait here for the connection to complete
     Await.result(MongoDbService.database, 20 seconds)
   }
 
-  def close(): Unit = if(database != null && isConnected) database.map(db => db.connection.close())
+  def close(): Unit = if(database != null && isReady) database.map(db => db.connection.close())
 
   /**
     * create all collections from the STIX objects type names (including Bundle)
@@ -90,7 +92,7 @@ object MongoDbService extends DbService {
   }
 
   def saveServerBundle(bundle: Bundle, colPath: String): Unit = {
-    if (isConnected) {
+    if (isConnected()) {
       // save the bundle of stix
       saveBundleAsStixs(bundle)
       // save the log to the db

@@ -9,6 +9,8 @@ import scala.concurrent.Future
 trait DbService {
   def init(): Unit
 
+  def isConnected(): Boolean
+
   def close(): Unit
 
   def saveServerBundle(bundle: Bundle, colPath: String): Unit
@@ -27,7 +29,7 @@ object DbService extends DbService {
 
   val dbUri = mongoDB.dbUri
 
-  def isConnected() = mongoDB.isConnected
+  def isConnected() = mongoDB.isConnected()
 
   def init(): Unit = {
     mongoDB.init()
