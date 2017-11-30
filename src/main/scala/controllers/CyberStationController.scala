@@ -140,7 +140,7 @@ class CyberStationController(mainMenu: VBox,
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    if (DbService.isConnected)
+    if (DbService.isConnected())
       saveAndStop()
     else
       doClose()

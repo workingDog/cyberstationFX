@@ -27,7 +27,7 @@ object DbService extends DbService {
 
   val dbUri = mongoDB.dbUri
 
-  var isConnected = mongoDB.isConnected
+  def isConnected() = mongoDB.isConnected
 
   def init(): Unit = {
     mongoDB.init()
