@@ -1,0 +1,43 @@
+---------------------------------------------
+// install mongoDB
+//see: https://docs.mongodb.com/manual/
+
+// make sure the mongo server is running before launching the app.
+In a terminal type:
+mongod
+
+
+// then to check things out
+
+// in another terminal, the mongo shell:
+mongo
+
+// to show what databases exit
+show dbs
+
+// to select a database to use
+use cyberstix
+
+// to show what is in the database
+show collections
+
+// to create a collection
+db.createCollection("bundles")
+db.createCollection("userLog")
+
+// to delete a collection
+db.bundles.drop()
+db.bundlesInfo.drop()
+db.indicator.drop()
+db.userLog.drop()
+
+// to list what is in a collection
+db.bundles.find().pretty()
+db.userLog.find().pretty()
+db.indicator.find().pretty()
+
+
+---------------------------------------------
+
+
+
