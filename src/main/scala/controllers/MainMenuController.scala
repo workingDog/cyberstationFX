@@ -58,11 +58,19 @@ class MainMenuController(loadItem: MenuItem,
 
   }
 
+  /**
+    * load a set of bundles from a zip file
+    */
   override def loadAction() {
     // select the bundle zip file to load
-    Option(new FileChooser().showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
+    val fileChooser = new FileChooser {
+      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))}
+    Option(fileChooser.showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
   }
 
+  /**
+    * save the bundles to a zip file
+    */
   override def saveAction() {
     val file = new FileChooser {
       extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
@@ -98,6 +106,9 @@ class MainMenuController(loadItem: MenuItem,
 
   }
 
+  /**
+    * stop all processes and exit from the app
+    */
   override def quitAction() {
     cyberController.stopApp()
   }
@@ -108,6 +119,10 @@ class MainMenuController(loadItem: MenuItem,
     })
   }
 
+  /**
+    * read a zip file containing bundle of stix
+    * @param theFile
+    */
   private def loadLocalBundles(theFile: File) {
     cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
     showSpinner(true)
@@ -125,19 +140,24 @@ class MainMenuController(loadItem: MenuItem,
           case Some(bundle) => bundleList += CyberBundle.fromStix(bundle, bundleName)
           case None =>
             cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
-            println("---> bundle loading failure --> invalid JSON")
+            println("---> bundle loading failure, invalid json in: "+ stixFile.getName)
         }
       })
       cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
-      cyberController.showThis("Bundles loaded from file: " + theFile.getName, Color.Black)
+      cyberController.showThis("", Color.Black)
       showSpinner(false)
     } catch {
       case ex: Throwable =>
+        println("---> Fail to load bundles from file: " + theFile.getName)
         cyberController.showThis("Fail to load bundles from file: " + theFile.getName, Color.Red)
         showSpinner(false)
     }
   }
 
+  /**
+    * load one bundle from a json or text file
+    * @param theFile
+    */
   private def loadLocalBundle(theFile: File) {
     cyberController.showThis("Loading bundle from file: " + theFile.getName, Color.Black)
     showSpinner(true)
