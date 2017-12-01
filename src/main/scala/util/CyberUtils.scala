@@ -21,7 +21,7 @@ object CyberUtils {
     }
   }
 
-  // generate a 4 letters random name
+  // generate a 4 letter random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString
 
   // generate a 4 digit random name

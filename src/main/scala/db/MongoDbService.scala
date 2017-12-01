@@ -42,10 +42,12 @@ object MongoDbService extends DbService {
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
   private var userLogCol = "userLog"
+  private var timeout = 30
   try {
     bundlesCol = config.getString("mongo.collection.bundles")
     bundlesInf = config.getString("mongo.collection.bundlesInfo")
     userLogCol = config.getString("mongo.collection.userLog")
+    timeout = config.getInt("mongodb.timeout")
   } catch {
     case e: Throwable => println("---> config error: " + e)
   }
@@ -79,7 +81,7 @@ object MongoDbService extends DbService {
       case ex: Throwable => isReady = false
     }
     // wait here for the connection to complete
-    Await.result(MongoDbService.database, 20 seconds)
+    Await.result(MongoDbService.database, timeout seconds)
   }
 
   def close(): Unit = if(database != null && isReady) database.map(db => db.connection.close())

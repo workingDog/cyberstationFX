@@ -18,7 +18,6 @@
                         <Menu mnemonicParsing="false" text="Open Recent" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save As…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />

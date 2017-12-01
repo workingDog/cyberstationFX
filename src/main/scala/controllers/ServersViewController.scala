@@ -144,9 +144,8 @@ class ServersViewController(@FXML addButton: JFXButton,
       return
     }
     connOpt.map(conn => {
-      val cols = Collections(apiroot, conn)
       // get the future response
-      cols.response onComplete {
+      Collections(apiroot, conn).response onComplete {
 
         case Success(theResponse) =>
           serverSpinner.setVisible(false)
@@ -163,7 +162,6 @@ class ServersViewController(@FXML addButton: JFXButton,
                   })
                 })
               })
-
             case Left(taxiiErrorMessage) => showAlert(taxiiErrorMessage)
           }
 

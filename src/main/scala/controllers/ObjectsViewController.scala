@@ -86,7 +86,7 @@ class ObjectsViewController(objCountLabel: Label,
     objSpinner.setVisible(true)
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo)
-      col.getObjects().map(bndl => {
+      col.getObjects(range = "0-100").map(bndl => {
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
           col.conn.close()
