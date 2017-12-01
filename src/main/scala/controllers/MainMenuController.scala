@@ -102,32 +102,35 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def newAction() {
-    val ButtonTypeYes = new ButtonType("Yes")
-    val ButtonTypeNo = new ButtonType("No")
-    val alert = new Alert(AlertType.Confirmation) {
-      initOwner(this.owner)
-      title = "About to clear the current bundles data"
-      headerText = "Save current bundles data before clearing"
-      contentText = "Confirm saving bundles"
-      buttonTypes = Seq(ButtonTypeYes, ButtonTypeNo)
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      val ButtonTypeYes = new ButtonType("Yes")
+      val ButtonTypeNo = new ButtonType("No")
+      val alert = new Alert(AlertType.Confirmation) {
+        initOwner(this.owner)
+        title = "About to clear the current bundles data"
+        headerText = "Save current bundles data before clearing"
+        contentText = "Confirm saving bundles"
+        buttonTypes = Seq(ButtonTypeYes, ButtonTypeNo)
+      }
+      val result = alert.showAndWait()
+      result match {
+        case Some(ButtonTypeYes) =>
+          // todo redo this
+          // delete the old bundles collection
+          DbService.dropLocalBundles()
+          // save the current bundles
+          DbService.saveLocalBundles(cyberController.getAllBundles().toList).onComplete {
+            case Success(result) => println("---> bundles saved")
+            case Failure(err) => println("---> bundles saving failure: " + err)
+          }
+        case _ =>
+      }
+      // clear bundles
+      Platform.runLater(() => {
+        cyberController.getStixViewController().getBundleController().getAllBundles().clear()
+        cyberController.getStixViewController().getBundleController().getBundleStixView().getItems.clear()
+      })
     }
-    val result = alert.showAndWait()
-    result match {
-      case Some(ButtonTypeYes) =>
-        // todo redo this
-        // delete the old bundles collection
-        DbService.dropLocalBundles()
-        // save the current bundles
-        DbService.saveLocalBundles(cyberController.getAllBundles().toList).onComplete {
-          case Success(result) => println("---> bundles saved")
-          case Failure(err) => println("---> bundles saving failure: " + err)
-        }
-      case _ =>
-    }
-    // clear bundles
-    Platform.runLater(() => {
-      cyberController.getStixViewController().getBundleController().getAllBundles().clear()
-    })
   }
 
   /**
