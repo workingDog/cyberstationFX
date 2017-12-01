@@ -19,6 +19,8 @@ import scala.language.{implicitConversions, postfixOps}
   */
 object CyberStationApp extends JFXApp {
 
+  val version = "0.1"
+
   // needed for (SSL) TLS-1.2 in https, requires jdk1.8.0_152
   Security.setProperty("crypto.policy", "unlimited")
 
@@ -33,11 +35,11 @@ object CyberStationApp extends JFXApp {
   val root: jfxs.Parent = loader.getRoot[jfxs.Parent]
   val controller = loader.getController[CyberStationControllerInterface]
   stage = new PrimaryStage() {
-    title = "CyberStation 0.1"
+    title = "CyberStation-" + version
     scene = new Scene(root)
   }
 
-  // initialise the main controller, db etc...
+  // initialise the main controller
   controller.init()
 
   // close properly before exiting

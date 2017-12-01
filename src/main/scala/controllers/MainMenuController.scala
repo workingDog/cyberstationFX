@@ -3,13 +3,14 @@ package controllers
 import java.io.File
 
 import com.kodekutters.stix.Bundle
-import cyber.CyberBundle
+import cyber.{CyberBundle, CyberStationApp}
 import play.api.libs.json.Json
 import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db.DbService
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import util.CyberUtils
 
@@ -102,9 +103,9 @@ class MainMenuController(loadItem: MenuItem,
   override def aboutAction() {
     new Alert(AlertType.Information) {
       initOwner(this.owner)
-      title = "CyberStation"
+      title = "CyberStation-" + CyberStationApp.version
       headerText = None
-      contentText = "CyberStation is a tool to send STIX-2 objects to a TAXII-2 server"
+      contentText = "CyberStation is a tool to create and send STIX-2 objects to TAXII-2 servers"
     }.showAndWait()
   }
 
