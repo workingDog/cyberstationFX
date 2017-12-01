@@ -30,7 +30,7 @@ class ObjectsViewController(objCountLabel: Label,
 
   init()
 
-  override def init(): Unit = {
+  def init(): Unit = {
     objSpinner.setVisible(false)
     // setup the table of objects
     objectsTable.setItems(objects)
@@ -70,7 +70,7 @@ class ObjectsViewController(objCountLabel: Label,
       })
   }
 
-  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
     cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) =>
       apirootInfo = newValue
     }

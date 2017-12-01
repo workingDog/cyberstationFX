@@ -100,7 +100,7 @@ class CommonController(@FXML idButton: JFXButton,
     // object markings list
     objectMarkingsView.cellFactory = TextFieldListCell.forListView()
     addMarkingButton.setOnMouseClicked((ev: MouseEvent) =>
-      if (currentForm != null) currentForm.object_marking_refs += CyberUtils.randName
+      if (currentForm != null) currentForm.object_marking_refs += ("xx--" + CyberUtils.randName)
     )
     deleteMarkingButton.setOnMouseClicked((_: MouseEvent) => {
       val toRemove = objectMarkingsView.getSelectionModel.getSelectedItem
@@ -108,7 +108,7 @@ class CommonController(@FXML idButton: JFXButton,
     })
   }
 
-  override def clear(): Unit = {
+  def clear(): Unit = {
     unbindAll()
     createdField.setText("")
     modifiedField.setText("")
@@ -164,7 +164,7 @@ class CommonController(@FXML idButton: JFXButton,
     }
   }
 
-  override def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit = {
+  def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
     if (stix != null) {
       currentForm = stix

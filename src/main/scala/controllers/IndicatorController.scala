@@ -33,7 +33,7 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
 
   init()
 
-  override def init() {
+  def init() {
     // setup the list of indicators
     indicatorListView.setEditable(true)
     indicatorListView.setExpanded(true)
@@ -56,8 +56,14 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
     }
   }
 
-  override def setBundleViewController(controller: BundleViewControllerInterface): Unit = {
+  def setBundleViewController(controller: BundleViewControllerInterface): Unit = {
     bundleController = Option(controller)
+    // this is to clear the list of indicators when the list of bundles is cleared
+    bundleController.map(controller => {
+      controller.getAllBundles().onChange((source, changes) => {
+        if (controller.getAllBundles().isEmpty) indicatorList.clear()
+      })
+    })
     // the BundleViewController currentBundle
     val currentBundle = controller.getCurrentBundle()
     val bndlName = if (currentBundle.value != null) currentBundle.value.name.value else ""

@@ -1,6 +1,7 @@
 package controllers
 
 import javafx.fxml.FXML
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import cyber.CyberBundle
@@ -11,11 +12,12 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
+import scalafx.collections.ObservableBuffer
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafxml.core.macros.{nested, sfxml}
-
 
 
 trait CyberStationControllerInterface {
@@ -24,7 +26,9 @@ trait CyberStationControllerInterface {
 
   def stopApp(): Unit
 
-  def getAllBundles(): List[CyberBundle]
+  def confirmAndSave(): Unit
+
+  def getAllBundles(): ObservableBuffer[CyberBundle]
 
   def messageBar(): Label
 
@@ -55,13 +59,13 @@ class CyberStationController(mainMenu: VBox,
                              @nested[StixViewController] stixViewController: StixViewControllerInterface)
   extends CyberStationControllerInterface {
 
-  override def getSelectedServer() = serversViewController.serverInfo
+  def getSelectedServer() = serversViewController.serverInfo
 
-  override def getSelectedApiroot() = serversViewController.apirootInfo
+  def getSelectedApiroot() = serversViewController.apirootInfo
 
-  override def getSelectedCollection() = serversViewController.collectionInfo
+  def getSelectedCollection() = serversViewController.collectionInfo
 
-  override def getStixViewController() = stixViewController
+  def getStixViewController() = stixViewController
 
   // give this controller to the mainMenuController
   mainMenuController.setCyberStationController(this)
@@ -72,13 +76,13 @@ class CyberStationController(mainMenu: VBox,
   // give this controller to the ObjectsViewController
   objectsViewController.setCyberStationController(this)
 
-  override def getAllBundles() = stixViewController.getBundleController().getAllBundles()
+  def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
-  override def messageBar(): Label = messageLabel
+  def messageBar(): Label = messageLabel
 
-  override def messageBarSpin(): JFXSpinner = msgBarSpinner
+  def messageBarSpin(): JFXSpinner = msgBarSpinner
 
-  override def init() {
+  def init() {
     showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
@@ -111,7 +115,7 @@ class CyberStationController(mainMenu: VBox,
     // delete the old bundles collection
     DbService.dropLocalBundles()
     // save the current bundles
-    DbService.saveLocalBundles(getAllBundles()).onComplete {
+    DbService.saveLocalBundles(getAllBundles().toList).onComplete {
       case Success(result) =>
         println("---> bundles saved")
         doClose()
@@ -121,7 +125,7 @@ class CyberStationController(mainMenu: VBox,
     }
   }
 
-  override def showThis(text: String, color: Color): Unit = Platform.runLater(() => {
+  def showThis(text: String, color: Color): Unit = Platform.runLater(() => {
     messageBar().setTextFill(color)
     messageBar().setText(text)
   })
@@ -140,10 +144,28 @@ class CyberStationController(mainMenu: VBox,
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    if (DbService.isConnected())
-      saveAndStop()
-    else
-      doClose()
+    confirmAndSave()
+  }
+
+  def confirmAndSave() {
+    val ButtonTypeYes = new ButtonType("Yes")
+    val ButtonTypeNo = new ButtonType("No")
+    val alert = new Alert(AlertType.Confirmation) {
+      initOwner(this.owner)
+      title = "About to exit CyberStation"
+      headerText = "Save current bundles data before exiting"
+      contentText = "Confirm saving bundles"
+      buttonTypes = Seq(ButtonTypeYes, ButtonTypeNo)
+    }
+    val result = alert.showAndWait()
+    result match {
+      case Some(ButtonTypeYes) =>
+        if (DbService.isConnected())
+          saveAndStop()
+        else
+          doClose()
+      case _ => doClose()
+    }
   }
 
 }

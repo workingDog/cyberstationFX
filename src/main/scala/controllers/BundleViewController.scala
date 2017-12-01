@@ -35,7 +35,7 @@ trait BundleViewControllerInterface {
 
   def getBundleStixView(): JFXListView[CyberObj]
 
-  def getAllBundles(): List[CyberBundle]
+  def getAllBundles(): ObservableBuffer[CyberBundle]
 
   def setBundles(theBundles: List[CyberBundle])
 
@@ -72,17 +72,17 @@ class BundleViewController(bundleViewBox: VBox,
 
   def getBundleStixView() = bundleStixView
 
-  override def addStixToBundle(stix: CyberObj) {
+  def addStixToBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects += stix
   }
 
-  override def removeStixFromBundle(stix: CyberObj) {
+  def removeStixFromBundle(stix: CyberObj) {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects -= stix
   }
 
-  override def init() {
+  def init() {
     serverSpinner.setVisible(false)
     // setup the list of bundles (showing names)
     bundlesListView.setEditable(true)
@@ -221,11 +221,11 @@ class BundleViewController(bundleViewBox: VBox,
     if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
   }
 
-  override def getAllBundles(): List[CyberBundle] = bundlesListView.getItems.toList
+  def getAllBundles(): ObservableBuffer[CyberBundle] = bundleList
 
-  override def setBundles(theBundles: List[CyberBundle]): Unit = bundleList ++= theBundles
+  def setBundles(theBundles: List[CyberBundle]): Unit = bundleList ++= theBundles
 
-  override def setCyberStationController(cyberController: CyberStationControllerInterface): Unit = {
+  def setCyberStationController(cyberController: CyberStationControllerInterface): Unit = {
     cyberStationController = cyberController
 
     cyberStationController.getSelectedServer().onChange { (_, oldValue, newValue) =>

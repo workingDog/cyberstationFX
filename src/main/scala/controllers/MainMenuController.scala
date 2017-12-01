@@ -9,19 +9,23 @@ import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
+import db.DbService
+import scala.concurrent.ExecutionContext.Implicits.global
 import util.CyberUtils
 
 import scala.collection.mutable
 import scala.io.Source
 import scala.language.implicitConversions
 import scala.language.postfixOps
-import scalafx.scene.control.MenuItem
+import scalafx.scene.control.{Alert, ButtonType, MenuItem}
 import scalafx.scene.paint.Color
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scalafxml.core.macros.sfxml
 import scala.collection.JavaConverters._
+import scala.util.{Failure, Success}
 import scalafx.application.Platform
+import scalafx.scene.control.Alert.AlertType
 
 
 trait MainMenuControllerInterface {
@@ -98,15 +102,41 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def newAction() {
-    // should ask to save current bundles, then
+    val ButtonTypeYes = new ButtonType("Yes")
+    val ButtonTypeNo = new ButtonType("No")
+    val alert = new Alert(AlertType.Confirmation) {
+      initOwner(this.owner)
+      title = "About to clear the current bundles data"
+      headerText = "Save current bundles data before clearing"
+      contentText = "Confirm saving bundles"
+      buttonTypes = Seq(ButtonTypeYes, ButtonTypeNo)
+    }
+    val result = alert.showAndWait()
+    result match {
+      case Some(ButtonTypeYes) =>
+        // todo redo this
+        // delete the old bundles collection
+        DbService.dropLocalBundles()
+        // save the current bundles
+        DbService.saveLocalBundles(cyberController.getAllBundles().toList).onComplete {
+          case Success(result) => println("---> bundles saved")
+          case Failure(err) => println("---> bundles saving failure: " + err)
+        }
+      case _ =>
+    }
     // clear bundles
+    Platform.runLater(() => {
+      cyberController.getStixViewController().getBundleController().getAllBundles().clear()
+      cyberController.getStixViewController().getBundleController().setBundles(List())
+ //     cyberController.getStixViewController().getBundleController().getBundleStixView().refresh()
+    })
   }
 
   /**
     * stop all processes and exit from the app
     */
   override def quitAction() {
-    cyberController.stopApp()
+    cyberController.confirmAndSave()
   }
 
   private def showSpinner(onof: Boolean) = {

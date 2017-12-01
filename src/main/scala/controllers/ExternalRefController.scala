@@ -33,13 +33,13 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
   var dialogStage: Stage = _
   var isOk = false
 
-  override def isOkClicked: Boolean = isOk
+  def isOkClicked: Boolean = isOk
 
-  override def setDialogStage(theStage: Stage): Unit = {
+  def setDialogStage(theStage: Stage): Unit = {
     dialogStage = theStage
   }
 
-  override def setExternalRef(extRef: ExternalRefForm): Unit = {
+  def setExternalRef(extRef: ExternalRefForm): Unit = {
     clear()
     if (extRef != null) {
       theForm = extRef

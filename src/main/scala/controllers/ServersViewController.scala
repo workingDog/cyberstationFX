@@ -57,7 +57,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   // bind the collectionInfo to the selected collection of the collectionsListView
   collectionInfo <== collectionsListView.getSelectionModel.selectedItemProperty()
 
-  override def init() {
+  def init() {
     serverSpinner.setVisible(false)
     // setup the list of server url
     serversListView.setEditable(true)

@@ -20,13 +20,13 @@ class StixViewController(bundleHBox: HBox,
 
   init()
 
-  override def init() {
+  def init() {
     indicatorController.setBundleViewController(bundleViewController)
   }
 
-  override def getBundleController(): BundleViewControllerInterface = bundleViewController
+  def getBundleController(): BundleViewControllerInterface = bundleViewController
 
-  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
     bundleViewController.setCyberStationController(cyberStationController)
   }
 
