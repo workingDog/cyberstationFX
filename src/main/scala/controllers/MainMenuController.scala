@@ -71,29 +71,31 @@ class MainMenuController(loadItem: MenuItem,
     * save the bundles to a zip file
     */
   override def saveAction() {
-    val file = new FileChooser {
-      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
-    }.showSaveDialog(new Stage())
-    if (file != null) {
-      // create the zip file
-      val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
-      // for each bundle of stix
-      cyberController.getAllBundles().foreach { bundle =>
-        val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
-          CyberUtils.randName + ".json"
-        else
-          bundle.name.value + ".json"
-        zip.putNextEntry(new ZipEntry(fileName))
-        try {
-          zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
-        } catch {
-          case e: IOException => e.printStackTrace()
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      val file = new FileChooser {
+        extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
+      }.showSaveDialog(new Stage())
+      if (file != null) {
+        // create the zip file
+        val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
+        // for each bundle of stix
+        cyberController.getAllBundles().foreach { bundle =>
+          val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
+            CyberUtils.randName + ".json"
+          else
+            bundle.name.value + ".json"
+          zip.putNextEntry(new ZipEntry(fileName))
+          try {
+            zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
+          } catch {
+            case e: IOException => e.printStackTrace()
+          }
+          finally {
+            zip.closeEntry()
+          }
         }
-        finally {
-          zip.closeEntry()
-        }
+        zip.close()
       }
-      zip.close()
     }
   }
 
@@ -142,7 +144,8 @@ class MainMenuController(loadItem: MenuItem,
     * stop all processes and exit from the app
     */
   override def quitAction() {
-    cyberController.confirmAndSave()
+    if (cyberController.getAllBundles().toList.nonEmpty) cyberController.confirmAndSave()
+    else cyberController.doClose()
   }
 
   private def showSpinner(onof: Boolean) = {

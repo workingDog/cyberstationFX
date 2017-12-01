@@ -26,6 +26,8 @@ trait CyberStationControllerInterface {
 
   def stopApp(): Unit
 
+  def doClose(): Unit
+
   def confirmAndSave(): Unit
 
   def getAllBundles(): ObservableBuffer[CyberBundle]
@@ -136,7 +138,7 @@ class CyberStationController(mainMenu: VBox,
     })
   }
 
-  private def doClose() {
+  def doClose() {
     DbService.close()
     TaxiiConnection.closeSystem()
     System.exit(0)
@@ -144,7 +146,8 @@ class CyberStationController(mainMenu: VBox,
 
   // close properly before exiting
   override def stopApp(): Unit = {
-    confirmAndSave()
+    if (getAllBundles().toList.nonEmpty) confirmAndSave()
+    else doClose()
   }
 
   def confirmAndSave() {
