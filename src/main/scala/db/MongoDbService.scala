@@ -105,7 +105,7 @@ object MongoDbService extends DbService {
   private def saveUserLog(bundle: Bundle, colPath: String): Unit = {
     for (stix <- bundle.objects) {
       // todo user-id
-      val userlog = UserLog("user_id", bundle.id.toString(), stix.id.toString(), Timestamp.now().toString(), colPath)
+      val userlog = UserLog("user_id", bundle.id.toString(), stix.id.toString(), colPath, Timestamp.now().toString())
       for {
         userCol <- userLogF
         theError <- userCol.insert(userlog)
