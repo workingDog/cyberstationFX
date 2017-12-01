@@ -127,8 +127,6 @@ class MainMenuController(loadItem: MenuItem,
     // clear bundles
     Platform.runLater(() => {
       cyberController.getStixViewController().getBundleController().getAllBundles().clear()
-      cyberController.getStixViewController().getBundleController().setBundles(List())
- //     cyberController.getStixViewController().getBundleController().getBundleStixView().refresh()
     })
   }
 
