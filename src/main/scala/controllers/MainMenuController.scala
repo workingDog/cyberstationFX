@@ -98,7 +98,12 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   override def aboutAction() {
-    println("---> in aboutAction")
+    new Alert(AlertType.Information) {
+      initOwner(this.owner)
+      title = "CyberStation"
+      headerText = None
+      contentText = "CyberStation is a tool to send STIX-2 objects to a TAXII-2 server"
+    }.showAndWait()
   }
 
   override def newAction() {
