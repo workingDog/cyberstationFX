@@ -26,7 +26,8 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
                           @FXML addButton: JFXButton,
                           bundleLabel: Label,
                           @FXML deleteButton: JFXButton,
-                          @nested[CommonController] commonController: CommonControllerInterface) extends IndicatorControllerInterface {
+                          @nested[CommonController] commonController: CommonControllerInterface,
+                          @nested[IndicatorSpecController] indicatorSpecController: IndicatorSpecControllerInterface) extends IndicatorControllerInterface {
 
   val indicatorList = ObservableBuffer[IndicatorForm]()
   var bundleController: Option[BundleViewControllerInterface] = None
@@ -47,11 +48,14 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
       }
     }
     indicatorListView.getSelectionModel.selectedItem.onChange { (_, oldValue, newValue) =>
-      // the commonController will take care of all interactions/updates with the new IndicatorForm
+      // the commonController and indicatorSpecController
+      // will take care of all interactions/updates
       if (newValue != null) {
         commonController.control(newValue, bundleController)
+        indicatorSpecController.control(newValue, bundleController)
       } else {
         commonController.clear()
+        indicatorSpecController.clear()
       }
     }
   }

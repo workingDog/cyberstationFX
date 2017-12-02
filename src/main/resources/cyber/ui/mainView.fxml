@@ -22,7 +22,7 @@
        </HBox>
    </top>
    <bottom>
-      <Pane prefHeight="38.0" prefWidth="711.0">
+      <Pane prefHeight="38.0" prefWidth="800.0">
          <children>
             <HBox prefHeight="38.0" prefWidth="1031.0" spacing="22.0">
                <children>

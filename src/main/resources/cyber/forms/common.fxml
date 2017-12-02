@@ -6,13 +6,14 @@
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane hgap="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" prefWidth="789.0" vgap="12.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommonController">
+<GridPane hgap="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" vgap="12.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommonController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
@@ -102,7 +103,10 @@
                   </JFXButton>
                </children>
             </HBox>
-            <JFXListView fx:id="externalRefsView" editable="true" prefHeight="205.0" prefWidth="257.0" />
+            <JFXListView fx:id="externalRefsView" editable="true" prefHeight="205.0" prefWidth="257.0" showTooltip="true">
+               <tooltip>
+                  <Tooltip text="double click to edit" />
+               </tooltip></JFXListView>
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
@@ -126,7 +130,10 @@
                   </JFXButton>
                </children>
             </HBox>
-            <JFXListView fx:id="objectMarkingsView" editable="true" prefHeight="203.0" prefWidth="257.0" />
+            <JFXListView fx:id="objectMarkingsView" editable="true" prefHeight="203.0" prefWidth="257.0">
+               <tooltip>
+                  <Tooltip text="double click to edit, then press return" />
+               </tooltip></JFXListView>
          </children>
       </VBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">

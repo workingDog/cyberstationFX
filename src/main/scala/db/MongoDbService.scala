@@ -42,7 +42,7 @@ object MongoDbService extends DbService {
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
   private var userLogCol = "userLog"
-  private var timeout = 30
+  private var timeout = 30  // seconds
   try {
     bundlesCol = config.getString("mongo.collection.bundles")
     bundlesInf = config.getString("mongo.collection.bundlesInfo")

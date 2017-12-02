@@ -17,7 +17,7 @@ trait CyberObj {
   val `type` = StringProperty("")
   val id = StringProperty("")
   val name = StringProperty("")
-  val lang = StringProperty("en")
+  val lang = StringProperty("")
   val created = StringProperty(Timestamp.now().toString())
   val modified = StringProperty(Timestamp.now().toString())
   val created_by_ref = StringProperty("")
@@ -26,7 +26,7 @@ trait CyberObj {
   val confidence = StringProperty("0")
   val external_references = ObservableBuffer[ExternalRefForm]()
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
-  val granular_markings = ObservableBuffer[String]() // List[GranularMarking]
+  val granular_markings = ObservableBuffer[String]() // todo List[GranularMarking]
   // convert to the associated Stix object
   def toStix: StixObj
 }

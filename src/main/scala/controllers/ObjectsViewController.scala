@@ -3,7 +3,9 @@ package controllers
 import javafx.fxml.FXML
 
 import com.jfoenix.controls.JFXSpinner
+import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{CyberConverter, CyberObj}
+import db.MongoDbService.{bundlesCol, bundlesInf, config, userLogCol}
 import taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,9 +30,17 @@ class ObjectsViewController(objCountLabel: Label,
   val objects = ObservableBuffer[CyberObj]()
   var apirootInfo = ""
 
+  val config: Config = ConfigFactory.load
+  private var fetchNumber = 100
+
   init()
 
   def init(): Unit = {
+    try {
+      fetchNumber = config.getInt("taxii.objects")
+    } catch {
+      case e: Throwable => println("---> config taxii.objects error: " + e)
+    }
     objSpinner.setVisible(false)
     // setup the table of objects
     objectsTable.setItems(objects)
@@ -86,7 +96,7 @@ class ObjectsViewController(objCountLabel: Label,
     objSpinner.setVisible(true)
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo)
-      col.getObjects(range = "0-100").map(bndl => {
+      col.getObjects(range = ("0-" + fetchNumber.toString)).map(bndl => {
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
           col.conn.close()

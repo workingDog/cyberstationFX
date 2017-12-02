@@ -78,7 +78,7 @@ class CommonController(@FXML idButton: JFXButton,
     addExtRefButton.setOnMouseClicked((_: MouseEvent) => {
       if (currentForm != null) {
         val newForm = new ExternalRefForm() {
-          source_name.value = "new name"
+          source_name.value = "source_name"
         }
         if (showExtRefDialog(newForm)) currentForm.external_references += newForm
       }

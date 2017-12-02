@@ -106,7 +106,7 @@ class CyberStationController(mainMenu: VBox,
       showSpinner(false)
     } catch {
       case ex: Throwable =>
-        showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved", Color.Red)
+        showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved to the database", Color.Red)
         showSpinner(false)
     })
   }
