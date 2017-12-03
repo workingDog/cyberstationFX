@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="bundleHBox" prefHeight="800.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BundleViewController">
+<HBox fx:id="bundleHBox" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BundleViewController">
    <children>
-      <VBox fx:id="bundleViewBox" prefWidth="340.0" HBox.hgrow="NEVER">
+      <VBox fx:id="bundleViewBox" prefWidth="340.0" HBox.hgrow="ALWAYS">
          <children>
-            <HBox prefHeight="48.0" prefWidth="260.0" spacing="8.0" VBox.vgrow="NEVER">
+            <HBox minHeight="-Infinity" prefHeight="52.0" prefWidth="340.0" spacing="8.0" VBox.vgrow="NEVER">
                <children>
                   <JFXButton fx:id="addButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
                      <tooltip>
@@ -36,12 +36,15 @@
                   <JFXSpinner fx:id="serverSpinner" visible="false" />
                </children>
                <padding>
-                  <Insets bottom="4.0" left="12.0" right="4.0" top="6.0" />
+                  <Insets left="12.0" right="4.0" />
                </padding>
+               <VBox.margin>
+                  <Insets top="6.0" />
+               </VBox.margin>
             </HBox>
             <JFXListView fx:id="bundlesListView" editable="true" prefHeight="551.0" prefWidth="320.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
-                  <Insets left="8.0" right="8.0" />
+                  <Insets left="8.0" right="8.0" top="4.0" />
                </VBox.margin></JFXListView>
          </children>
       </VBox>

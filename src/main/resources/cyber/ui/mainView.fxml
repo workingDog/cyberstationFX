@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane fx:id="cyberStationApp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CyberStationController">
+<BorderPane fx:id="cyberStationApp" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CyberStationController">
    <top>
        <HBox>
-           <fx:include fx:id="mainMenu" source="mainMenu.fxml" HBox.hgrow="ALWAYS" />
-           <Button fx:id="loginButton" layoutX="659.0" layoutY="-2.0" minWidth="50.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Login" HBox.hgrow="ALWAYS">
+           <fx:include fx:id="mainMenu" source="mainMenu.fxml" />
+           <Button fx:id="loginButton" minWidth="50.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Login">
             <HBox.margin>
-               <Insets top="4.0" />
+               <Insets left="120.0" top="4.0" />
             </HBox.margin></Button>
        </HBox>
    </top>
@@ -46,7 +46,7 @@
    <center>
       <JFXTabPane id="tabsPane" BorderPane.alignment="CENTER">
          <tabs>
-            <Tab id="taxiiTab" text="Taxii servers">
+            <Tab id="taxiiTab" closable="false" text="Taxii servers">
               <content>
                   <AnchorPane HBox.hgrow="ALWAYS">
                   <children>
@@ -55,18 +55,18 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab id="objectsTab" text="Taxii objects">
+            <Tab id="objectsTab" closable="false" text="Taxii objects">
                 <content>
-                    <AnchorPane>
+                    <AnchorPane HBox.hgrow="ALWAYS">
                         <children>
-                            <fx:include fx:id="objectsView" source="objectsView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+  <fx:include fx:id="objectsView" source="objectsView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         </children>
                     </AnchorPane>
                 </content>
             </Tab>
-            <Tab id="stixTab" text="Stix objects">
+            <Tab id="stixTab" closable="false" text="Stix objects">
               <content>
-                  <AnchorPane>
+                  <AnchorPane HBox.hgrow="ALWAYS">
                       <children>
  <fx:include fx:id="stixView" source="stixView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                       </children>
