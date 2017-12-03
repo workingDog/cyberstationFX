@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="indicatorSpec" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="controllers.IndicatorSpecController">
+<GridPane fx:id="indicatorSpec" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.IndicatorSpecController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="289.0" minWidth="10.0" prefWidth="289.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="311.0" minWidth="10.0" prefWidth="269.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="89.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="289.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="311.0" minWidth="10.0" prefWidth="280.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="10.0" prefWidth="208.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="147.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="314.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="292.0" minHeight="10.0" prefHeight="292.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="314.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <JFXTextField fx:id="patternField" promptText="pattern" GridPane.columnSpan="3">
          <GridPane.margin>
-            <Insets bottom="12.0" left="6.0" right="6.0" top="8.0" />
+            <Insets bottom="12.0" left="6.0" right="6.0" top="6.0" />
          </GridPane.margin>
       </JFXTextField>
       <HBox prefHeight="67.0" prefWidth="273.0" GridPane.rowIndex="1">
@@ -59,6 +63,39 @@
             <Insets top="4.0" />
          </GridPane.margin>
       </HBox>
+      <JFXTextArea fx:id="descriptionField" labelFloat="true" promptText="description" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="6.0" top="8.0" />
+         </GridPane.margin>
+      </JFXTextArea>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <children>
+            <HBox prefHeight="60.0" prefWidth="280.0">
+               <children>
+                  <JFXButton fx:id="addKFButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
+                     <HBox.margin>
+                        <Insets left="8.0" top="12.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <Label text="kill chain phases">
+                     <HBox.margin>
+                        <Insets left="12.0" top="18.0" />
+                     </HBox.margin>
+                  </Label>
+                  <JFXButton fx:id="deleteKFButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
+                     <HBox.margin>
+                        <Insets left="12.0" top="12.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <JFXListView fx:id="killPhaseListView" editable="true" prefHeight="150.0" prefWidth="280.0">
+               <VBox.margin>
+                  <Insets left="8.0" right="8.0" />
+               </VBox.margin>
+            </JFXListView>
+         </children>
+      </VBox>
    </children>
    <padding>
       <Insets left="8.0" right="8.0" top="8.0" />

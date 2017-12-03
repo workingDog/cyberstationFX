@@ -42,7 +42,7 @@
       </VBox>
       <ScrollPane HBox.hgrow="ALWAYS">
          <content>
-            <VBox>
+            <VBox fillWidth="false" spacing="8.0">
                <children>
                   <Label fx:id="bundleLabel" maxWidth="1.7976931348623157E308" text="Part of bundle: ">
                      <padding>

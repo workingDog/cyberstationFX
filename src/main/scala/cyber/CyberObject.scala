@@ -89,14 +89,16 @@ class IndicatorForm() extends CyberObj {
   val pattern = StringProperty("")
   val valid_from = StringProperty(Timestamp.now().toString())
   val valid_until = StringProperty("")
-  val kill_chain_phases = mutable.ListBuffer[KillChainPhase]()
+  val kill_chain_phases = ObservableBuffer[KillChainPhaseForm]()
   val description = StringProperty("")
 
   def toStix = new Indicator(
     Indicator.`type`, Identifier.stringToIdentifier(id.value),
     Timestamp(created.value), Timestamp(modified.value), pattern.value,
     Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
-    Option(labels.toList), Option(kill_chain_phases.toList), Option(description.value),
+    Option(labels.toList),
+    KillChainPhaseForm.toKillChainPhaseListOpt(kill_chain_phases),
+    Option(description.value),
     Option(revoked.value),
     Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     ExternalRefForm.toExternalRefListOpt(external_references), Option(lang.value),
@@ -145,6 +147,38 @@ object AttackPatternForm {
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
     lang.value = stix.lang.getOrElse("")
+  }
+
+}
+
+class KillChainPhaseForm() {
+  val kill_chain_name = StringProperty("")
+  val phase_name = StringProperty("")
+
+  def toStix = new KillChainPhase(
+    kill_chain_name = kill_chain_name.value,
+    phase_name = phase_name.value)
+}
+
+object KillChainPhaseForm {
+
+  def fromStix(stix: KillChainPhase): KillChainPhaseForm = new KillChainPhaseForm() {
+    kill_chain_name.value = stix.kill_chain_name
+    phase_name.value = stix.phase_name
+  }
+
+  def toKillChainPhaseListOpt(theList: ObservableBuffer[KillChainPhaseForm]): Option[List[KillChainPhase]] = {
+    if (theList == null)
+      None
+    else
+      Option((for (s <- theList) yield s.toStix).toList)
+  }
+
+  def fromKillChainPhaseList(theList: List[KillChainPhase]): ObservableBuffer[KillChainPhaseForm] = {
+    if (theList == null)
+      ObservableBuffer[KillChainPhaseForm]()
+    else
+      (for (s <- theList) yield KillChainPhaseForm.fromStix(s)).to[ObservableBuffer]
   }
 
 }
