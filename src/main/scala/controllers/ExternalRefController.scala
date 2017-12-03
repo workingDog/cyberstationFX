@@ -8,6 +8,7 @@ import cyber.ExternalRefForm
 import scalafx.stage.Stage
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
+import scalafx.beans.binding.Bindings
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.input.MouseEvent
 
@@ -50,6 +51,11 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
       theForm.description <== descriptionField.textProperty()
       theForm.external_id <== externalIdField.textProperty()
       //  theForm.hashes <== createdByField.textProperty()
+      // must have some text for source_name
+      okButton.disableProperty().bind(
+        Bindings.createBooleanBinding(() =>
+          theForm.source_name.value.trim().isEmpty(), sourceNameField.textProperty())
+      )
     }
   }
 
@@ -61,7 +67,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
 
   cancelButton.setOnMouseClicked((_: MouseEvent) => {
     isOk = false
-    clear()
+    unbindAll()
     dialogStage.close()
   })
 

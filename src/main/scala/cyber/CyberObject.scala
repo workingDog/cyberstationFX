@@ -110,6 +110,23 @@ class IndicatorForm() extends CyberObj {
 
 object IndicatorForm {
 
+  def clone(inForm: IndicatorForm) = {
+    new IndicatorForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      lang.value = inForm.lang.value
+      confidence.value = inForm.confidence.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
+
   def fromStix(stix: Indicator): IndicatorForm = new IndicatorForm {
     `type`.value = stix.`type`
     id.value = stix.id.toString()
@@ -162,6 +179,13 @@ class KillChainPhaseForm() {
 
 object KillChainPhaseForm {
 
+  def clone(inForm: KillChainPhaseForm) = {
+    new KillChainPhaseForm {
+      kill_chain_name.value = inForm.kill_chain_name.value
+      phase_name.value = inForm.phase_name.value
+    }
+  }
+
   def fromStix(stix: KillChainPhase): KillChainPhaseForm = new KillChainPhaseForm() {
     kill_chain_name.value = stix.kill_chain_name
     phase_name.value = stix.phase_name
@@ -212,6 +236,15 @@ class ExternalRefForm() {
 }
 
 object ExternalRefForm {
+
+  def clone(inForm: ExternalRefForm) = {
+    new ExternalRefForm {
+      source_name.value = inForm.source_name.value
+      description.value = inForm.description.value
+      url.value = inForm.url.value
+      external_id.value = inForm.external_id.value
+    }
+  }
 
   def fromStix(stix: ExternalReference): ExternalRefForm = {
     new ExternalRefForm() {

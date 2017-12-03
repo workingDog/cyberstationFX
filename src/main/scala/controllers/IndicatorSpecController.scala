@@ -126,6 +126,8 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
   // popup the external reference editor dialog
   def showKillChainDialog(killChainForm: KillChainPhaseForm): Boolean =
     try {
+      // record the initial values, in case we cancel
+      val formCopy = KillChainPhaseForm.clone(killChainForm)
       // load the fxml file
       val resource = CyberStationApp.getClass.getResource("forms/killChainDialog.fxml")
       if (resource == null) {
@@ -145,6 +147,11 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
       controller.setKillChainPhase(killChainForm)
       // show the dialog and wait until the user closes it
       theStage.showAndWait
+      // if cancel, reset the previous values
+      if (!controller.isOkClicked) {
+        killChainForm.kill_chain_name.value = formCopy.kill_chain_name.value
+        killChainForm.phase_name.value = formCopy.phase_name.value
+      }
       // return true if the ok button was clicked else false
       controller.isOkClicked
     } catch {

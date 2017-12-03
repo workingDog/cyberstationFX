@@ -191,6 +191,8 @@ class CommonController(@FXML idButton: JFXButton,
   // popup the external reference editor dialog
   def showExtRefDialog(extRefForm: ExternalRefForm): Boolean =
     try {
+      // record the initial values, in case we cancel
+      val formCopy = ExternalRefForm.clone(extRefForm)
       // load the fxml file
       val resource = CyberStationApp.getClass.getResource("forms/extRefDialog.fxml")
       if (resource == null) {
@@ -211,6 +213,13 @@ class CommonController(@FXML idButton: JFXButton,
       controller.setExternalRef(extRefForm)
       // show the dialog and wait until the user closes it
       theStage.showAndWait
+      // if cancel, reset the previous values
+      if (!controller.isOkClicked) {
+        extRefForm.source_name.value = formCopy.source_name.value
+        extRefForm.description.value = formCopy.description.value
+        extRefForm.url.value = formCopy.url.value
+        extRefForm.external_id.value = formCopy.external_id.value
+      }
       // return true if the ok button was clicked else false
       controller.isOkClicked
     } catch {
