@@ -17,9 +17,9 @@
 
 <HBox fx:id="bundleHBox" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BundleViewController">
    <children>
-      <VBox fx:id="bundleViewBox" prefWidth="340.0" HBox.hgrow="ALWAYS">
+      <VBox fx:id="bundleViewBox" minWidth="-Infinity" prefWidth="250.0">
          <children>
-            <HBox minHeight="-Infinity" prefHeight="52.0" prefWidth="340.0" spacing="8.0" VBox.vgrow="NEVER">
+            <HBox minHeight="-Infinity" prefHeight="60.0" prefWidth="250.0" spacing="8.0" VBox.vgrow="NEVER">
                <children>
                   <JFXButton fx:id="addButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
                      <tooltip>
@@ -42,13 +42,13 @@
                   <Insets top="6.0" />
                </VBox.margin>
             </HBox>
-            <JFXListView fx:id="bundlesListView" editable="true" prefHeight="551.0" prefWidth="320.0" VBox.vgrow="ALWAYS">
+            <JFXListView fx:id="bundlesListView" editable="true" prefHeight="551.0" prefWidth="250.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="8.0" right="8.0" top="4.0" />
                </VBox.margin></JFXListView>
          </children>
       </VBox>
-      <VBox prefWidth="491.0" spacing="8.0" HBox.hgrow="ALWAYS">
+      <VBox prefWidth="500.0" spacing="8.0" HBox.hgrow="ALWAYS">
          <children>
             <GridPane prefHeight="87.0" prefWidth="524.0">
               <columnConstraints>

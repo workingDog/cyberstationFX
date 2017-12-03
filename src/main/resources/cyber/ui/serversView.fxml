@@ -11,9 +11,9 @@
 
 <HBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServersViewController">
          <children>
-            <VBox prefWidth="255.0" HBox.hgrow="ALWAYS">
+            <VBox minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="46.0" prefWidth="255.0" spacing="8.0">
+                  <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="8.0">
                      <children>
                         <JFXButton fx:id="addButton" buttonType="RAISED" defaultButton="true" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');" />
                         <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');" />
@@ -23,7 +23,7 @@
                         <Insets bottom="4.0" left="12.0" right="4.0" top="8.0" />
                      </padding>
                   </HBox>
-                  <JFXListView fx:id="serversListView" editable="true" prefWidth="255.0">
+                  <JFXListView fx:id="serversListView" editable="true" minWidth="-Infinity" prefWidth="250.0">
                <VBox.margin>
                   <Insets left="8.0" right="8.0" />
                </VBox.margin></JFXListView>
