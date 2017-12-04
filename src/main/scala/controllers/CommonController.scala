@@ -213,7 +213,7 @@ class CommonController(@FXML idButton: JFXButton,
       controller.setExternalRef(extRefForm)
       // show the dialog and wait until the user closes it
       theStage.showAndWait
-      // if cancel, reset the previous values
+      // if cancel, reset to the previous values
       if (!controller.isOkClicked) {
         extRefForm.source_name.value = formCopy.source_name.value
         extRefForm.description.value = formCopy.description.value

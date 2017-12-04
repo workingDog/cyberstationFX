@@ -147,7 +147,7 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
       controller.setKillChainPhase(killChainForm)
       // show the dialog and wait until the user closes it
       theStage.showAndWait
-      // if cancel, reset the previous values
+      // if cancel, reset to the previous values
       if (!controller.isOkClicked) {
         killChainForm.kill_chain_name.value = formCopy.kill_chain_name.value
         killChainForm.phase_name.value = formCopy.phase_name.value
