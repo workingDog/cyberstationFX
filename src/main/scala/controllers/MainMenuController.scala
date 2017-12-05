@@ -63,7 +63,7 @@ class MainMenuController(loadItem: MenuItem,
   override def loadAction() {
     // select the bundle zip file to load
     val fileChooser = new FileChooser {
-      extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
+      extensionFilters.add(new ExtensionFilter("bundle", Seq("*.json", "*.zip")))
     }
     Option(fileChooser.showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
   }
@@ -160,7 +160,7 @@ class MainMenuController(loadItem: MenuItem,
     *
     * @param theFile
     */
-  private def loadLocalBundles(theFile: File) {
+  private def loadLocalZipBundles(theFile: File) {
     cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
     showSpinner(true)
     // try to load the data from a zip file
@@ -191,6 +191,13 @@ class MainMenuController(loadItem: MenuItem,
         cyberController.showThis("Fail to load bundles from file: " + theFile.getName, Color.Red)
         showSpinner(false)
     }
+  }
+
+  private def loadLocalBundles(theFile: File) {
+    if (theFile.getName.toLowerCase.endsWith(".json"))
+      loadLocalBundle(theFile)
+    else
+      loadLocalZipBundles(theFile)
   }
 
   /**

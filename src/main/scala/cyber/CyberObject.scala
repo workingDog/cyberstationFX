@@ -130,7 +130,7 @@ object IndicatorForm {
   def fromStix(stix: Indicator): IndicatorForm = new IndicatorForm {
     `type`.value = stix.`type`
     id.value = stix.id.toString()
-    name.value = stix.name.getOrElse("")
+    name.value = stix.name.getOrElse("indicator_" + CyberUtils.randDigits)
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
     lang.value = stix.lang.getOrElse("")
