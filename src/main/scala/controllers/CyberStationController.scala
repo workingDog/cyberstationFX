@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import cyber.CyberBundle
 import db.DbService
-import taxii.{TaxiiCollection, TaxiiConnection}
+import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}

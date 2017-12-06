@@ -11,7 +11,7 @@ import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
-import taxii._
+import com.kodekutters.taxii._
 import util.CyberUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global

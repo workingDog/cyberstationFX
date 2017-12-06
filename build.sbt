@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "org.scalafx" %% "scalafx" % "8.0.144-R12",
   "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
+  "com.github.workingDog" %% "scalastix" % "0.6",
   "com.github.workingDog" %% "taxii2lib" % "0.1",
   "com.typesafe" % "config" % "1.3.2",
   "org.reactivemongo" %% "reactivemongo" % "0.12.7",

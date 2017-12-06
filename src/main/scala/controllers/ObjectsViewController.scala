@@ -6,7 +6,7 @@ import com.jfoenix.controls.JFXSpinner
 import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{CyberConverter, CyberObj}
 import db.MongoDbService.{bundlesCol, bundlesInf, config, userLogCol}
-import taxii.{Collection, TaxiiCollection}
+import com.kodekutters.taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalafx.application.Platform

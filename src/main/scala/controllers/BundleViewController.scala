@@ -6,7 +6,7 @@ import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
 import cyber.{CyberBundle, CyberObj, InfoTableEntry}
 import db.DbService
-import taxii.{Collection, TaxiiCollection}
+import com.kodekutters.taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
