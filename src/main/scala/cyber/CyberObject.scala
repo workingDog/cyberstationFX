@@ -76,6 +76,65 @@ object BundleInfo {
   def emptyInfo() = new BundleInfo("", "", "", "")
 }
 
+
+/**
+  * an CustomStix form
+  */
+class CustomStixForm() extends CyberObj {
+  `type`.value = CustomStix.`type`
+  id.value = Identifier(CustomStix.`type`).toString()
+  name.value = "x-custom-" + CyberUtils.randDigits
+
+  def toStix = new CustomStix(
+    `type`.value, Identifier.stringToIdentifier(id.value),
+    Timestamp(created.value), Timestamp(modified.value),
+    Option(revoked.value),
+    Option(labels.toList),
+    Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
+    ExternalRefForm.toExternalRefListOpt(external_references),
+    Option(lang.value),
+    CyberConverter.toIdentifierListOpt(object_marking_refs), Option(List()),
+    CyberConverter.toIdentifierOpt(created_by_ref.value), None
+  )
+
+}
+
+object CustomStixForm {
+
+  def clone(inForm: CustomStixForm) = {
+    new CustomStixForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      lang.value = inForm.lang.value
+      confidence.value = inForm.confidence.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
+
+  def fromStix(stix: CustomStix): CustomStixForm = new CustomStixForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = "x-custom-" + CyberUtils.randDigits
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    lang.value = stix.lang.getOrElse("")
+    confidence.value = stix.confidence.getOrElse(0).toString
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
 // Indicator, ObservedData, Relationship, Sighting, LanguageContent, Bundle
 
 /**
@@ -311,6 +370,7 @@ object CyberConverter {
       case stix: Indicator => IndicatorForm.fromStix(stix)
       case stix: AttackPattern => AttackPatternForm.fromStix(stix)
       case stix: Identity => IdentityForm.fromStix(stix)
+      case stix: CustomStix => CustomStixForm.fromStix(stix)
 
       case stix: Campaign => new IndicatorForm()
       case stix: CourseOfAction => new IndicatorForm()
