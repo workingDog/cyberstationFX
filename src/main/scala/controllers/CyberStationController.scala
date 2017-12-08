@@ -49,7 +49,6 @@ trait CyberStationControllerInterface {
 
 @sfxml
 class CyberStationController(mainMenu: VBox,
-                             loginButton: Button,
                              messageLabel: Label,
                              serversView: HBox,
                              objectsView: VBox,

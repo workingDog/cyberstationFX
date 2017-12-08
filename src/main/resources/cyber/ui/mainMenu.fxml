@@ -15,24 +15,24 @@
                     <items>
                         <MenuItem fx:id="newItem" mnemonicParsing="false" onAction="#newAction" text="New" />
                         <MenuItem fx:id="loadItem" mnemonicParsing="false" onAction="#loadAction" text="Open…" />
-                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitAction" text="Quit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Undo" />
-                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Undo" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Redo" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Cut" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Paste" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Cut" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Copy" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Paste" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

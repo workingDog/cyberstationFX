@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,10 +14,6 @@
    <top>
        <HBox>
            <fx:include fx:id="mainMenu" source="mainMenu.fxml" />
-           <Button fx:id="loginButton" minWidth="50.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Login">
-            <HBox.margin>
-               <Insets left="120.0" top="4.0" />
-            </HBox.margin></Button>
        </HBox>
    </top>
    <bottom>
