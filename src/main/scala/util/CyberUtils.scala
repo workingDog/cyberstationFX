@@ -45,7 +45,6 @@ object CyberUtils {
     Tool.`type`,
     Vulnerability.`type`,
     MarkingDefinition.`type`,
-    LanguageContent.`type`,
     Bundle.`type`)
 
 }

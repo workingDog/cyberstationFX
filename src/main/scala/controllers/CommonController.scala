@@ -37,8 +37,6 @@ class CommonController(@FXML idButton: JFXButton,
                        @FXML renewModified: JFXButton,
                        @FXML modifiedField: JFXTextField,
                        @FXML revokedField: JFXToggleButton,
-                       @FXML confidenceField: JFXTextField,
-                       @FXML langField: JFXTextField,
                        @FXML labelsView: JFXListView[LabelItem],
                        @FXML createdByField: JFXTextField,
                        @FXML addMarkingButton: JFXButton,
@@ -55,7 +53,7 @@ class CommonController(@FXML idButton: JFXButton,
 
   def init(): Unit = {
     // make sure only integers can be entered in the confidenceField
-    confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
+ //   confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
     // labels list
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
@@ -112,8 +110,6 @@ class CommonController(@FXML idButton: JFXButton,
     unbindAll()
     createdField.setText("")
     modifiedField.setText("")
-    confidenceField.setText("")
-    langField.setText("")
     labelsView.getItems.foreach(item => {
       item.form = null
       item.selected.value = false
@@ -128,8 +124,6 @@ class CommonController(@FXML idButton: JFXButton,
   private def loadValues(): Unit = {
     createdField.setText(currentForm.created.value)
     modifiedField.setText(currentForm.modified.value)
-    confidenceField.setText(currentForm.confidence.value)
-    langField.setText(currentForm.lang.value)
     labelsView.getItems.foreach(item => {
       item.form = currentForm
       if (currentForm.labels.contains(item.name))
@@ -146,10 +140,8 @@ class CommonController(@FXML idButton: JFXButton,
 
   private def unbindAll(): Unit = {
     if (currentForm != null) {
-      currentForm.lang.unbind()
       currentForm.created.unbind()
       currentForm.modified.unbind()
-      currentForm.confidence.unbind()
       currentForm.created_by_ref.unbind()
       currentForm.revoked.unbind()
       currentForm.id.unbind()
@@ -170,10 +162,8 @@ class CommonController(@FXML idButton: JFXButton,
       currentForm = stix
       loadValues()
       // bind the form to the UI
-      currentForm.lang <== langField.textProperty()
       currentForm.created <== createdField.textProperty()
       currentForm.modified <== modifiedField.textProperty()
-      currentForm.confidence <== confidenceField.textProperty()
       currentForm.created_by_ref <== createdByField.textProperty()
       currentForm.revoked <== revokedField.selectedProperty()
       currentForm.id <== idField.textProperty()

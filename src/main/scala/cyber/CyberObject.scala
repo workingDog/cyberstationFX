@@ -17,13 +17,11 @@ trait CyberObj {
   val `type` = StringProperty("")
   val id = StringProperty("")
   val name = StringProperty("")
-  val lang = StringProperty("")
   val created = StringProperty(Timestamp.now().toString())
   val modified = StringProperty(Timestamp.now().toString())
   val created_by_ref = StringProperty("")
   val revoked = BooleanProperty(false)
   val labels = mutable.Set[String]()
-  val confidence = StringProperty("0")
   val external_references = ObservableBuffer[ExternalRefForm]()
   val object_marking_refs = ObservableBuffer[String]() // List[Identifier]
   val granular_markings = ObservableBuffer[String]() // todo List[GranularMarking]
@@ -90,9 +88,7 @@ class CustomStixForm() extends CyberObj {
     Timestamp(created.value), Timestamp(modified.value),
     Option(revoked.value),
     Option(labels.toList),
-    Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
     ExternalRefForm.toExternalRefListOpt(external_references),
-    Option(lang.value),
     CyberConverter.toIdentifierListOpt(object_marking_refs), Option(List()),
     CyberConverter.toIdentifierOpt(created_by_ref.value), None
   )
@@ -108,8 +104,6 @@ object CustomStixForm {
       name.value = inForm.name.value
       created.value = inForm.created.value
       modified.value = inForm.modified.value
-      lang.value = inForm.lang.value
-      confidence.value = inForm.confidence.value
       labels ++ inForm.labels
       created_by_ref.value = inForm.created_by_ref.value
       revoked.value = inForm.revoked.value
@@ -124,8 +118,6 @@ object CustomStixForm {
     name.value = "x-custom-" + CyberUtils.randDigits
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
-    lang.value = stix.lang.getOrElse("")
-    confidence.value = stix.confidence.getOrElse(0).toString
     labels ++= stix.labels.getOrElse(List())
     created_by_ref.value = stix.created_by_ref.getOrElse("").toString
     revoked.value = stix.revoked.getOrElse(false)
@@ -159,8 +151,7 @@ class IndicatorForm() extends CyberObj {
     KillChainPhaseForm.toKillChainPhaseListOpt(kill_chain_phases),
     Option(description.value),
     Option(revoked.value),
-    Option(if (confidence.value.isEmpty) 0 else Integer.parseInt(confidence.value)),
-    ExternalRefForm.toExternalRefListOpt(external_references), Option(lang.value),
+    ExternalRefForm.toExternalRefListOpt(external_references),
     CyberConverter.toIdentifierListOpt(object_marking_refs), Option(List()),
     CyberConverter.toIdentifierOpt(created_by_ref.value), None
   )
@@ -176,8 +167,6 @@ object IndicatorForm {
       name.value = inForm.name.value
       created.value = inForm.created.value
       modified.value = inForm.modified.value
-      lang.value = inForm.lang.value
-      confidence.value = inForm.confidence.value
       labels ++ inForm.labels
       created_by_ref.value = inForm.created_by_ref.value
       revoked.value = inForm.revoked.value
@@ -192,8 +181,6 @@ object IndicatorForm {
     name.value = stix.name.getOrElse("indicator_" + CyberUtils.randDigits)
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
-    lang.value = stix.lang.getOrElse("")
-    confidence.value = stix.confidence.getOrElse(0).toString
     labels ++= stix.labels.getOrElse(List())
     created_by_ref.value = stix.created_by_ref.getOrElse("").toString
     revoked.value = stix.revoked.getOrElse(false)
@@ -222,7 +209,6 @@ object AttackPatternForm {
     name.value = stix.name
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
-    lang.value = stix.lang.getOrElse("")
   }
 
 }
@@ -350,7 +336,6 @@ object IdentityForm {
     name.value = stix.name
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
-    lang.value = stix.lang.getOrElse("")
   }
 
 }
@@ -384,7 +369,6 @@ object CyberConverter {
       case stix: Relationship => new IndicatorForm()
       case stix: Sighting => new IndicatorForm()
       case stix: MarkingDefinition => new IndicatorForm()
-      case stix: LanguageContent => new IndicatorForm()
       case _ => new IndicatorForm()
     }
   }

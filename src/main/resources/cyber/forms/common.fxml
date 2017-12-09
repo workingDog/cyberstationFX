@@ -68,20 +68,6 @@
             <JFXListView fx:id="labelsView" editable="true" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
-      <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
-         <children>
-            <JFXTextField fx:id="langField" labelFloat="true" promptText="language" text="en">
-               <HBox.margin>
-                  <Insets left="8.0" right="8.0" top="12.0" />
-               </HBox.margin>
-            </JFXTextField>
-            <JFXTextField fx:id="confidenceField" labelFloat="true" promptText="confidence" text="0">
-               <HBox.margin>
-                  <Insets left="8.0" top="12.0" />
-               </HBox.margin>
-            </JFXTextField>
-         </children>
-      </HBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <HBox prefHeight="60.0" spacing="12.0">
