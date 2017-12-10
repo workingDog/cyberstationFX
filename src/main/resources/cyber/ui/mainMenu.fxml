@@ -7,9 +7,9 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="40.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
+<VBox prefHeight="40.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
     <children>
-        <MenuBar prefHeight="40.0" VBox.vgrow="NEVER">
+        <MenuBar prefHeight="32.0" prefWidth="273.0" VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
@@ -35,6 +35,18 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Tools">
+              <items>
+                  <MenuItem fx:id="sendFromFileItem" mnemonicParsing="false" onAction="#sendFromFile" text="Send file to server" />
+                  <Menu mnemonicParsing="false" text="Save file to">
+                    <items>
+                      <MenuItem fx:id="saveToMongo" disable="true" mnemonicParsing="false" text="MongoDB" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Neo4J" />
+                        <MenuItem disable="true" mnemonicParsing="false" text="Postgres" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#aboutAction" text="About CyberStation" />

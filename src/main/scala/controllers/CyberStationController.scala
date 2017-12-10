@@ -45,6 +45,8 @@ trait CyberStationControllerInterface {
   def getStixViewController(): StixViewControllerInterface
 
   def showThis(text: String, color: Color): Unit
+
+  def showSpinner(onof: Boolean): Unit
 }
 
 @sfxml
@@ -102,11 +104,11 @@ class CyberStationController(mainMenu: VBox,
           showThis("Fail to load data from database: " + DbService.dbUri, Color.Red)
           println("---> bundles loading failure: " + err)
       }
-      showSpinner(false)
     } catch {
       case ex: Throwable =>
         showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved to the database", Color.Red)
-        showSpinner(false)
+    } finally {
+      showSpinner(false)
     })
   }
 
@@ -131,7 +133,7 @@ class CyberStationController(mainMenu: VBox,
     messageBar().setText(text)
   })
 
-  private def showSpinner(onof: Boolean) = {
+  def showSpinner(onof: Boolean) = {
     Platform.runLater(() => {
       msgBarSpinner.setVisible(onof)
     })

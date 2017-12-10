@@ -3,7 +3,7 @@ package controllers
 import java.io.File
 
 import com.kodekutters.stix.Bundle
-import cyber.{CyberBundle, CyberStationApp}
+import cyber.{CyberBundle, CyberStationApp, FileSender}
 import play.api.libs.json.Json
 import java.io.IOException
 import java.nio.file.{Files, Paths}
@@ -34,6 +34,8 @@ trait MainMenuControllerInterface {
 
   def loadAction(): Unit
 
+  def sendFromFile(): Unit
+
   def saveAction(): Unit
 
   def aboutAction(): Unit
@@ -45,20 +47,21 @@ trait MainMenuControllerInterface {
 
 @sfxml
 class MainMenuController(loadItem: MenuItem,
+                         sendFromFileItem: MenuItem,
                          saveItem: MenuItem,
                          quitItem: MenuItem,
                          aboutItem: MenuItem,
-                         newItem: MenuItem
-                        ) extends MainMenuControllerInterface {
+                         newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
+
 
   override def setCyberStationController(cyberStationController: CyberStationControllerInterface) {
     cyberController = cyberStationController
   }
 
   /**
-    * load a set of bundles from a zip file
+    * load bundles from a file to the viewer
     */
   override def loadAction() {
     // select the bundle zip file to load
@@ -66,6 +69,22 @@ class MainMenuController(loadItem: MenuItem,
       extensionFilters.add(new ExtensionFilter("bundle", Seq("*.json", "*.zip")))
     }
     Option(fileChooser.showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
+  }
+
+  /**
+    * load bundles from a file and sent it to the server
+    */
+  override def sendFromFile() {
+    // select the bundle zip or json file to send
+    val fileChooser = new FileChooser {
+      extensionFilters.add(new ExtensionFilter("bundle", Seq("*.json", "*.zip")))
+    }
+    Option(fileChooser.showOpenDialog(new Stage())).map(file => {
+      if (file.getName.toLowerCase.endsWith(".json"))
+        FileSender.sendBundle(file, cyberController)
+      else
+        FileSender.sendZipBundles(file, cyberController)
+    })
   }
 
   /**
@@ -184,12 +203,12 @@ class MainMenuController(loadItem: MenuItem,
         cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
       })
       cyberController.showThis("", Color.Black)
-      showSpinner(false)
     } catch {
       case ex: Throwable =>
         println("---> Fail to load bundles from file: " + theFile.getName)
         cyberController.showThis("Fail to load bundles from file: " + theFile.getName, Color.Red)
-        showSpinner(false)
+    } finally {
+      showSpinner(false)
     }
   }
 
@@ -228,11 +247,11 @@ class MainMenuController(loadItem: MenuItem,
           cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
           println("---> bundle loading failure --> invalid JSON")
       }
-      showSpinner(false)
     } catch {
       case ex: Throwable =>
         cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
-        showSpinner(false)
+    }finally {
+      showSpinner(false)
     }
   }
 
