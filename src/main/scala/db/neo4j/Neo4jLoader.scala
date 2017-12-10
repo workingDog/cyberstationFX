@@ -18,7 +18,7 @@ import scala.language.{implicitConversions, postfixOps}
   * @param inFile the input file to process
   * @param dbDir  the db.neo4j graph database directory name
   */
-class Neo4jLoader(inFile: String, dbDir: String) {
+class Neo4jLoader(inFile: File, dbDir: String) {
 
   import MakerSupport._
 
@@ -54,12 +54,12 @@ class Neo4jLoader(inFile: String, dbDir: String) {
     // read a STIX bundle from the inFile
     val jsondoc = Source.fromFile(inFile).mkString
     Option(Json.parse(jsondoc)) match {
-      case None => println("\n-----> could not parse JSON in file: " + inFile)
+      case None => println("\n-----> could not parse JSON in file: " + inFile.getName)
       case Some(js) =>
         // create a bundle object from it and convert its objects to nodes and relations
         Json.fromJson[Bundle](js).asOpt match {
-          case None => println("\n-----> ERROR reading bundle in file: " + inFile)
-          case Some(bundle) => processBundle(bundle, inFile)
+          case None => println("\n-----> ERROR reading bundle in file: " + inFile.getName)
+          case Some(bundle) => processBundle(bundle, inFile.getName)
         }
         Neo4jDbService.closeAll()
     }
@@ -72,7 +72,7 @@ class Neo4jLoader(inFile: String, dbDir: String) {
   def processBundleZipFile(): Unit = {
     import scala.collection.JavaConverters._
     // get the zip file
-    val rootZip = new java.util.zip.ZipFile(new File(inFile))
+    val rootZip = new java.util.zip.ZipFile(inFile)
     // for each entry file containing a single bundle
     rootZip.entries.asScala.filter(_.getName.toLowerCase.endsWith(".json")).foreach(f => {
       loadBundle(rootZip.getInputStream(f)) match {
@@ -129,7 +129,7 @@ class Neo4jLoader(inFile: String, dbDir: String) {
     */
   def processStixZipFile(): Unit = {
     // get the input zip file
-    val rootZip = new java.util.zip.ZipFile(new File(inFile))
+    val rootZip = new java.util.zip.ZipFile(inFile)
     // for each entry file
     rootZip.entries.asScala.filter(_.getName.toLowerCase.endsWith(".json")).foreach(f => {
       // go thru the file twice, on first pass process the nodes, on second pass relations

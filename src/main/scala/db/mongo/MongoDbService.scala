@@ -179,7 +179,7 @@ object MongoDbService extends DbService {
   }
 
   def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
-    println("----> in MongoDbService saveFileToDB ")
+    println("----> in MongoDbService saveFileToDB not yet implemented")
   }
 
 
