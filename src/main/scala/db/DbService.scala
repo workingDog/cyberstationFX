@@ -1,8 +1,13 @@
 package db
 
+import java.io.File
+
 import com.kodekutters.stix.Bundle
+import controllers.CyberStationControllerInterface
 import cyber.CyberBundle
+import db.mongo.MongoDbService
 import reactivemongo.api.commands.MultiBulkWriteResult
+
 import scala.concurrent.Future
 
 
@@ -20,6 +25,8 @@ trait DbService {
   def loadLocalBundles(): Future[List[CyberBundle]]
 
   def dropLocalBundles(): Unit
+
+  def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit
 }
 
 
@@ -54,4 +61,9 @@ object DbService extends DbService {
   def dropLocalBundles(): Unit = {
     mongoDB.dropLocalBundles()
   }
+
+  def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
+    mongoDB.saveFileToDB(file, controller)
+  }
+
 }

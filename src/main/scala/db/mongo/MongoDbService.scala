@@ -1,22 +1,25 @@
-package db
+package db.mongo
 
+import java.io.File
+
+import com.kodekutters.stix.StixObj._
+import com.kodekutters.stix._
+import com.typesafe.config.{Config, ConfigFactory}
+import controllers.CyberStationControllerInterface
+import cyber.{BundleInfo, CyberBundle}
+import db.{DbService, UserLog}
 import util.CyberUtils
 import play.api.libs.json._
-import com.kodekutters.stix.StixObj._
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
-import com.kodekutters.stix._
-import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.api._
+import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
-import com.typesafe.config.{Config, ConfigFactory}
-import cyber.{BundleInfo, CyberBundle}
 
-import scala.util.{Failure, Success}
-import scala.language.{implicitConversions, postfixOps}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.{implicitConversions, postfixOps}
+import scala.util.{Failure, Success}
 
 
 /**
@@ -174,6 +177,12 @@ object MongoDbService extends DbService {
     dropBundles()
     dropBundlesInfo()
   }
+
+  def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
+    println("----> in MongoDbService saveFileToDB ")
+  }
+
+
 
 }
 

@@ -5,7 +5,7 @@ import javafx.fxml.FXML
 import com.jfoenix.controls.JFXSpinner
 import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{CyberConverter, CyberObj}
-import db.MongoDbService.{bundlesCol, bundlesInf, config, userLogCol}
+import db.mongo.MongoDbService.{bundlesCol, bundlesInf, config, userLogCol}
 import com.kodekutters.taxii.{Collection, TaxiiCollection}
 
 import scala.concurrent.ExecutionContext.Implicits.global

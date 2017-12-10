@@ -18,7 +18,19 @@ import scalafx.scene.paint.Color
   */
 object FileSender {
 
-  def sendBundle(theFile: File, cyberController: CyberStationControllerInterface): Unit = {
+  var cyberController: CyberStationControllerInterface = _
+
+  def sendFile(file: File, controller: CyberStationControllerInterface) = {
+    cyberController = controller
+    if(cyberController != null) {
+      if (file.getName.toLowerCase.endsWith(".json"))
+        sendBundle(file)
+      else
+        sendZipBundles(file)
+    }
+  }
+
+  private def sendBundle(theFile: File): Unit = {
     cyberController.showSpinner(true)
     // try to load the data from file
     try {
@@ -27,7 +39,7 @@ object FileSender {
       val jsondoc = Source.fromFile(theFile).mkString
       // create a bundle object from it
       Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
-        case Some(bundle) => sendBundleToServer(bundle, cyberController)
+        case Some(bundle) => sendBundleToServer(bundle)
         case None =>
           cyberController.showThis("Invalid JSON --> fail to load bundle from file: " + theFile.getName, Color.Red)
           println("---> bundle loading failure --> invalid JSON")
@@ -40,7 +52,7 @@ object FileSender {
     }
   }
 
-  private def sendBundleToServer(theBundle: Bundle, cyberController: CyberStationControllerInterface) = {
+  private def sendBundleToServer(theBundle: Bundle) = {
     val taxiiApiroot = Option(cyberController.getSelectedApiroot().value)
     val taxiiCol = Option(cyberController.getSelectedCollection().value)
     if (taxiiCol.isEmpty || taxiiApiroot.isEmpty) {
@@ -67,7 +79,7 @@ object FileSender {
     }
   }
 
-  def sendZipBundles(theFile: File, cyberController: CyberStationControllerInterface): Unit = {
+  private def sendZipBundles(theFile: File): Unit = {
     cyberController.showSpinner(true)
     // try to load the data from a zip file
     try {
@@ -77,7 +89,7 @@ object FileSender {
         val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
         // create a bundle object
         Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
-          case Some(bundle) => sendBundleToServer(bundle, cyberController)
+          case Some(bundle) => sendBundleToServer(bundle)
             println("---> trying to send " + stixFile.getName + " to server")
           case None =>
             cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)

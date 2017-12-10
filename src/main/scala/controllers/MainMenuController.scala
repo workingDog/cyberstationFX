@@ -9,7 +9,9 @@ import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
-import db.DbService
+import db._
+import db.mongo.MongoDbService
+import db.neo4j.Neo4jDbService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import util.CyberUtils
@@ -20,14 +22,15 @@ import scala.language.implicitConversions
 import scala.language.postfixOps
 import scalafx.scene.control.{Alert, ButtonType, MenuItem}
 import scalafx.scene.paint.Color
-import scalafx.stage.FileChooser.ExtensionFilter
-import scalafx.stage.{FileChooser, Stage}
 import scalafxml.core.macros.sfxml
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.scene.control.Alert.AlertType
+import CyberUtils._
 
+import scalafx.stage.FileChooser.ExtensionFilter
+import scalafx.stage.{FileChooser, Stage}
 
 trait MainMenuControllerInterface {
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
@@ -43,11 +46,17 @@ trait MainMenuControllerInterface {
   def newAction(): Unit
 
   def quitAction(): Unit
+
+  def saveToNeo4jDB(): Unit
+
+  def saveToMongoDB(): Unit
 }
 
 @sfxml
 class MainMenuController(loadItem: MenuItem,
                          sendFromFileItem: MenuItem,
+                         saveToNeo4jItem: MenuItem,
+                         saveToMongoItem: MenuItem,
                          saveItem: MenuItem,
                          quitItem: MenuItem,
                          aboutItem: MenuItem,
@@ -64,31 +73,18 @@ class MainMenuController(loadItem: MenuItem,
     * load bundles from a file to the viewer
     */
   override def loadAction() {
-    // select the bundle zip file to load
-    val fileChooser = new FileChooser {
-      extensionFilters.add(new ExtensionFilter("bundle", Seq("*.json", "*.zip")))
-    }
-    Option(fileChooser.showOpenDialog(new Stage())).map(file => loadLocalBundles(file))
+    fileSelector().map(file => loadLocalBundles(file))
   }
 
   /**
     * load bundles from a file and sent it to the server
     */
   override def sendFromFile() {
-    // select the bundle zip or json file to send
-    val fileChooser = new FileChooser {
-      extensionFilters.add(new ExtensionFilter("bundle", Seq("*.json", "*.zip")))
-    }
-    Option(fileChooser.showOpenDialog(new Stage())).map(file => {
-      if (file.getName.toLowerCase.endsWith(".json"))
-        FileSender.sendBundle(file, cyberController)
-      else
-        FileSender.sendZipBundles(file, cyberController)
-    })
+    fileSelector().map(file => FileSender.sendFile(file, cyberController))
   }
 
   /**
-    * save the bundles to a zip file
+    * save the bundles to a zip file  ("zip", "*.zip")
     */
   override def saveAction() {
     if (cyberController.getAllBundles().toList.nonEmpty) {
@@ -124,7 +120,7 @@ class MainMenuController(loadItem: MenuItem,
       initOwner(this.owner)
       title = "CyberStation-" + CyberStationApp.version
       headerText = None
-      contentText = "CyberStation is a tool to create and send STIX-2 objects to TAXII-2 servers"
+      contentText = "CyberStation is a tool to create and send STIX-2 objects to TAXII-2 servers."
     }.showAndWait()
   }
 
@@ -175,9 +171,8 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   /**
-    * read a zip file containing bundle of stix
+    * read a zip file containing bundles of stix
     *
-    * @param theFile
     */
   private def loadLocalZipBundles(theFile: File) {
     cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
@@ -250,9 +245,24 @@ class MainMenuController(loadItem: MenuItem,
     } catch {
       case ex: Throwable =>
         cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
-    }finally {
+    } finally {
       showSpinner(false)
     }
   }
+
+  /**
+    * save a file to a Neo4jDB
+    */
+  override def saveToNeo4jDB() {
+    fileSelector().map(file => Neo4jDbService.saveFileToDB(file, cyberController))
+  }
+
+  /**
+    * save a file to a MongoDB
+    */
+  override def saveToMongoDB() {
+    fileSelector().map(file => MongoDbService.saveFileToDB(file, cyberController))
+  }
+
 
 }

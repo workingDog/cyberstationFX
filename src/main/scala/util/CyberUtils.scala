@@ -1,11 +1,13 @@
 package util
 
 import java.net.URL
+import java.io.File
 
 import com.kodekutters.stix._
 
 import scala.util.Random
-
+import scalafx.stage.FileChooser.ExtensionFilter
+import scalafx.stage.{FileChooser, Stage}
 
 
 object CyberUtils {
@@ -47,4 +49,13 @@ object CyberUtils {
     MarkingDefinition.`type`,
     Bundle.`type`)
 
+  /**
+    * popup a fileChooser with the desired filter
+    */
+  def fileSelector(filter: Seq[String] = Seq("*.json", "*.zip")): Option[File] = {
+    val fileChooser = new FileChooser {
+      extensionFilters.add(new ExtensionFilter("bundle", filter))
+    }
+    Option(fileChooser.showOpenDialog(new Stage()))
+  }
 }
