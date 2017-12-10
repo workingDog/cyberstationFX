@@ -3,7 +3,7 @@
 //see: https://docs.mongodb.com/manual/
 
 // make sure the mongo server is running before launching the app.
-In a terminal type:
+In a terminal type the following and leave it running:
 mongod
 
 
@@ -36,7 +36,7 @@ db.bundles.find().pretty()
 db.userLog.find().pretty()
 db.indicator.find().pretty()
 
-
+db.indicator.find().pretty()
 ---------------------------------------------
 
 

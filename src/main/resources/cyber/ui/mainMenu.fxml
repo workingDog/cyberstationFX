@@ -38,7 +38,7 @@
             <Menu mnemonicParsing="false" text="Tools">
               <items>
                   <MenuItem fx:id="sendFromFileItem" mnemonicParsing="false" onAction="#sendFromFile" text="Send file to server" />
-                  <Menu mnemonicParsing="false" text="Save file to">
+                  <Menu mnemonicParsing="false" text="Convert file to">
                     <items>
                       <MenuItem fx:id="saveToMongoItem" mnemonicParsing="false" onAction="#saveToMongoDB" text="MongoDB" />
                         <MenuItem fx:id="saveToNeo4jItem" mnemonicParsing="false" onAction="#saveToNeo4jDB" text="Neo4J" />

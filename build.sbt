@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.2",
   "org.reactivemongo" %% "reactivemongo" % "0.12.7",
   "org.reactivemongo" %% "reactivemongo-play-json" % "0.12.7-play26",
-  "org.neo4j" % "neo4j" % "3.2.1",
+  "org.neo4j" % "neo4j" % "3.3.1" % "provided",
   // "ch.qos.logback" % "logback-classic" % "1.2.3",
   // "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
   "org.slf4j" % "slf4j-nop" % "1.7.25"

@@ -7,6 +7,7 @@ import com.kodekutters.stix._
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 import cyber.{BundleInfo, CyberBundle}
+import db.neo4j.MakerSupport.loadBundle
 import db.{DbService, UserLog}
 import util.CyberUtils
 import play.api.libs.json._
@@ -18,9 +19,10 @@ import reactivemongo.play.json.collection._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.io.Source
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success}
-
+import scalafx.scene.paint.Color
 
 /**
   * the MongoDbService support
@@ -45,7 +47,7 @@ object MongoDbService extends DbService {
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
   private var userLogCol = "userLog"
-  private var timeout = 30  // seconds
+  private var timeout = 30 // seconds
   try {
     bundlesCol = config.getString("mongo.collection.bundles")
     bundlesInf = config.getString("mongo.collection.bundlesInfo")
@@ -87,7 +89,7 @@ object MongoDbService extends DbService {
     Await.result(MongoDbService.database, timeout seconds)
   }
 
-  def close(): Unit = if(database != null && isReady) database.map(db => db.connection.close())
+  def close(): Unit = if (database != null && isReady) database.map(db => db.connection.close())
 
   /**
     * create all collections from the STIX objects type names (including Bundle)
@@ -179,10 +181,45 @@ object MongoDbService extends DbService {
   }
 
   def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
-    println("----> in MongoDbService saveFileToDB not yet implemented")
+    controller.showSpinner(true)
+    Future({
+      println("---> MongoDb: " + dbUri)
+      controller.showThis("---> saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
+      if (file.getName.toLowerCase.endsWith(".json")) saveBundleFile(file)
+      if (file.getName.toLowerCase.endsWith(".zip")) saveBundleZipFile(file)
+      controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
+      controller.showSpinner(false)
+    })
   }
 
+  def saveBundleFile(file: File): Unit = {
+    // read a STIX bundle from the file
+    val jsondoc = Source.fromFile(file).mkString
+    Option(Json.parse(jsondoc)) match {
+      case None => println("\n-----> could not parse JSON in file: " + file.getName)
+      case Some(js) =>
+        // create a bundle object from it and convert its objects to nodes and relations
+        Json.fromJson[Bundle](js).asOpt match {
+          case None => println("\n-----> ERROR reading bundle in file: " + file.getName)
+          case Some(bundle) => saveBundleAsStixs(bundle)
+        }
+        close()
+    }
+  }
 
+  def saveBundleZipFile(file: File): Unit = {
+    import scala.collection.JavaConverters._
+    // get the zip file
+    val rootZip = new java.util.zip.ZipFile(file)
+    // for each entry file containing a single bundle
+    rootZip.entries.asScala.filter(_.getName.toLowerCase.endsWith(".json")).foreach(f => {
+      loadBundle(rootZip.getInputStream(f)) match {
+        case Some(bundle) => saveBundleAsStixs(bundle)
+        case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
+      }
+    })
+    close()
+  }
 
 }
 

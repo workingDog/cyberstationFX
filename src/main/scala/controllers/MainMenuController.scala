@@ -10,7 +10,7 @@ import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db._
-import db.mongo.MongoDbService
+import db.mongo.{MongoDbService, MongoDbStix}
 import db.neo4j.Neo4jDbService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -261,7 +261,7 @@ class MainMenuController(loadItem: MenuItem,
     * save a file to a MongoDB
     */
   override def saveToMongoDB() {
-    fileSelector().map(file => MongoDbService.saveFileToDB(file, cyberController))
+    fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
   }
 
 

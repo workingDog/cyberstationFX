@@ -7,6 +7,7 @@ import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import cyber.CyberBundle
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
+import db.mongo.MongoDbStix
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -85,12 +86,28 @@ class CyberStationController(mainMenu: VBox,
 
   def messageBarSpin(): JFXSpinner = msgBarSpinner
 
-  def init() {
+  def initToolMongo() {
+    showThis("Trying to connect to database: " + MongoDbStix.dbUri, Color.Black)
+    showSpinner(true)
+    // try to connect to the mongo db
+    Future(try {
+      // start a mongo DB connection, for the save to file tool
+      // will wait here for the connection to complete or throw an exception
+      MongoDbStix.init()
+    } catch {
+      case ex: Throwable =>
+        showThis("Fail to connect to database: " + MongoDbStix.dbUri + " --> data will not be saved to the database", Color.Red)
+    } finally {
+      showSpinner(false)
+    })
+  }
+
+  def initLocalDB() {
     showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
     Future(try {
-      // start a db connection
+      // start a db connection, for local bundle storage
       // will wait here for the connection to complete or throw an exception
       DbService.init()
       // load the data
@@ -110,6 +127,13 @@ class CyberStationController(mainMenu: VBox,
     } finally {
       showSpinner(false)
     })
+  }
+
+  def init() {
+    // try to connect to the mongo db, for the save to file tool
+    initToolMongo()
+    // try to connect to the mongo db, for local storage
+    initLocalDB()
   }
 
   // save the data and close properly before exiting

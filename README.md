@@ -1,5 +1,7 @@
 ### CyberStation
 
+Adjust *application.conf*
+
 java -jar CyberStationApp.jar
 
 ### Requirements
