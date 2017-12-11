@@ -148,12 +148,12 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
       // show the dialog and wait until the user closes it
       theStage.showAndWait
       // if cancel, reset to the previous values
-      if (!controller.isOkClicked) {
+      if (!controller.isOkClicked()) {
         killChainForm.kill_chain_name.value = formCopy.kill_chain_name.value
         killChainForm.phase_name.value = formCopy.phase_name.value
       }
       // return true if the ok button was clicked else false
-      controller.isOkClicked
+      controller.isOkClicked()
     } catch {
       case e: IOException =>
         e.printStackTrace()

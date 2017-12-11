@@ -85,7 +85,9 @@ object MakerSupport {
       case Some(markObjNode) =>
         transaction {
           sourceNode.createRelationshipTo(markObjNode, "HAS_MARKING_OBJECT")
-        }.getOrElse(println("---> could not process marking_object_refs relation: " + definition_id))
+        }.getOrElse {
+          println("---> could not process marking_object_refs relation: " + definition_id); Unit
+        }
 
       case None => println("---> could not create marking_object_refs definition_id: " + definition_id)
     }
@@ -106,7 +108,9 @@ object MakerSupport {
           case Some(stixNode) =>
             transaction {
               sourceNode.createRelationshipTo(stixNode, "HAS_KILL_CHAIN_PHASE")
-            }.getOrElse(println("---> could not process relation: HAS_KILL_CHAIN_PHASE"))
+            }.getOrElse {
+              println("---> could not process relation: HAS_KILL_CHAIN_PHASE"); Unit
+            }
 
           case None => println("---> could not create node kill_chain_phase: " + kp.toString())
         }
@@ -145,7 +149,9 @@ object MakerSupport {
             createHashes(stixNode, extRef.hashes, hashes_ids)
             transaction {
               sourceNode.createRelationshipTo(stixNode, "HAS_EXTERNAL_REF")
-            }.getOrElse(println("---> could not process relation: HAS_EXTERNAL_REF"))
+            }.getOrElse {
+              println("---> could not process relation: HAS_EXTERNAL_REF"); Unit
+            }
 
           case None => println("---> could not create node external_reference: " + extRef.toString)
         }
@@ -180,7 +186,9 @@ object MakerSupport {
           case Some(stixNode) =>
             transaction {
               sourceNode.createRelationshipTo(stixNode, "HAS_GRANULAR_MARKING")
-            }.getOrElse(println("---> could not process relation: HAS_GRANULAR_MARKING"))
+            }.getOrElse {
+              println("---> could not process relation: HAS_GRANULAR_MARKING"); Unit
+            }
 
           case None => println("---> could not create node granular_marking: " + gra.toString())
         }
@@ -195,7 +203,9 @@ object MakerSupport {
         val sourceNode = Neo4jDbService.idIndex.get("id", idString).getSingle
         val targetNode = Neo4jDbService.idIndex.get("id", s.toString()).getSingle
         sourceNode.createRelationshipTo(targetNode, relName)
-      }.getOrElse(println("---> could not process " + relName + " relation from: " + idString + " to: " + s.toString()))
+      }.getOrElse {
+        println("---> could not process " + relName + " relation from: " + idString + " to: " + s.toString()); Unit
+      }
     }
   }
 
@@ -205,7 +215,9 @@ object MakerSupport {
         val sourceNode = Neo4jDbService.idIndex.get("id", sourceId).getSingle
         val targetNode = Neo4jDbService.idIndex.get("id", tgt.toString()).getSingle
         sourceNode.createRelationshipTo(targetNode, "CREATED_BY")
-      }.getOrElse(println("---> could not process CREATED_BY relation from: " + sourceId + " to: " + tgt.toString()))
+      }.getOrElse {
+        println("---> could not process CREATED_BY relation from: " + sourceId + " to: " + tgt.toString()); Unit
+      }
     })
   }
 
@@ -223,7 +235,9 @@ object MakerSupport {
           createTranslations(tgtNode, obs, obs_contents_ids)
           transaction {
             sourceNode.createRelationshipTo(tgtNode, "HAS_CONTENTS")
-          }.getOrElse(println("---> could not process language HAS_CONTENTS relation"))
+          }.getOrElse {
+            println("---> could not process language HAS_CONTENTS relation"); Unit
+          }
 
         case None => println("---> could not create node language contents")
       }
@@ -242,7 +256,9 @@ object MakerSupport {
         case Some(tgtNode) =>
           transaction {
             sourceNode.createRelationshipTo(tgtNode, "HAS_TRANSLATION")
-          }.getOrElse(println("---> could not process language HAS_TRANSLATION relation"))
+          }.getOrElse {
+            println("---> could not process language HAS_TRANSLATION relation"); Unit
+          }
 
         case None => println("---> could not create node language translations")
       }
@@ -263,7 +279,9 @@ object MakerSupport {
           case Some(hashNode) =>
             transaction {
               theNode.createRelationshipTo(hashNode, "HAS_HASHES")
-            }.getOrElse(println("---> could not process language HAS_HASHES relation"))
+            }.getOrElse {
+              println("---> could not process language HAS_HASHES relation"); Unit
+            }
 
           case None => println("---> could not create node hashes")
         }

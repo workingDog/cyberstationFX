@@ -39,14 +39,14 @@ object MongoDbStix {
 
   def isConnected() = isReady
 
+  var dbUri = ""
   private var timeout = 30 // seconds
   try {
     timeout = config.getInt("mongodbStix.timeout")
+    dbUri = config.getString("mongodbStix.uri")
   } catch {
     case e: Throwable => println("---> config error: " + e)
   }
-
-  val dbUri = config.getString("mongodbStix.uri")
 
   /**
     * initialise this singleton

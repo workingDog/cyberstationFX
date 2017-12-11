@@ -45,7 +45,7 @@ object ObservablesMaker {
           // create the relation to the parent node
           transaction {
             sourceNode.createRelationshipTo(node, "HAS_OBSERVABLE")
-          }.getOrElse(println("---> could not process HAS_OBSERVABLE relation"))
+          }.getOrElse {println("---> could not process HAS_OBSERVABLE relation"); Unit}
 
         case None => println("---> could not create node Observable")
       }
@@ -278,7 +278,7 @@ object ObservablesMaker {
         nodeOpt.foreach(node => {
           transaction {
             sourceNode.createRelationshipTo(node, "HAS_ENVIRONMENT_VARIABLE")
-          }.getOrElse(println("---> could not process HAS_ENVIRONMENT_VARIABLE relation"))
+          }.getOrElse {println("---> could not process HAS_ENVIRONMENT_VARIABLE relation"); Unit}
         })
       }
     )
@@ -296,7 +296,7 @@ object ObservablesMaker {
         nodeOpt.foreach(node => {
           transaction {
             sourceNode.createRelationshipTo(node, "HAS_ADDITIONAL_HEADER_FIELD")
-          }.getOrElse(println("---> could not process HAS_ADDITIONAL_HEADER_FIELD relation"))
+          }.getOrElse {println("---> could not process HAS_ADDITIONAL_HEADER_FIELD relation"); Unit}
         })
       }
     )
@@ -319,7 +319,7 @@ object ObservablesMaker {
         nodeOpt.foreach(node => {
           transaction {
             sourceNode.createRelationshipTo(node, "HAS_IPFIX")
-          }.getOrElse(println("---> could not process HAS_IPFIX relation"))
+          }.getOrElse {println("---> could not process HAS_IPFIX relation"); Unit}
         })
       }
     )

@@ -38,7 +38,7 @@ object ExtensionsMaker {
             // create a relation between the parent Observable node and this Extension node
             transaction {
               sourceNode.createRelationshipTo(xNode, "HAS_EXTENSION")
-            }.getOrElse(println("---> could not process HAS_EXTENSION relation"))
+            }.getOrElse {println("---> could not process HAS_EXTENSION relation"); Unit}
 
             // add the specific attributes to the extension node
             extention match {
@@ -118,7 +118,7 @@ object ExtensionsMaker {
           createHashes(tgtNode, kp.hashes, hashes_ids)
           transaction {
             fromNode.createRelationshipTo(tgtNode, "HAS_ALTERNATE_DATA_STREAM")
-          }.getOrElse(println("---> could not process HAS_ALTERNATE_DATA_STREAM relation"))
+          }.getOrElse {println("---> could not process HAS_ALTERNATE_DATA_STREAM relation"); Unit}
         })
       }
     })
@@ -141,7 +141,7 @@ object ExtensionsMaker {
         tgtNodeOpt.foreach(tgtNode => {
           transaction {
             fromNode.createRelationshipTo(tgtNode, "HAS_EXIF_TAGS")
-          }.getOrElse(println("---> could not process HAS_EXIF_TAGS relation"))
+          }.getOrElse {println("---> could not process HAS_EXIF_TAGS relation"); Unit}
         })
       }
     )

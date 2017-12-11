@@ -204,14 +204,14 @@ class CommonController(@FXML idButton: JFXButton,
       // show the dialog and wait until the user closes it
       theStage.showAndWait
       // if cancel, reset to the previous values
-      if (!controller.isOkClicked) {
+      if (!controller.isOkClicked()) {
         extRefForm.source_name.value = formCopy.source_name.value
         extRefForm.description.value = formCopy.description.value
         extRefForm.url.value = formCopy.url.value
         extRefForm.external_id.value = formCopy.external_id.value
       }
       // return true if the ok button was clicked else false
-      controller.isOkClicked
+      controller.isOkClicked()
     } catch {
       case e: IOException =>
         e.printStackTrace()

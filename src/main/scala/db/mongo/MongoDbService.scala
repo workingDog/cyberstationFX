@@ -9,7 +9,7 @@ import controllers.CyberStationControllerInterface
 import cyber.{BundleInfo, CyberBundle}
 import db.neo4j.MakerSupport.loadBundle
 import db.{DbService, UserLog}
-import util.CyberUtils
+
 import play.api.libs.json._
 import reactivemongo.api._
 import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
@@ -44,6 +44,7 @@ object MongoDbService extends DbService {
 
   def isConnected() = isReady
 
+  var dbUri = ""
   private var bundlesCol = "bundles"
   private var bundlesInf = "bundlesInfo"
   private var userLogCol = "userLog"
@@ -53,6 +54,7 @@ object MongoDbService extends DbService {
     bundlesInf = config.getString("mongo.collection.bundlesInfo")
     userLogCol = config.getString("mongo.collection.userLog")
     timeout = config.getInt("mongodb.timeout")
+    dbUri = config.getString("mongodb.uri")
   } catch {
     case e: Throwable => println("---> config error: " + e)
   }
@@ -62,8 +64,6 @@ object MongoDbService extends DbService {
   def bundlesInfoF: Future[JSONCollection] = database.map(_.collection[JSONCollection](bundlesInf))
 
   def userLogF: Future[JSONCollection] = database.map(_.collection[JSONCollection](userLogCol))
-
-  val dbUri = config.getString("mongodb.uri")
 
   /**
     * initialise this singleton
@@ -90,13 +90,6 @@ object MongoDbService extends DbService {
   }
 
   def close(): Unit = if (database != null && isReady) database.map(db => db.connection.close())
-
-  /**
-    * create all collections from the STIX objects type names (including Bundle)
-    */
-  private def createStixCollections(): Unit = {
-    database.map(db => CyberUtils.listOfObjectTypes.foreach(objType => db.collection[JSONCollection](objType)))
-  }
 
   def saveServerBundle(bundle: Bundle, colPath: String): Unit = {
     if (isConnected()) {
@@ -127,10 +120,10 @@ object MongoDbService extends DbService {
     }
   }
 
-  private def saveBundle(bundle: Bundle): Future[WriteResult] = for {
-    bundles <- bundlesF
-    lastError <- bundles.insert(bundle)
-  } yield lastError
+//  private def saveBundle(bundle: Bundle): Future[WriteResult] = for {
+//    bundles <- bundlesF
+//    lastError <- bundles.insert(bundle)
+//  } yield lastError
 
   def saveLocalBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = {
     // the list of STIX bundles

@@ -215,7 +215,7 @@ class NodesMaker() {
     }.getOrElse(println("---> could not process SRO node: " + x.id.toString()))
   }
 
-  // create a MarkingDefinition or LanguageContent node
+  // create a MarkingDefinition and LanguageContent node
   def createStixObjNode(stixObj: StixObj) = {
 
     stixObj match {

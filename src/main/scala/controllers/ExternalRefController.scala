@@ -18,7 +18,7 @@ trait ExternalRefControllerInterface {
 
   def setExternalRef(extRef: ExternalRefForm): Unit
 
-  def isOkClicked: Boolean
+  def isOkClicked(): Boolean
 }
 
 @sfxml
@@ -34,7 +34,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
   var dialogStage: Stage = _
   var isOk = false
 
-  def isOkClicked: Boolean = isOk
+  def isOkClicked(): Boolean = isOk
 
   def setDialogStage(theStage: Stage): Unit = {
     dialogStage = theStage

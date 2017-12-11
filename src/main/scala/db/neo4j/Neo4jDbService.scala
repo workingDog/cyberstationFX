@@ -2,17 +2,13 @@ package db.neo4j
 
 import java.io.File
 
-import com.kodekutters.stix.Bundle
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
-import cyber.CyberBundle
-import db.DbService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.neo4j.graphdb.{GraphDatabaseService, Node}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.graphdb.index.Index
-import reactivemongo.api.commands.MultiBulkWriteResult
 
 import scala.concurrent.Future
 import scala.util.Try
@@ -20,9 +16,10 @@ import scalafx.scene.paint.Color
 
 
 /**
+  * the Neo4j graph database for saving files to neo4j
   * the GraphDatabaseService support and associated index
   */
-object Neo4jDbService extends DbService {
+object Neo4jDbService {
 
   val config: Config = ConfigFactory.load
 
@@ -42,7 +39,7 @@ object Neo4jDbService extends DbService {
         println("cannot access " + dbDir + ", ensure no other process is using this database, and that the directory is writable")
         System.exit(1)
       case Some(gph) =>
-        registerShutdownHook
+        registerShutdownHook()
         println("connected")
         transaction {
           idIndex = graphDB.index.forNodes("id")
@@ -76,38 +73,10 @@ object Neo4jDbService extends DbService {
     graphDB.shutdown()
   }
 
-  private def registerShutdownHook =
+  private def registerShutdownHook() =
     Runtime.getRuntime.addShutdownHook(new Thread() {
       override def run = graphDB.shutdown()
     })
-
-  val dbUri = ""
-
-  def isConnected() = true
-
-  def init(): Unit = {
-
-  }
-
-  def close(): Unit = {
-
-  }
-
-  def saveServerBundle(bundle: Bundle, colPath: String): Unit = {
-
-  }
-
-  def saveLocalBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = {
-    ???
-  }
-
-  def loadLocalBundles(): Future[List[CyberBundle]] = {
-    ???
-  }
-
-  def dropLocalBundles(): Unit = {
-
-  }
 
   def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
     controller.showSpinner(true)
@@ -128,6 +97,5 @@ object Neo4jDbService extends DbService {
       controller.showSpinner(false)
     })
   }
-
 
 }

@@ -17,7 +17,7 @@ trait KillChainControllerInterface {
 
   def setKillChainPhase(extRef: KillChainPhaseForm): Unit
 
-  def isOkClicked: Boolean
+  def isOkClicked(): Boolean
 }
 
 @sfxml
@@ -30,7 +30,7 @@ class KillChainController(@FXML okButton: JFXButton,
   var dialogStage: Stage = _
   var isOk = false
 
-  def isOkClicked: Boolean = isOk
+  def isOkClicked(): Boolean = isOk
 
   def setDialogStage(theStage: Stage): Unit = {
     dialogStage = theStage
