@@ -1,13 +1,13 @@
 package db.mongo
 
 import java.io.File
-
+import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.stix.StixObj._
 import com.kodekutters.stix._
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 import cyber.{BundleInfo, CyberBundle}
-import db.neo4j.MakerSupport.loadBundle
+
 import db.{DbService, UserLog}
 
 import play.api.libs.json._
@@ -206,7 +206,7 @@ object MongoDbService extends DbService {
     val rootZip = new java.util.zip.ZipFile(file)
     // for each entry file containing a single bundle
     rootZip.entries.asScala.filter(_.getName.toLowerCase.endsWith(".json")).foreach(f => {
-      loadBundle(rootZip.getInputStream(f)) match {
+      readBundle(rootZip.getInputStream(f)) match {
         case Some(bundle) => saveBundleAsStixs(bundle)
         case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
       }

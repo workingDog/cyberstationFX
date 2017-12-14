@@ -1,7 +1,9 @@
 package db.neo4j
 
-import java.io.File
+import java.io.{File, InputStream}
 
+import com.kodekutters.neo4j.Neo4jFileLoader
+import com.kodekutters.stix.Bundle
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 
@@ -9,8 +11,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.neo4j.graphdb.{GraphDatabaseService, Node}
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.graphdb.index.Index
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
+import scala.io.Source
 import scala.util.Try
 import scalafx.scene.paint.Color
 
@@ -90,12 +94,32 @@ object Neo4jDbService {
       val dbDir = if (dbDirectory.isEmpty) new java.io.File(".").getCanonicalPath + "/cyberstix" else dbDirectory
       println("---> neo4jDB directory: " + dbDir)
       controller.showThis("---> saving: " + file.getName + " to Neo4jDB at: " + dbDir, Color.Black)
-      val neoLoader = new Neo4jLoader(file, dbDir)
-      if (file.getName.toLowerCase.endsWith(".json")) neoLoader.processBundleFile()
-      if (file.getName.toLowerCase.endsWith(".zip")) neoLoader.processBundleZipFile()
+      val neoLoader = new Neo4jFileLoader(dbDir)
+      if (file.getName.toLowerCase.endsWith(".json")) neoLoader.loadBundleFile(file)
+      if (file.getName.toLowerCase.endsWith(".zip")) neoLoader.loadBundleZipFile(file)
       controller.showThis("Done saving: " + file.getName + " to Neo4jDB at: " + dbDir, Color.Black)
       controller.showSpinner(false)
     })
+  }
+
+  /**
+    * read a Bundle from the input source
+    *
+    * @param source the input InputStream
+    * @return a Bundle option
+    */
+  def loadBundle(source: InputStream): Option[Bundle] = {
+    // read a STIX bundle from the InputStream
+    val jsondoc = Source.fromInputStream(source).mkString
+    Option(Json.parse(jsondoc)) match {
+      case None => println("\n-----> could not parse JSON"); None
+      case Some(js) =>
+        // create a bundle object from it
+        Json.fromJson[Bundle](js).asOpt match {
+          case None => println("-----> ERROR invalid bundle JSON in zip file: \n"); None
+          case Some(bundle) => Option(bundle)
+        }
+    }
   }
 
 }
