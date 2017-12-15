@@ -12,7 +12,7 @@ import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
 import com.kodekutters.taxii._
-import util.CyberUtils
+import support.CyberUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

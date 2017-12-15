@@ -2,7 +2,7 @@ package db
 
 import com.kodekutters.stix.Bundle
 import cyber.CyberBundle
-import db.mongo.MongoDbService
+import db.mongo.MongoLocalService
 import reactivemongo.api.commands.MultiBulkWriteResult
 
 import scala.concurrent.Future
@@ -28,7 +28,7 @@ trait DbService {
 
 object DbService extends DbService {
 
-  val mongoDB = MongoDbService
+  val mongoDB = MongoLocalService
 
   val dbUri = mongoDB.dbUri
 

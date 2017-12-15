@@ -8,7 +8,7 @@ import javafx.scene.text.Text
 import com.jfoenix.controls._
 import com.kodekutters.stix.{Identifier, Timestamp}
 import cyber._
-import util.CyberUtils
+import support.CyberUtils
 
 import scala.language.implicitConversions
 import scalafx.Includes._

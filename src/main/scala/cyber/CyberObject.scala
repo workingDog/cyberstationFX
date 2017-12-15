@@ -2,7 +2,7 @@ package cyber
 
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json.Json
-import util.CyberUtils
+import support.CyberUtils
 
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, StringProperty}

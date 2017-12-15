@@ -25,9 +25,9 @@ import scala.util.{Failure, Success}
 import scalafx.scene.paint.Color
 
 /**
-  * the MongoDbService support
+  * the MongoDb Service support for storing local bundles data to a mongodb
   */
-object MongoDbService extends DbService {
+object MongoLocalService extends DbService {
 
   // needed for StixObj json write
   implicit val stixObjFormats = new OFormat[StixObj] {
@@ -86,7 +86,7 @@ object MongoDbService extends DbService {
       case ex: Throwable => isReady = false
     }
     // wait here for the connection to complete
-    Await.result(MongoDbService.database, timeout seconds)
+    Await.result(MongoLocalService.database, timeout seconds)
   }
 
   def close(): Unit = if (database != null && isReady) database.map(db => db.connection.close())

@@ -49,6 +49,7 @@
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
+                  <MenuItem fx:id="testItem" mnemonicParsing="false" onAction="#testAction" text="test" />
                         <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#aboutAction" text="About CyberStation" />
                     </items>
                 </Menu>

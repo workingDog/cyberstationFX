@@ -7,9 +7,11 @@ import com.kodekutters.stix._
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
+import db.neo4j.Neo4jService
 import play.api.libs.json._
 import reactivemongo.api._
 import reactivemongo.play.json.collection._
+import reactivemongo.play.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -19,8 +21,9 @@ import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success}
 import scalafx.scene.paint.Color
 
+
 /**
-  * the MongoDbStix for saving files to mongodb
+  * the MongoDbStix for saving STIX-2 objects to a mongodb
   */
 object MongoDbStix {
 
@@ -30,6 +33,8 @@ object MongoDbStix {
 
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
+
+  val customObjectType = "custom-object"
 
   val config: Config = ConfigFactory.load
 
@@ -41,12 +46,17 @@ object MongoDbStix {
 
   var dbUri = ""
   private var timeout = 30 // seconds
+  private var readTimeout = 60 // seconds
   try {
+    readTimeout = config.getInt("mongodbStix.readTimeout")
     timeout = config.getInt("mongodbStix.timeout")
     dbUri = config.getString("mongodbStix.uri")
   } catch {
     case e: Throwable => println("---> config error: " + e)
   }
+
+  // duration allowed for reading all STIX from mongo
+  private var readDuration = Duration(readTimeout, SECONDS)
 
   /**
     * initialise this singleton
@@ -77,7 +87,7 @@ object MongoDbStix {
   // all non-STIX-2 types are put in the designated "custom-object" collection
   private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
-      val stixType = if (stix.`type`.startsWith("x-")) "custom-object" else stix.`type`
+      val stixType = if (stix.`type`.startsWith("x-")) customObjectType else stix.`type`
       for {
         stxCol <- database.map(_.collection[JSONCollection](stixType))
         theError <- stxCol.insert(stix)
@@ -134,6 +144,32 @@ object MongoDbStix {
       }
     })
     close()
+  }
+
+  /**
+    * reads all STIX-2 objects, each from its own mongoDB collection
+    *
+    * @return a sequence of futures of lists of STIX-2 objects
+    */
+  def readAllStix(): Seq[Future[List[StixObj]]] = {
+    val allTypes = Util.listOfSDOTypes ++ Util.listOfSROTypes ++ Util.listOfStixTypes ++ List(LanguageContent.`type`, customObjectType)
+    for (stixType <- allTypes) yield {
+      for {
+        stxCol <- database.map(_.collection[JSONCollection](stixType))
+        theList <- stxCol.find(Json.obj()).
+          cursor[StixObj](ReadPreference.nearest).
+          collect[List](-1, Cursor.FailOnError[List[StixObj]]())
+      } yield theList
+    }
+  }
+
+  def saveMongoToNeo4j(controller: CyberStationControllerInterface): Unit = {
+    try {
+      val seqListOfStix = Await.result(Future.sequence(readAllStix()), readDuration)
+      Neo4jService.saveStixToNeo4j(seqListOfStix.flatten.toList, controller)
+    } catch {
+      case e: Exception => e.printStackTrace()
+    }
   }
 
 }

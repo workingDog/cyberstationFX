@@ -10,11 +10,11 @@ import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db._
-import db.mongo.{MongoDbService, MongoDbStix}
-import db.neo4j.Neo4jDbService
+import db.mongo.{MongoLocalService, MongoDbStix}
+import db.neo4j.Neo4jService
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import util.CyberUtils
+import support.CyberUtils
 
 import scala.collection.mutable
 import scala.io.Source
@@ -60,6 +60,7 @@ class MainMenuController(loadItem: MenuItem,
                          saveItem: MenuItem,
                          quitItem: MenuItem,
                          aboutItem: MenuItem,
+                         testItem: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
@@ -254,7 +255,7 @@ class MainMenuController(loadItem: MenuItem,
     * save a file to a Neo4jDB
     */
   override def saveToNeo4jDB() {
-    fileSelector().map(file => Neo4jDbService.saveFileToDB(file, cyberController))
+    fileSelector().map(file => Neo4jService.saveFileToDB(file, cyberController))
   }
 
   /**
@@ -262,6 +263,10 @@ class MainMenuController(loadItem: MenuItem,
     */
   override def saveToMongoDB() {
     fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
+  }
+
+  def testAction() {
+    MongoDbStix.saveMongoToNeo4j(cyberController)
   }
 
 
