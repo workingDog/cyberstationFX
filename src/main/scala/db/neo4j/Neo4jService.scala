@@ -5,6 +5,7 @@ import java.io.File
 import com.kodekutters.neo4j.{Neo4jFileLoader, Neo4jLoader}
 import com.kodekutters.stix.StixObj
 import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.scalalogging.Logger
 import controllers.CyberStationControllerInterface
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,6 +20,8 @@ import scalafx.scene.paint.Color
 object Neo4jService {
 
   val config: Config = ConfigFactory.load
+
+  implicit val logger = Logger("CyberStation")
 
   def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
     controller.showSpinner(true)

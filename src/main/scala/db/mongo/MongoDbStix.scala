@@ -165,7 +165,9 @@ object MongoDbStix {
 
   def saveMongoToNeo4j(controller: CyberStationControllerInterface): Unit = {
     try {
+      // wait for all readings to be completed
       val seqListOfStix = Await.result(Future.sequence(readAllStix()), readDuration)
+      // do the saving to Neo4j
       Neo4jService.saveStixToNeo4j(seqListOfStix.flatten.toList, controller)
     } catch {
       case e: Exception => e.printStackTrace()
