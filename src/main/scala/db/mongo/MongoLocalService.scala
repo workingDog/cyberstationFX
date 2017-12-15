@@ -178,8 +178,11 @@ object MongoLocalService extends DbService {
     Future({
       println("---> MongoDb: " + dbUri)
       controller.showThis("---> saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
-      if (file.getName.toLowerCase.endsWith(".json")) saveBundleFile(file)
-      if (file.getName.toLowerCase.endsWith(".zip")) saveBundleZipFile(file)
+      if (file.getName.toLowerCase.endsWith(".zip")) {
+        saveBundleZipFile(file)
+      } else {
+        saveBundleFile(file)
+      }
       controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
       controller.showSpinner(false)
     })
@@ -205,7 +208,7 @@ object MongoLocalService extends DbService {
     // get the zip file
     val rootZip = new java.util.zip.ZipFile(file)
     // for each entry file containing a single bundle
-    rootZip.entries.asScala.filter(_.getName.toLowerCase.endsWith(".json")).foreach(f => {
+    rootZip.entries.asScala.foreach(f => {
       readBundle(rootZip.getInputStream(f)) match {
         case Some(bundle) => saveBundleAsStixs(bundle)
         case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
