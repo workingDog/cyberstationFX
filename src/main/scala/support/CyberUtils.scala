@@ -33,7 +33,7 @@ object CyberUtils {
   /**
     * popup a open fileChooser with the desired filter, default .json and .zip
     */
-  def fileSelector(filter: Seq[String] = Seq("*.json", "*.zip")): Option[File] = {
+  def fileSelector(filter: Seq[String] = Seq("*.*", "*.zip")): Option[File] = {
     val fileChooser = new FileChooser {
       extensionFilters.add(new ExtensionFilter("bundle", filter))
     }

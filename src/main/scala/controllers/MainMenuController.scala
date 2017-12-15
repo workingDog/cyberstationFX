@@ -185,8 +185,12 @@ class MainMenuController(loadItem: MenuItem,
       rootZip.entries.asScala.foreach(stixFile => {
         // read a STIX bundle from the InputStream
         val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
-        // assume the file entries end with ".json"
-        val bundleName = stixFile.getName.toLowerCase.dropRight(5)
+        val bundleName = stixFile.getName.toLowerCase match {
+          case x if x.endsWith(".json") => x.dropRight(5)
+          case x if x.endsWith(".stix") => x.dropRight(5)
+          case x if x.endsWith(".txt") => x.dropRight(4)
+          case x => x
+        }
         // create a bundle object
         Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
           case Some(bundle) => bundleList += CyberBundle.fromStix(bundle, bundleName)
@@ -209,14 +213,14 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   private def loadLocalBundles(theFile: File) {
-    if (theFile.getName.toLowerCase.endsWith(".json"))
+    if (!theFile.getName.toLowerCase.endsWith(".zip"))
       loadLocalBundle(theFile)
     else
       loadLocalZipBundles(theFile)
   }
 
   /**
-    * load one bundle from a json or text file
+    * load one bundle from a json, stix or text file
     *
     * @param theFile
     */
@@ -228,6 +232,7 @@ class MainMenuController(loadItem: MenuItem,
       // make a bundle name from the file name
       val bundleName = theFile.getName.toLowerCase match {
         case x if x.endsWith(".json") => x.dropRight(5)
+        case x if x.endsWith(".stix") => x.dropRight(5)
         case x if x.endsWith(".txt") => x.dropRight(4)
         case x => x
       }
