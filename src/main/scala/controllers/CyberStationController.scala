@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
-import cyber.CyberBundle
+import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
 import db.mongo.MongoDbStix
@@ -37,7 +37,7 @@ trait CyberStationControllerInterface {
 
   def messageBarSpin(): JFXSpinner
 
-  def getSelectedServer(): StringProperty
+  def getSelectedServer(): ObjectProperty[ServerForm]
 
   def getSelectedApiroot(): StringProperty
 

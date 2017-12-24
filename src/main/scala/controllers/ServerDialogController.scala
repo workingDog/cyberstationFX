@@ -2,7 +2,7 @@ package controllers
 
 import javafx.fxml.FXML
 
-import com.jfoenix.controls.{JFXButton, JFXTextArea, JFXTextField}
+import com.jfoenix.controls.{JFXButton, JFXPasswordField, JFXTextArea, JFXTextField}
 import cyber.ServerForm
 import support.CyberUtils
 
@@ -26,7 +26,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
                              @FXML cancelButton: JFXButton,
                              @FXML urlField: JFXTextField,
                              @FXML userField: JFXTextField,
-                             @FXML pswField: JFXTextField) extends ServerDialogControllerInterface {
+                             @FXML pswField: JFXPasswordField) extends ServerDialogControllerInterface {
 
   var theForm: ServerForm = _
   var dialogStage: Stage = _

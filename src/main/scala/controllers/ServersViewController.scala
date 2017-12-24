@@ -31,7 +31,7 @@ import scalafxml.core.{DependenciesByType, FXMLLoader}
 trait ServersViewControllerInterface {
   def init(): Unit
 
-  val serverInfo = StringProperty("")
+  val serverInfo = new ObjectProperty[ServerForm]()
   val apirootInfo = StringProperty("")
   val collectionInfo = new ObjectProperty[TaxiiCollection]()
 }
@@ -54,15 +54,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   init()
 
   // bind the serverInfo to the selected server url of the serversListView
-  val temp = new ObjectProperty[ServerForm]()
-  temp <== serversListView.getSelectionModel.selectedItemProperty()
-  temp.onChange { (_, _, srv) =>
-    if (srv != null) {
-      serverInfo.unbind()
-      serverInfo <== srv.url
-    }
-  }
-
+  serverInfo <== serversListView.getSelectionModel.selectedItemProperty()
   // bind the apirootInfo to the selected apiroot of the apirootsListView
   apirootInfo <== apirootsListView.getSelectionModel.selectedItemProperty()
   // bind the collectionInfo to the selected collection of the collectionsListView
@@ -88,7 +80,7 @@ class ServersViewController(@FXML addButton: JFXButton,
       wipeInfo()
       serverSpinner.setVisible(true)
       Future {
-        getServerInfo(newValue)
+        createServerInfo(newValue)
       }
     }
     addButton.setOnMouseClicked((_: MouseEvent) => {
@@ -210,7 +202,7 @@ class ServersViewController(@FXML addButton: JFXButton,
     })
   }
 
-  def getServerInfo(serverForm: ServerForm) {
+  def createServerInfo(serverForm: ServerForm) {
     // check that the url is valid
     if (serverForm.url.value == null || serverForm.url.value.isEmpty || !CyberUtils.urlValid(serverForm.url.value)) {
       serverSpinner.setVisible(false)

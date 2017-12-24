@@ -4,15 +4,15 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner, JFXTextField}
 import com.kodekutters.stix.{Bundle, Identifier}
-import cyber.{CyberBundle, CyberObj, InfoTableEntry}
+import cyber.{CyberBundle, CyberObj, InfoTableEntry, ServerForm}
 import db.DbService
-import com.kodekutters.taxii.{Collection, TaxiiCollection}
+import com.kodekutters.taxii.{Collection, TaxiiCollection, TaxiiConnection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.Includes._
 import scalafx.application.Platform
-import scalafx.beans.property.ReadOnlyObjectProperty
+import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control.{Label, ListCell, TableColumn, TableView}
@@ -61,6 +61,7 @@ class BundleViewController(bundleViewBox: VBox,
     if (bundleList.isEmpty) sendButton.setDisable(true)
   })
 
+  var serverInfo: ServerForm = _
   val connInfo = ObservableBuffer[InfoTableEntry]()
   var taxiiApiroot: Option[String] = None
   var taxiiCol: Option[TaxiiCollection] = None
@@ -110,10 +111,10 @@ class BundleViewController(bundleViewBox: VBox,
       }
     }
     // todo remove this
-//    if (bundleList.isEmpty) {
-//      bundleList += new CyberBundle()
-//      bundlesListView.getSelectionModel.selectFirst()
-//    }
+    //    if (bundleList.isEmpty) {
+    //      bundleList += new CyberBundle()
+    //      bundlesListView.getSelectionModel.selectFirst()
+    //    }
 
     // setup the table of connection info
     wipeConnInfo()
@@ -161,7 +162,8 @@ class BundleViewController(bundleViewBox: VBox,
     } else {
       taxiiCol.map(colInfo => {
         taxiiApiroot.map(apiroot => {
-          val col = Collection(colInfo, apiroot)
+          val col = Collection(colInfo, apiroot, new TaxiiConnection(serverInfo.url.value,
+              serverInfo.user.value, serverInfo.psw.value, 10))
           col.addObjects(theBundle.toStix).map(status => {
             println("----> status: " + status.getOrElse(theBundle.name.value + " could not be sent to the server"))
             showThis("status: " + status.getOrElse(theBundle.name.value + " could not be sent to the server"), Color.Red)
@@ -229,7 +231,10 @@ class BundleViewController(bundleViewBox: VBox,
     cyberStationController = cyberController
 
     cyberStationController.getSelectedServer().onChange { (_, oldValue, newValue) =>
-      connInfo.update(0, new InfoTableEntry("Server", newValue))
+      if (newValue != null) {
+        connInfo.update(0, new InfoTableEntry("Server", newValue.url.value))
+        serverInfo = newValue
+      }
     }
 
     cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) => {

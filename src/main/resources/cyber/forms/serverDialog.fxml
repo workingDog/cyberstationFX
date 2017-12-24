@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -24,11 +25,11 @@
             <Insets left="8.0" right="4.0" top="12.0" />
          </GridPane.margin>
       </JFXTextField>
-      <JFXTextField fx:id="pswField" promptText="password" GridPane.rowIndex="1">
+      <JFXPasswordField fx:id="pswField" promptText="password" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets left="8.0" right="4.0" />
+            <Insets left="8.0" right="4.0" top="12.0" />
          </GridPane.margin>
-      </JFXTextField>
+      </JFXPasswordField>
       <JFXTextField fx:id="urlField" promptText="url" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="8.0" right="4.0" />
