@@ -7,9 +7,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane prefHeight="239.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ExternalRefController">
+<GridPane prefHeight="284.0" prefWidth="652.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ExternalRefController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -18,8 +20,8 @@
     <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="84.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <JFXTextField fx:id="sourceNameField" labelFloat="true" promptText="source name">
@@ -55,9 +57,31 @@
             <Insets left="8.0" right="4.0" />
          </GridPane.margin>
       </JFXTextField>
-      <JFXListView fx:id="hashesListView" editable="true" GridPane.columnSpan="2" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets left="8.0" right="4.0" />
-         </GridPane.margin></JFXListView>
+      <HBox prefHeight="78.0" prefWidth="653.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         <children>
+            <JFXListView fx:id="hashesListView" editable="true" prefHeight="79.0" prefWidth="593.0">
+               <HBox.margin>
+                  <Insets left="8.0" />
+               </HBox.margin>
+            </JFXListView>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="4.0">
+               <children>
+                  <JFXButton buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
+                     <VBox.margin>
+                        <Insets left="8.0" />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
+                     <VBox.margin>
+                        <Insets left="8.0" />
+                     </VBox.margin>
+                  </JFXButton>
+               </children>
+               <HBox.margin>
+                  <Insets top="4.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </GridPane>

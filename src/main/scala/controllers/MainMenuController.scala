@@ -271,7 +271,7 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   def testAction() {
-    MongoDbStix.saveMongoToNeo4j(cyberController)
+  //  MongoDbStix.saveMongoToNeo4j(cyberController)
   }
 
 

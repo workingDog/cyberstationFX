@@ -1,5 +1,6 @@
 package cyber
 
+import com.jfoenix.controls.JFXButton
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json.Json
 import support.CyberUtils
@@ -424,3 +425,18 @@ case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
   override def toString: String = name
 }
 
+case class ServerForm(url: StringProperty = StringProperty(""),
+                      user: StringProperty = StringProperty(""),
+                      psw: StringProperty = StringProperty(""))
+
+object ServerForm {
+
+  def clone(inForm: ServerForm) = {
+    new ServerForm {
+      url.value = inForm.url.value
+      user.value = inForm.user.value
+      psw.value = inForm.psw.value
+    }
+  }
+
+}

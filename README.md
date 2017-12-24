@@ -2,7 +2,7 @@
 
 Adjust *application.conf*
 
-java -jar CyberStationApp.jar
+    sbt run
 
 ### Requirements
 
@@ -10,7 +10,7 @@ java 1.8.0_152
 
 ### Status
 
-work in progress, not yet useful
+work in progress
 
 
 ### License 

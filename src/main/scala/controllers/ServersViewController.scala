@@ -1,13 +1,15 @@
 package controllers
 
+import java.io.IOException
 import javafx.fxml.FXML
+import javafx.scene.text.Text
 
 import scalafx.Includes._
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner}
-import cyber.InfoTableEntry
+import cyber.{CyberStationApp, InfoTableEntry, ServerForm}
 
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.input.MouseEvent
+import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
@@ -20,9 +22,10 @@ import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.geometry.Insets
+import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.cell.TextFieldListCell
-import scalafx.scene.text.Text
+import scalafx.stage.{Modality, Stage}
+import scalafxml.core.{DependenciesByType, FXMLLoader}
 
 
 trait ServersViewControllerInterface {
@@ -37,21 +40,29 @@ trait ServersViewControllerInterface {
 class ServersViewController(@FXML addButton: JFXButton,
                             @FXML deleteButton: JFXButton,
                             @FXML serverSpinner: JFXSpinner,
-                            @FXML serversListView: JFXListView[String],
+                            @FXML serversListView: JFXListView[ServerForm],
                             @FXML collectionsListView: JFXListView[TaxiiCollection],
                             @FXML apirootsListView: JFXListView[String],
                             serverInfoTable: TableView[InfoTableEntry]) extends ServersViewControllerInterface {
 
   var connOpt: Option[TaxiiConnection] = None
   val serverInfoItems = ObservableBuffer[InfoTableEntry]()
-  val srvList = ObservableBuffer[String]("https://test.freetaxii.com:8000")
+  val srvList = ObservableBuffer[ServerForm](ServerForm(url = StringProperty("https://test.freetaxii.com:8000")))
   val apirootList = ObservableBuffer[String]()
   val collectionList = ObservableBuffer[TaxiiCollection]()
 
   init()
 
-  // bind the serverInfo to the selected server of the serversListView
-  serverInfo <== serversListView.getSelectionModel.selectedItemProperty()
+  // bind the serverInfo to the selected server url of the serversListView
+  val temp = new ObjectProperty[ServerForm]()
+  temp <== serversListView.getSelectionModel.selectedItemProperty()
+  temp.onChange { (_, _, srv) =>
+    if (srv != null) {
+      serverInfo.unbind()
+      serverInfo <== srv.url
+    }
+  }
+
   // bind the apirootInfo to the selected apiroot of the apirootsListView
   apirootInfo <== apirootsListView.getSelectionModel.selectedItemProperty()
   // bind the collectionInfo to the selected collection of the collectionsListView
@@ -64,7 +75,15 @@ class ServersViewController(@FXML addButton: JFXButton,
     serversListView.setExpanded(true)
     serversListView.setDepth(1)
     serversListView.setItems(srvList)
-    serversListView.cellFactory = TextFieldListCell.forListView()
+    //  serversListView.cellFactory = TextFieldListCell.forListView()
+    serversListView.cellFactory = { _ =>
+      new ListCell[ServerForm] {
+        item.onChange { (_, _, srv) =>
+          if (srv != null) text = srv.url.value
+          else text = ""
+        }
+      }
+    }
     serversListView.getSelectionModel.selectedItem.onChange { (source, oldValue, newValue) =>
       wipeInfo()
       serverSpinner.setVisible(true)
@@ -72,8 +91,29 @@ class ServersViewController(@FXML addButton: JFXButton,
         getServerInfo(newValue)
       }
     }
-    // todo remove this, select the first server
-  //  serversListView.getSelectionModel.selectFirst()
+    addButton.setOnMouseClicked((_: MouseEvent) => {
+      serverSpinner.setVisible(false)
+      val newForm = new ServerForm() {
+        url.value = "https://"
+      }
+      if (showServerDialog(newForm)) srvList += newForm
+    })
+    deleteButton.setOnMouseClicked((_: MouseEvent) => {
+      val selectedItem = serversListView.getSelectionModel.getSelectedItem
+      if (selectedItem != null) {
+        serversListView.getSelectionModel.clearSelection()
+        srvList -= selectedItem
+        wipeInfo()
+      }
+      serverSpinner.setVisible(false)
+    })
+    // double click on a server entry to edit it
+    serversListView.setOnMouseClicked((event: MouseEvent) => {
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && event.getTarget.isInstanceOf[Text]) {
+        showServerDialog(serversListView.getSelectionModel.getSelectedItem)
+        serversListView.refresh()
+      }
+    })
 
     // setup the table of server info
     serverInfoTable.setItems(serverInfoItems)
@@ -170,16 +210,16 @@ class ServersViewController(@FXML addButton: JFXButton,
     })
   }
 
-  def getServerInfo(url: String) {
+  def getServerInfo(serverForm: ServerForm) {
     // check that the url is valid
-    if (url == null || url.isEmpty || !CyberUtils.urlValid(url)) {
+    if (serverForm.url.value == null || serverForm.url.value.isEmpty || !CyberUtils.urlValid(serverForm.url.value)) {
       serverSpinner.setVisible(false)
       return
     }
     // close any previous connection
     connOpt.map(conn => conn.close())
     // create a new connection object
-    connOpt = Some(new TaxiiConnection(url, "user", "psw", 5))
+    connOpt = Some(new TaxiiConnection(serverForm.url.value, serverForm.user.value, serverForm.psw.value, 5))
     val server = Server(conn = connOpt.get)
     // get the future response from the server
     server.response onComplete {
@@ -223,19 +263,44 @@ class ServersViewController(@FXML addButton: JFXButton,
     })
   }
 
-  addButton.setOnMouseClicked((_: MouseEvent) => {
-    serverSpinner.setVisible(false)
-    srvList.append("https://")
-  })
 
-  deleteButton.setOnMouseClicked((_: MouseEvent) => {
-    val selectedItem = serversListView.getSelectionModel.getSelectedItem
-    if (selectedItem != null) {
-      serversListView.getSelectionModel.clearSelection()
-      srvList.remove(srvList.indexOf(selectedItem), 1)
-      wipeInfo()
+  // popup the server info editor dialog
+  def showServerDialog(serverForm: ServerForm): Boolean =
+    try {
+      // record the initial values, in case we cancel
+      val formCopy = ServerForm.clone(serverForm)
+      // load the fxml file
+      val resource = CyberStationApp.getClass.getResource("forms/serverDialog.fxml")
+      if (resource == null) {
+        throw new IOException("Cannot load resource: forms/serverDialog.fxml")
+      }
+      val loader = new FXMLLoader(resource, new DependenciesByType(Map.empty))
+      val pane = loader.load.asInstanceOf[javafx.scene.layout.GridPane]
+      val scene = new Scene(pane)
+      // create the dialog Stage
+      val theStage = new Stage()
+      theStage.setTitle("Server info")
+      theStage.initModality(Modality.WindowModal)
+      theStage.initOwner(CyberStationApp.stage)
+      theStage.setScene(scene)
+      // give the stage and server info to the controller
+      val controller = loader.getController[ServerDialogControllerInterface]()
+      controller.setDialogStage(theStage)
+      controller.setServerInfo(serverForm)
+      // show the dialog and wait until the user closes it
+      theStage.showAndWait
+      // if cancel, reset to the previous values
+      if (!controller.isOkClicked()) {
+        serverForm.url.value = formCopy.url.value
+        serverForm.user.value = formCopy.user.value
+        serverForm.psw.value = formCopy.psw.value
+      }
+      // return true if the ok button was clicked else false
+      controller.isOkClicked()
+    } catch {
+      case e: IOException =>
+        e.printStackTrace()
+        false
     }
-    serverSpinner.setVisible(false)
-  })
 
 }
