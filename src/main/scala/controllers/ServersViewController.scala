@@ -62,12 +62,11 @@ class ServersViewController(@FXML addButton: JFXButton,
 
   def init() {
     serverSpinner.setVisible(false)
-    // setup the list of server url
+    // setup the list of servers
     serversListView.setEditable(true)
     serversListView.setExpanded(true)
     serversListView.setDepth(1)
     serversListView.setItems(srvList)
-    //  serversListView.cellFactory = TextFieldListCell.forListView()
     serversListView.cellFactory = { _ =>
       new ListCell[ServerForm] {
         item.onChange { (_, _, srv) =>

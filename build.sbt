@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   "org.neo4j" % "neo4j" % "3.2.1",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
   "com.github.workingDog" %% "scalastix" % "0.7",
-  "com.github.workingDog" %% "taxii2lib" % "0.2",
+  "com.github.workingDog" %% "taxii2lib" % "0.3-SNAPSHOT",
   "com.github.workingDog" %% "stixtoneolib" % "0.2",
   "org.reactivemongo" %% "reactivemongo" % "0.12.7",
   "org.reactivemongo" %% "reactivemongo-play-json" % "0.12.7-play26",

@@ -1,5 +1,7 @@
 ### CyberStation
 
+Install [SBT](https://www.scala-sbt.org/)
+
 Adjust *application.conf*
 
     sbt run

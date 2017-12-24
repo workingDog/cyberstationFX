@@ -130,6 +130,7 @@ class CyberStationController(mainMenu: VBox,
   }
 
   def init() {
+    showSpinner(false)
     // try to connect to the mongo db, for the save to file tool
     initToolMongo()
     // try to connect to the mongo db, for local storage
