@@ -4,9 +4,9 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.JFXSpinner
 import com.typesafe.config.{Config, ConfigFactory}
-import cyber.{CyberConverter, CyberObj}
+import cyber.{CyberConverter, CyberObj, ServerForm}
 import db.mongo.MongoLocalService.{bundlesCol, bundlesInf, config, userLogCol}
-import com.kodekutters.taxii.{Collection, TaxiiCollection}
+import com.kodekutters.taxii.{Collection, TaxiiCollection, TaxiiConnection}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalafx.application.Platform
@@ -27,6 +27,7 @@ class ObjectsViewController(objCountLabel: Label,
                             objectsTable: TableView[CyberObj],
                             @FXML objSpinner: JFXSpinner) extends ObjectsViewControllerInterface {
 
+  var serverInfo: ServerForm = _
   val objects = ObservableBuffer[CyberObj]()
   var apirootInfo = ""
 
@@ -81,6 +82,9 @@ class ObjectsViewController(objCountLabel: Label,
   }
 
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+    cyberStationController.getSelectedServer().onChange { (_, oldValue, newValue) =>
+      if (newValue != null) serverInfo = newValue
+    }
     cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) =>
       apirootInfo = newValue
     }
@@ -95,7 +99,8 @@ class ObjectsViewController(objCountLabel: Label,
     if (taxiiCol == null) return
     objSpinner.setVisible(true)
     if (taxiiCol.id != null && apirootInfo != null) {
-      val col = Collection(taxiiCol, apirootInfo)
+      val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
+        serverInfo.user.value, serverInfo.psw.value, 10))
       col.getObjects(range = ("0-" + fetchNumber.toString)).map(bndl => {
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
