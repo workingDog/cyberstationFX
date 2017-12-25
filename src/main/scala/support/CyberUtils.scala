@@ -3,12 +3,25 @@ package support
 import java.net.URL
 import java.io.File
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
+import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.libs.ws.JsonBodyReadables._
+import play.api.libs.ws.JsonBodyWritables._
+
+import scala.concurrent.Future
 import scala.util.Random
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 object CyberUtils {
+  // create an Akka system for thread and streaming management
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
   // check that the url is valid
   def urlValid(url: String): Boolean = {
@@ -39,4 +52,22 @@ object CyberUtils {
     }
     Option(fileChooser.showOpenDialog(new Stage()))
   }
+
+  /**
+    *
+    * @param thePath
+    * @return
+    */
+  def getDataFrom(thePath: String): Future[JsValue] = {
+    val wsClient = StandaloneAhcWSClient()
+    wsClient.url(thePath).get().map { response =>
+      response.status match {
+        case 200 => response.body[JsValue]
+        case x => println("----> response.status: " + x); JsNull
+      }
+    }.recover({
+      case e: Exception => println("could not connect to: " + thePath); JsNull
+    })
+  }
+
 }

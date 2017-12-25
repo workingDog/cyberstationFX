@@ -53,7 +53,7 @@ class CommonController(@FXML idButton: JFXButton,
 
   def init(): Unit = {
     // make sure only integers can be entered in the confidenceField
- //   confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
+    //   confidenceField.textFormatter = new TextFormatter(new NumberStringConverter(NumberFormat.getIntegerInstance))
     // labels list
     labelsView.setItems(labelsData)
     labelsView.cellFactory = CheckBoxListCell.forListView(_.selected)
@@ -131,6 +131,13 @@ class CommonController(@FXML idButton: JFXButton,
       else
         item.selected.value = false
     })
+    // get the name of all labels
+    val nameList = for (x <- labelsView.getItems) yield x.name
+    // get all new labels
+    val newLabels = currentForm.labels.filterNot(nameList.contains(_))
+    // add any new labels to the list
+    labelsData ++= (for (x <- newLabels) yield LabelItem(true, x, currentForm))
+
     objectMarkingsView.setItems(currentForm.object_marking_refs)
     externalRefsView.setItems(currentForm.external_references)
     createdByField.setText(currentForm.created_by_ref.value)

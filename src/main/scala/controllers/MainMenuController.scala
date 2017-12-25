@@ -4,13 +4,14 @@ import java.io.File
 
 import com.kodekutters.stix.Bundle
 import cyber.{CyberBundle, CyberStationApp, FileSender}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsNull, JsValue, Json}
+
 import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db._
-import db.mongo.{MongoLocalService, MongoDbStix}
+import db.mongo.{MongoDbStix, MongoLocalService}
 import db.neo4j.Neo4jService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -31,6 +32,7 @@ import CyberUtils._
 
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
+
 
 trait MainMenuControllerInterface {
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
@@ -64,7 +66,6 @@ class MainMenuController(loadItem: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
-
 
   override def setCyberStationController(cyberStationController: CyberStationControllerInterface) {
     cyberController = cyberStationController
@@ -271,8 +272,39 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   def testAction() {
-  //  MongoDbStix.saveMongoToNeo4j(cyberController)
+    //  MongoDbStix.saveMongoToNeo4j(cyberController)
+  //  loadNetBundle("https://misp.truesec.be/isc-top-100-stix.json")
   }
 
+  /**
+    * load one bundle from a network feed
+    *
+    * @param thePath the full url of the data to load
+    *                "https://misp.truesec.be/isc-top-100-stix.json"
+    */
+  def loadNetBundle(thePath: String) {
+    cyberController.showThis("Loading bundle from: " + thePath, Color.Black)
+    showSpinner(true)
+    // try to load the data
+    try {
+      // request the data
+      getDataFrom(thePath).map(jsData => {
+        // create a bundle object from it
+        Json.fromJson[Bundle](jsData).asOpt match {
+          case Some(bundle) =>
+            val cyberBundle = CyberBundle.fromStix(bundle, "bundle-" + randName)
+            cyberController.showThis("Bundle loaded from: " + thePath, Color.Black)
+            cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
+          case None =>
+            cyberController.showThis("Fail to load bundle from: " + thePath, Color.Red)
+            println("---> bundle loading failure --> invalid JSON")
+        }
+      })
+    } catch {
+      case ex: Throwable => cyberController.showThis("Fail to load bundle from: " + thePath, Color.Red)
+    } finally {
+      showSpinner(false)
+    }
+  }
 
 }
