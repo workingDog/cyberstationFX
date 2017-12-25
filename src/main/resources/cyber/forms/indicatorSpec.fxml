@@ -19,19 +19,19 @@
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="10.0" prefWidth="208.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="147.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="314.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="147.0" minHeight="0.0" prefHeight="58.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="314.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="181.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <JFXTextField fx:id="patternField" promptText="pattern" GridPane.columnSpan="3">
+      <JFXTextField fx:id="patternField" labelFloat="true" promptText="pattern" GridPane.columnSpan="3">
          <GridPane.margin>
             <Insets bottom="12.0" left="6.0" right="6.0" top="6.0" />
          </GridPane.margin>
       </JFXTextField>
       <HBox prefHeight="67.0" prefWidth="273.0" GridPane.rowIndex="1">
          <children>
-            <JFXTextField fx:id="validFromField" prefHeight="26.0" prefWidth="220.0" promptText="valid from">
+            <JFXTextField fx:id="validFromField" labelFloat="true" prefHeight="26.0" prefWidth="220.0" promptText="valid from">
                <HBox.margin>
                   <Insets left="6.0" right="6.0" top="6.0" />
                </HBox.margin>
@@ -48,7 +48,7 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <JFXTextField fx:id="validUntilField" prefHeight="26.0" prefWidth="206.0" promptText="valid until">
+            <JFXTextField fx:id="validUntilField" labelFloat="true" prefHeight="26.0" prefWidth="206.0" promptText="valid until">
                <HBox.margin>
                   <Insets left="6.0" right="6.0" top="6.0" />
                </HBox.margin>

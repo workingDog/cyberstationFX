@@ -168,6 +168,11 @@ object IndicatorForm {
       name.value = inForm.name.value
       created.value = inForm.created.value
       modified.value = inForm.modified.value
+      pattern.value = inForm.pattern.value
+      valid_from.value = inForm.valid_from.value
+      valid_until.value = inForm.valid_until.value
+      description.value = inForm.description.value
+      kill_chain_phases ++ inForm.kill_chain_phases
       labels ++ inForm.labels
       created_by_ref.value = inForm.created_by_ref.value
       revoked.value = inForm.revoked.value
@@ -182,8 +187,13 @@ object IndicatorForm {
     name.value = stix.name.getOrElse("indicator_" + CyberUtils.randDigits)
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
+    pattern.value = stix.pattern
+    valid_from.value = stix.valid_from.toString()
+    valid_until.value = stix.valid_until.getOrElse("").toString()
+    description.value = stix.description.getOrElse("").toString()
+    kill_chain_phases ++= KillChainPhaseForm.fromKillChainPhaseList(stix.kill_chain_phases.getOrElse(List()))
     labels ++= stix.labels.getOrElse(List())
-    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString()
     revoked.value = stix.revoked.getOrElse(false)
     external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
     object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
