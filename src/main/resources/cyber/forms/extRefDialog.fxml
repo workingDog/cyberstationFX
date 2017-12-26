@@ -66,12 +66,12 @@
             </JFXListView>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="4.0">
                <children>
-                  <JFXButton buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
+                  <JFXButton fx:id="addHashesButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
                      <VBox.margin>
                         <Insets left="8.0" />
                      </VBox.margin>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
+                  <JFXButton fx:id="deleteHashesButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
                      <VBox.margin>
                         <Insets left="8.0" />
                      </VBox.margin>

@@ -1,16 +1,21 @@
 package controllers
 
+import java.io.IOException
 import javafx.fxml.FXML
+import javafx.scene.text.Text
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
-import cyber.ExternalRefForm
+import cyber.{CyberStationApp, ExternalRefForm, HashesForm, KillChainPhaseForm}
 
-import scalafx.stage.Stage
+import scalafx.stage.{Modality, Stage}
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
 import scalafx.beans.binding.Bindings
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.input.MouseEvent
+import scalafx.scene.Scene
+import scalafx.scene.control.{ListCell, TextInputDialog}
+import scalafx.scene.input.{MouseButton, MouseEvent}
+import scalafxml.core.{DependenciesByType, FXMLLoader}
 
 
 trait ExternalRefControllerInterface {
@@ -22,7 +27,9 @@ trait ExternalRefControllerInterface {
 }
 
 @sfxml
-class ExternalRefController(@FXML hashesListView: JFXListView[String],
+class ExternalRefController(@FXML hashesListView: JFXListView[HashesForm],
+                            @FXML addHashesButton: JFXButton,
+                            @FXML deleteHashesButton: JFXButton,
                             @FXML okButton: JFXButton,
                             @FXML cancelButton: JFXButton,
                             @FXML externalIdField: JFXTextField,
@@ -33,6 +40,8 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
   var theForm: ExternalRefForm = _
   var dialogStage: Stage = _
   var isOk = false
+
+  init()
 
   def isOkClicked(): Boolean = isOk
 
@@ -50,12 +59,8 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
       theForm.url <== urlField.textProperty()
       theForm.description <== descriptionField.textProperty()
       theForm.external_id <== externalIdField.textProperty()
-      //  theForm.hashes <== createdByField.textProperty()
       // must have some text for source_name
-      okButton.disableProperty().bind(
-        Bindings.createBooleanBinding(() =>
-          theForm.source_name.value.trim().isEmpty(), sourceNameField.textProperty())
-      )
+      okButton.disableProperty().bind(theForm.source_name.isEmpty())
     }
   }
 
@@ -76,14 +81,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
     urlField.setText(theForm.url.value)
     externalIdField.setText(theForm.external_id.value)
     descriptionField.setText(theForm.description.value)
-    //  hashesListView.getItems.foreach(item => {
-    //      item.form = theForm
-    //      if (theForm.hashes.contains(item))
-    //        item.selected.value = true
-    //      else
-    //        item.selected.value = false
-    //  })
-    hashesListView.setItems(ObservableBuffer[String]("hashes to do"))
+    hashesListView.setItems(theForm.hashes)
   }
 
   private def unbindAll(): Unit = {
@@ -92,7 +90,9 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
       theForm.url.unbind()
       theForm.external_id.unbind()
       theForm.description.unbind()
-      // hashes
+      hashesListView.items.unbind()
+      hashesListView.setItems(null)
+      theForm = null
     }
   }
 
@@ -102,6 +102,78 @@ class ExternalRefController(@FXML hashesListView: JFXListView[String],
     urlField.setText("")
     externalIdField.setText("")
     descriptionField.setText("")
+    hashesListView.setItems(null)
   }
+
+  def init() = {
+    // hashes
+    hashesListView.cellFactory = { _ =>
+      new ListCell[HashesForm] {
+        item.onChange { (_, _, kcf) =>
+          if (kcf != null) text = kcf.theKey.value + " --> " + kcf.theValue.value
+          else text = ""
+        }
+      }
+    }
+    addHashesButton.setOnMouseClicked((ev: MouseEvent) => {
+      if (theForm != null) {
+        val newForm = new HashesForm() {
+          theKey.value = ""
+          theValue.value = ""
+        }
+        if (showHashesDialog(newForm)) theForm.hashes += newForm
+      }
+    })
+    deleteHashesButton.setOnMouseClicked((_: MouseEvent) => {
+      val toRemove = hashesListView.getSelectionModel.getSelectedItem
+      if (theForm != null) theForm.hashes -= toRemove
+    })
+    // double click on a hashesListView entry to edit the selected hashes
+    hashesListView.setOnMouseClicked((event: MouseEvent) => {
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && event.getTarget.isInstanceOf[Text]) {
+        if (theForm != null) {
+          showHashesDialog(hashesListView.getSelectionModel.getSelectedItem)
+          hashesListView.refresh()
+        }
+      }
+    })
+  }
+
+  // popup the hashes editor dialog
+  def showHashesDialog(hashesForm: HashesForm): Boolean =
+    try {
+      // record the initial values, in case we cancel
+      val formCopy = HashesForm.clone(hashesForm)
+      // load the fxml file
+      val resource = CyberStationApp.getClass.getResource("forms/hashesDialog.fxml")
+      if (resource == null) {
+        throw new IOException("Cannot load resource: forms/hashesDialog.fxml")
+      }
+      val loader = new FXMLLoader(resource, new DependenciesByType(Map.empty))
+      val pane = loader.load.asInstanceOf[javafx.scene.layout.GridPane]
+      val scene = new Scene(pane)
+      // create the dialog Stage
+      val theStage = new Stage()
+      theStage.setTitle("hashes")
+      theStage.initModality(Modality.WindowModal)
+      theStage.initOwner(CyberStationApp.stage)
+      theStage.setScene(scene)
+      val controller = loader.getController[HashesControllerInterface]()
+      controller.setDialogStage(theStage)
+      controller.setHashes(hashesForm)
+      // show the dialog and wait until the user closes it
+      theStage.showAndWait
+      // if cancel, reset to the previous values
+      if (!controller.isOkClicked()) {
+        hashesForm.theKey.value = formCopy.theKey.value
+        hashesForm.theValue.value = formCopy.theValue.value
+      }
+      // return true if the ok button was clicked else false
+      controller.isOkClicked()
+    } catch {
+      case e: IOException =>
+        e.printStackTrace()
+        false
+    }
 
 }

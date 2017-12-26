@@ -271,23 +271,14 @@ class ExternalRefForm() {
   val description = StringProperty("")
   val url = StringProperty("")
   val external_id = StringProperty("")
-  val hashes = ObservableMap.empty[String, String]
-
-  /*
-    hashes.onChange((map, change) => {
-    println("hashes = " + hashes.mkString("[", ", ", "]"))
-    println(prettyChange(change))
-  })
-
-  hashes("SHA256") = "something"
-   */
+  val hashes = new ObservableBuffer[HashesForm]() //ObservableMap.empty[String, String]
 
   def toStix = new ExternalReference(
     source_name = source_name.value,
     Option(description.value),
     Option(external_id.value),
     Option(url.value),
-    Option(hashes.toMap))
+    HashesForm.toHashesMapOpt(hashes))
 
 }
 
@@ -299,6 +290,7 @@ object ExternalRefForm {
       description.value = inForm.description.value
       url.value = inForm.url.value
       external_id.value = inForm.external_id.value
+      hashes ++ inForm.hashes
     }
   }
 
@@ -308,7 +300,7 @@ object ExternalRefForm {
       description.value = stix.description.getOrElse("")
       url.value = stix.url.getOrElse("")
       external_id.value = stix.external_id.getOrElse("")
-      //  hashes = ObservableMap.empty[String, String]
+      hashes ++= HashesForm.toHashesForms(stix.hashes)
     }
   }
 
@@ -324,6 +316,42 @@ object ExternalRefForm {
       ObservableBuffer[ExternalRefForm]()
     else
       (for (s <- theList) yield ExternalRefForm.fromStix(s)).to[ObservableBuffer]
+  }
+
+}
+
+case class HashesForm(theKey: StringProperty = StringProperty(""),
+                      theValue: StringProperty = StringProperty("")) {
+
+  def toStix: Tuple2[String, String] = theKey.value -> theValue.value
+
+}
+
+object HashesForm {
+
+  def toHashesForms(theMapOpt: Option[Map[String, String]]): ObservableBuffer[HashesForm] = {
+    theMapOpt.map(theMap =>
+        (for ((k, v) <- theMap) yield HashesForm(StringProperty(k), StringProperty(v))).to[ObservableBuffer]
+      ).getOrElse(ObservableBuffer[HashesForm]())
+  }
+
+  def toHashesMapOpt(theList: ObservableBuffer[HashesForm]): Option[Map[String, String]] = {
+    if (theList == null)
+      None
+    else
+      Option((for (s <- theList) yield s.toStix).toMap)
+  }
+
+  def fromStix(stix: Tuple2[String, String]) = new HashesForm {
+    theKey.value = stix._1
+    theValue.value = stix._2
+  }
+
+  def clone(inForm: HashesForm) = {
+    new HashesForm {
+      theKey.value = inForm.theKey.value
+      theValue.value = inForm.theValue.value
+    }
   }
 
 }
@@ -450,3 +478,4 @@ object ServerForm {
   }
 
 }
+
