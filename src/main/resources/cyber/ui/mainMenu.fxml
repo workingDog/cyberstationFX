@@ -16,6 +16,7 @@
                         <MenuItem fx:id="newItem" mnemonicParsing="false" onAction="#newAction" text="New" />
                         <MenuItem fx:id="loadItem" mnemonicParsing="false" onAction="#loadAction" text="Open…" />
                         <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
+                  <MenuItem fx:id="openFeedItem" mnemonicParsing="false" onAction="#openFeedAction" text="Open feed" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
                         <SeparatorMenuItem mnemonicParsing="false" />

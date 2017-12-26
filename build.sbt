@@ -12,6 +12,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 libraryDependencies ++= Seq(
   "org.neo4j" % "neo4j" % "3.2.1",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
+//  "com.typesafe.play" %% "play-ws-standalone-json" % "1.1.3",
   "com.github.workingDog" %% "scalastix" % "0.7",
   "com.github.workingDog" %% "taxii2lib" % "0.3-SNAPSHOT",
   "com.github.workingDog" %% "stixtoneolib" % "0.2",

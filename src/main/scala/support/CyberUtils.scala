@@ -54,9 +54,10 @@ object CyberUtils {
   }
 
   /**
+    * get some json data from a network feed
     *
-    * @param thePath
-    * @return
+    * @param thePath the path of the data
+    * @return a Future[JsValue]
     */
   def getDataFrom(thePath: String): Future[JsValue] = {
     val wsClient = StandaloneAhcWSClient()
@@ -66,7 +67,7 @@ object CyberUtils {
         case x => println("----> response.status: " + x); JsNull
       }
     }.recover({
-      case e: Exception => println("could not connect to: " + thePath); JsNull
+      case e: Exception => println("----> could not connect to: " + thePath); JsNull
     })
   }
 

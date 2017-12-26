@@ -5,7 +5,6 @@ import java.io.File
 import com.kodekutters.stix.Bundle
 import cyber.{CyberBundle, CyberStationApp, FileSender}
 import play.api.libs.json.{JsNull, JsValue, Json}
-
 import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.zip.{ZipEntry, ZipOutputStream}
@@ -21,7 +20,7 @@ import scala.collection.mutable
 import scala.io.Source
 import scala.language.implicitConversions
 import scala.language.postfixOps
-import scalafx.scene.control.{Alert, ButtonType, MenuItem}
+import scalafx.scene.control.{Alert, ButtonType, MenuItem, TextInputDialog}
 import scalafx.scene.paint.Color
 import scalafxml.core.macros.sfxml
 import scala.collection.JavaConverters._
@@ -62,6 +61,7 @@ class MainMenuController(loadItem: MenuItem,
                          saveItem: MenuItem,
                          quitItem: MenuItem,
                          aboutItem: MenuItem,
+                         openFeedItem: MenuItem,
                          testItem: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
@@ -273,16 +273,27 @@ class MainMenuController(loadItem: MenuItem,
 
   def testAction() {
     //  MongoDbStix.saveMongoToNeo4j(cyberController)
-  //  loadNetBundle("https://misp.truesec.be/isc-top-100-stix.json")
+  }
+
+  /**
+    * open a feed that has a bundle of stix objects
+    */
+  def openFeedAction() {
+    val dialog = new TextInputDialog(defaultValue = "https://misp.truesec.be/isc-top-100-stix.json") {
+      initOwner(this.owner)
+      title = "STIX-2 bundle feed"
+      headerText = "Extract a bundle of STIX-2 objects                                             "
+      contentText = "Feed path:"
+    }.showAndWait()
+    dialog.map(thePath => loadNetBundle(thePath))
   }
 
   /**
     * load one bundle from a network feed
     *
-    * @param thePath the full url of the data to load
-    *                "https://misp.truesec.be/isc-top-100-stix.json"
+    * @param thePath the full url of the data to load, e.g. "https://misp.truesec.be/isc-top-100-stix.json"
     */
-  def loadNetBundle(thePath: String) {
+  private def loadNetBundle(thePath: String) {
     cyberController.showThis("Loading bundle from: " + thePath, Color.Black)
     showSpinner(true)
     // try to load the data
