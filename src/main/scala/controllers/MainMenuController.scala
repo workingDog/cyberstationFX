@@ -282,8 +282,9 @@ class MainMenuController(loadItem: MenuItem,
     val dialog = new TextInputDialog(defaultValue = "https://misp.truesec.be/isc-top-100-stix.json") {
       initOwner(this.owner)
       title = "STIX-2 bundle feed"
-      headerText = "Extract a bundle of STIX-2 objects                                             "
+      headerText = "Extract a bundle of STIX-2 objects"
       contentText = "Feed path:"
+      editor.setMinWidth(450)
     }.showAndWait()
     dialog.map(thePath => loadNetBundle(thePath))
   }
