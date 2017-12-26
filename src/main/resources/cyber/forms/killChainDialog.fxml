@@ -18,7 +18,7 @@
     <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <JFXTextField fx:id="killChainNameField" labelFloat="true" promptText="kill_chain_name" GridPane.columnSpan="2">
+      <JFXTextField fx:id="killChainNameField" labelFloat="true" promptText="kill chain name" GridPane.columnSpan="2">
          <GridPane.margin>
             <Insets left="8.0" right="4.0" top="12.0" />
          </GridPane.margin>
@@ -33,7 +33,7 @@
             <Insets />
          </GridPane.margin>
       </JFXButton>
-      <JFXTextField fx:id="phaseNameField" promptText="phase_name" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <JFXTextField fx:id="phaseNameField" promptText="phase name" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="8.0" right="4.0" />
          </GridPane.margin>
