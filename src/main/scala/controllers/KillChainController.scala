@@ -6,9 +6,8 @@ import com.jfoenix.controls.{JFXButton, JFXTextField}
 import cyber.KillChainPhaseForm
 
 import scalafx.stage.Stage
-import scalafxml.core.macros.{nested, sfxml}
+import scalafxml.core.macros.sfxml
 import scalafx.Includes._
-import scalafx.beans.binding.Bindings
 import scalafx.scene.input.MouseEvent
 
 
@@ -45,13 +44,7 @@ class KillChainController(@FXML okButton: JFXButton,
       theForm.kill_chain_name <== killChainNameField.textProperty()
       theForm.phase_name <== phaseNameField.textProperty()
       // must have some text for kill_chain_name and phase_name
-      okButton.disableProperty().bind(
-        Bindings.createBooleanBinding(() =>
-          theForm.kill_chain_name.value.trim().isEmpty(), killChainNameField.textProperty())
-          .or(Bindings.createBooleanBinding(() =>
-            theForm.phase_name.value.trim().isEmpty(), phaseNameField.textProperty())
-          )
-      )
+      okButton.disableProperty().bind(theForm.kill_chain_name.isEmpty() || theForm.phase_name.isEmpty())
     }
   }
 

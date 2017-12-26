@@ -58,10 +58,7 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
     }
     addKFButton.setOnMouseClicked((ev: MouseEvent) => {
       if (currentForm != null) {
-        val newForm = new KillChainPhaseForm() {
-          kill_chain_name.value = ""
-          phase_name.value = ""
-        }
+        val newForm = new KillChainPhaseForm()
         if (showKillChainDialog(newForm)) currentForm.kill_chain_phases += newForm
       }
     })

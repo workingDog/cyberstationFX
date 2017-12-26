@@ -8,7 +8,6 @@ import cyber.HashesForm
 import scalafx.stage.Stage
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
-import scalafx.beans.binding.Bindings
 import scalafx.scene.input.MouseEvent
 
 
@@ -45,13 +44,7 @@ class HashesController(@FXML okButton: JFXButton,
       theForm.theKey <== keyField.textProperty()
       theForm.theValue <== valueField.textProperty()
       // must have some text for the key and value
-      okButton.disableProperty().bind(
-        Bindings.createBooleanBinding(() =>
-          theForm.theKey.value.trim().isEmpty(), keyField.textProperty())
-          .or(Bindings.createBooleanBinding(() =>
-            theForm.theValue.value.trim().isEmpty(), valueField.textProperty())
-          )
-      )
+      okButton.disableProperty().bind(theForm.theValue.isEmpty() || theForm.theKey.isEmpty())
     }
   }
 

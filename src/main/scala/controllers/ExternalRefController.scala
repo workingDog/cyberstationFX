@@ -5,15 +5,13 @@ import javafx.fxml.FXML
 import javafx.scene.text.Text
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
-import cyber.{CyberStationApp, ExternalRefForm, HashesForm, KillChainPhaseForm}
+import cyber.{CyberStationApp, ExternalRefForm, HashesForm}
 
 import scalafx.stage.{Modality, Stage}
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
-import scalafx.beans.binding.Bindings
-import scalafx.collections.ObservableBuffer
 import scalafx.scene.Scene
-import scalafx.scene.control.{ListCell, TextInputDialog}
+import scalafx.scene.control.ListCell
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafxml.core.{DependenciesByType, FXMLLoader}
 
@@ -42,6 +40,37 @@ class ExternalRefController(@FXML hashesListView: JFXListView[HashesForm],
   var isOk = false
 
   init()
+
+  def init() = {
+    // hashes
+    hashesListView.cellFactory = { _ =>
+      new ListCell[HashesForm] {
+        item.onChange { (_, _, kcf) =>
+          if (kcf != null) text = kcf.theKey.value + " --> " + kcf.theValue.value
+          else text = ""
+        }
+      }
+    }
+    addHashesButton.setOnMouseClicked((ev: MouseEvent) => {
+      if (theForm != null) {
+        val newForm = new HashesForm()
+        if (showHashesDialog(newForm)) theForm.hashes += newForm
+      }
+    })
+    deleteHashesButton.setOnMouseClicked((_: MouseEvent) => {
+      val toRemove = hashesListView.getSelectionModel.getSelectedItem
+      if (theForm != null) theForm.hashes -= toRemove
+    })
+    // double click on a hashesListView entry to edit the selected hashes
+    hashesListView.setOnMouseClicked((event: MouseEvent) => {
+      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && event.getTarget.isInstanceOf[Text]) {
+        if (theForm != null) {
+          showHashesDialog(hashesListView.getSelectionModel.getSelectedItem)
+          hashesListView.refresh()
+        }
+      }
+    })
+  }
 
   def isOkClicked(): Boolean = isOk
 
@@ -103,40 +132,6 @@ class ExternalRefController(@FXML hashesListView: JFXListView[HashesForm],
     externalIdField.setText("")
     descriptionField.setText("")
     hashesListView.setItems(null)
-  }
-
-  def init() = {
-    // hashes
-    hashesListView.cellFactory = { _ =>
-      new ListCell[HashesForm] {
-        item.onChange { (_, _, kcf) =>
-          if (kcf != null) text = kcf.theKey.value + " --> " + kcf.theValue.value
-          else text = ""
-        }
-      }
-    }
-    addHashesButton.setOnMouseClicked((ev: MouseEvent) => {
-      if (theForm != null) {
-        val newForm = new HashesForm() {
-          theKey.value = ""
-          theValue.value = ""
-        }
-        if (showHashesDialog(newForm)) theForm.hashes += newForm
-      }
-    })
-    deleteHashesButton.setOnMouseClicked((_: MouseEvent) => {
-      val toRemove = hashesListView.getSelectionModel.getSelectedItem
-      if (theForm != null) theForm.hashes -= toRemove
-    })
-    // double click on a hashesListView entry to edit the selected hashes
-    hashesListView.setOnMouseClicked((event: MouseEvent) => {
-      if ((event.button == MouseButton.Primary) && (event.clickCount == 2) && event.getTarget.isInstanceOf[Text]) {
-        if (theForm != null) {
-          showHashesDialog(hashesListView.getSelectionModel.getSelectedItem)
-          hashesListView.refresh()
-        }
-      }
-    })
   }
 
   // popup the hashes editor dialog
