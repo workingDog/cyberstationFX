@@ -14,8 +14,11 @@ import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
 import com.kodekutters.taxii._
+import com.typesafe.config.{Config, ConfigFactory}
+import db.mongo.MongoLocalService.{bundlesCol, bundlesInf, config, dbUri, userLogCol}
 import support.CyberUtils
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -26,6 +29,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.stage.{Modality, Stage}
 import scalafxml.core.{DependenciesByType, FXMLLoader}
+import scala.collection.JavaConversions._
 
 
 trait ServersViewControllerInterface {
@@ -47,9 +51,11 @@ class ServersViewController(@FXML addButton: JFXButton,
 
   var connOpt: Option[TaxiiConnection] = None
   val serverInfoItems = ObservableBuffer[InfoTableEntry]()
-  val srvList = ObservableBuffer[ServerForm](ServerForm(url = StringProperty("https://test.freetaxii.com:8000")))
+  val srvList = ObservableBuffer[ServerForm]()
   val apirootList = ObservableBuffer[String]()
   val collectionList = ObservableBuffer[TaxiiCollection]()
+
+  val config: Config = ConfigFactory.load
 
   init()
 
@@ -61,6 +67,14 @@ class ServersViewController(@FXML addButton: JFXButton,
   collectionInfo <== collectionsListView.getSelectionModel.selectedItemProperty()
 
   def init() {
+    try {
+      // get the pre-defined taxii servers from the application.conf file
+      val definedServers = config.getStringList("taxii.servers").toList
+      // add the pre-defined servers to the srvList
+      srvList ++= (for(s <- definedServers) yield ServerForm(url = StringProperty(s)))
+    } catch {
+      case e: Throwable => println("---> config error: " + e)
+    }
     serverSpinner.setVisible(false)
     // setup the list of servers
     serversListView.setEditable(true)
