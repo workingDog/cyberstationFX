@@ -243,24 +243,22 @@ class MainMenuController(loadItem: MenuItem,
     fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
   }
 
-  def saveToGephiAction(): Unit = {
+  private def saveToWith(converter: StixConverter) = {
     fileSelector().map(file => {
       cyberController.showSpinner(true)
-      cyberController.showThis("Saving: " + file.getName + " to Gephi: " + file.getName + ".gexf", Color.Black)
-      new Transformer(GexfConverter()).stixFileConvertion(file, ".gexf")
-      cyberController.showThis("Done saving: " + file.getName + " to Gephi format", Color.Black)
+      cyberController.showThis("Saving: " + file.getName + " to " + converter.outputExt.drop(1).toUpperCase + ": " + file.getName + converter.outputExt, Color.Black)
+      new Transformer(converter).stixFileConvertion(file, converter.outputExt)
+      cyberController.showThis("Done saving: " + file.getName + " to " + converter.outputExt.drop(1).toUpperCase + " format", Color.Black)
       cyberController.showSpinner(false)
     })
   }
 
+  def saveToGephiAction(): Unit = {
+    saveToWith(GexfConverter())
+  }
+
   def saveToGraphMLAction(): Unit = {
-    fileSelector().map(file => {
-      cyberController.showSpinner(true)
-      cyberController.showThis("Saving: " + file.getName + " to GraphML: " + file.getName + ".graphml", Color.Black)
-      new Transformer(GraphMLConverter()).stixFileConvertion(file, ".graphml")
-      cyberController.showThis("Done saving: " + file.getName + " to GraphML format", Color.Black)
-      cyberController.showSpinner(false)
-    })
+    saveToWith(GraphMLConverter())
   }
 
   //-------------------------------------------------------------------------
@@ -353,7 +351,7 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  private def saveWith(converter: StixConverter): Unit = {
+  private def saveAsWith(converter: StixConverter): Unit = {
     val ext = converter.outputExt
     if (cyberController.getAllBundles().toList.nonEmpty) {
       cyberController.showSpinner(true)
@@ -374,11 +372,11 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   def saveAsGephiAction(): Unit = {
-    saveWith(GexfConverter())
+    saveAsWith(GexfConverter())
   }
 
   def saveAsGraphMLAction(): Unit = {
-    saveWith(GraphMLConverter())
+    saveAsWith(GraphMLConverter())
   }
 
   //-------------------------------------------------------------------------
