@@ -1,25 +1,34 @@
 package controllers
 
+import java.net.URI
+import java.nio.file.{Files, Path, Paths}
 import javafx.fxml.FXML
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
+import com.kodekutters.neo4j.Neo4jLoader
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
+import com.typesafe.config.{Config, ConfigFactory}
 import db.mongo.MongoDbStix
+import db.neo4j.Neo4jService
+import support.CyberUtils
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
+import scalafx.beans.value.ObservableValue
 import scalafx.collections.ObservableBuffer
+import scalafx.event.Event
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafxml.core.macros.{nested, sfxml}
-
+import scalafx.Includes._
+import org.neo4j.kernel.internal.GraphDatabaseAPI
 
 trait CyberStationControllerInterface {
 
@@ -48,6 +57,8 @@ trait CyberStationControllerInterface {
   def showThis(text: String, color: Color): Unit
 
   def showSpinner(onof: Boolean): Unit
+
+  def onChangeAction(e: Event): Unit
 }
 
 @sfxml
@@ -57,11 +68,16 @@ class CyberStationController(mainMenu: VBox,
                              objectsView: VBox,
                              @FXML msgBarSpinner: JFXSpinner,
                              @FXML stixView: JFXTabPane,
-                             @nested[ObjectsViewController] objectsViewController: ObjectsViewControllerInterface,
                              @nested[MainMenuController] mainMenuController: MainMenuControllerInterface,
                              @nested[ServersViewController] serversViewController: ServersViewControllerInterface,
-                             @nested[StixViewController] stixViewController: StixViewControllerInterface)
+                             @nested[WebViewController] webViewController: WebViewControllerInterface,
+                             @nested[StixViewController] stixViewController: StixViewControllerInterface,
+                             @nested[TaxiiWebViewController] taxiiWebViewController: TaxiiWebViewControllerInterface)
   extends CyberStationControllerInterface {
+
+  val config: Config = ConfigFactory.load
+
+  var theTempPath: String = _
 
   def getSelectedServer() = serversViewController.serverInfo
 
@@ -77,8 +93,8 @@ class CyberStationController(mainMenu: VBox,
   // give this controller to the stixViewController
   stixViewController.setCyberStationController(this)
 
-  // give this controller to the ObjectsViewController
-  objectsViewController.setCyberStationController(this)
+  // give this controller to the taxiiWebViewController
+  taxiiWebViewController.setCyberStationController(this)
 
   def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
@@ -132,9 +148,9 @@ class CyberStationController(mainMenu: VBox,
   def init() {
     showSpinner(false)
     // try to connect to the mongo db, for the save to file tool
-    initToolMongo()
+    //  initToolMongo()
     // try to connect to the mongo db, for local storage
-    initLocalDB()
+    //  initLocalDB()
   }
 
   // save the data and close properly before exiting
@@ -194,6 +210,35 @@ class CyberStationController(mainMenu: VBox,
         else
           doClose()
       case _ => doClose()
+    }
+  }
+
+  /**
+    * the action when the "stixViewTab" is selected
+    */
+  def onChangeAction(e: Event) = {
+    if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
+      val source = e.source.asInstanceOf[javafx.scene.control.Tab]
+      if (source.id.value == "stixViewTab" && source.selected.value) {
+        println("-----> in onChangeAction stixViewTab")
+        val bndl = stixViewController.getBundleController().getCurrentBundle()
+        if (bndl.value != null) {
+          webViewController.doLoadAndClick(bndl.value.toStix)
+          //  Neo4jService.reload(getAllBundles().toList, this)
+        }
+      }
+    }
+  }
+
+  /**
+    * the action when the "taxiiViewTab" is selected
+    */
+  def onTaxiiObjAction(e: Event) = {
+    if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
+      val source = e.source.asInstanceOf[javafx.scene.control.Tab]
+      if (source.id.value == "taxiiViewTab" && source.selected.value) {
+        taxiiWebViewController.doLoadAndClick()
+      }
     }
   }
 

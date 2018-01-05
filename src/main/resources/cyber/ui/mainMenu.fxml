@@ -15,10 +15,17 @@
                     <items>
                         <MenuItem fx:id="newItem" mnemonicParsing="false" onAction="#newAction" text="New" />
                         <MenuItem fx:id="loadItem" mnemonicParsing="false" onAction="#loadAction" text="Open…" />
-                        <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
                   <MenuItem fx:id="openFeedItem" mnemonicParsing="false" onAction="#openFeedAction" text="Open feed" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                  <Menu mnemonicParsing="false" text="Save as...">
+                    <items>
+                      <MenuItem fx:id="saveAsJsonFileItem" mnemonicParsing="false" onAction="#saveAsJsonFileAction" text="JSON" />
+                        <MenuItem fx:id="saveAsZipFileItem" mnemonicParsing="false" onAction="#saveAsZipFileAction" text="ZIP" />
+                        <MenuItem fx:id="saveAsGephiItem" mnemonicParsing="false" onAction="#saveAsGephiAction" text="Gephi" />
+                        <MenuItem fx:id="saveAsGraphMLItem" mnemonicParsing="false" onAction="#saveAsGraphMLAction" text="GraphML" />
+                    </items>
+                  </Menu>
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -43,6 +50,8 @@
                     <items>
                       <MenuItem fx:id="saveToMongoItem" mnemonicParsing="false" onAction="#saveToMongoDB" text="MongoDB" />
                         <MenuItem fx:id="saveToNeo4jItem" mnemonicParsing="false" onAction="#saveToNeo4jDB" text="Neo4J" />
+                        <MenuItem fx:id="saveToGephiItem" mnemonicParsing="false" onAction="#saveToGephiAction" text="Gephi" />
+                        <MenuItem fx:id="saveToGraphMLItem" mnemonicParsing="false" onAction="#saveToGraphMLAction" text="GraphML" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Postgres" />
                     </items>
                   </Menu>
@@ -50,7 +59,6 @@
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                  <MenuItem fx:id="testItem" mnemonicParsing="false" onAction="#testAction" text="test" />
                         <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#aboutAction" text="About CyberStation" />
                     </items>
                 </Menu>

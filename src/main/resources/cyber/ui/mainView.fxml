@@ -29,7 +29,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <JFXSpinner fx:id="msgBarSpinner">
+                  <JFXSpinner fx:id="msgBarSpinner" disable="true">
                      <HBox.margin>
                         <Insets left="22.0" />
                      </HBox.margin>
@@ -50,11 +50,11 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab id="objectsTab" closable="false" text="Taxii objects">
+            <Tab id="taxiiViewTab" fx:id="taxiiViewTab" closable="false" onSelectionChanged="#onTaxiiObjAction" text="Taxii view">
                 <content>
                     <AnchorPane HBox.hgrow="ALWAYS">
                         <children>
-  <fx:include fx:id="objectsView" source="objectsView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            <fx:include fx:id="taxiiWebView" source="taxiiWebView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         </children>
                     </AnchorPane>
                 </content>
@@ -66,6 +66,15 @@
  <fx:include fx:id="stixView" source="stixView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                       </children>
                   </AnchorPane>
+              </content>
+            </Tab>
+            <Tab fx:id="stixViewTab" closable="false" onSelectionChanged="#onChangeAction" text="Stix view">
+              <content>
+                  <AnchorPane HBox.hgrow="ALWAYS">
+                  <children>
+  <fx:include fx:id="webView" source="webView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  </children>
+              </AnchorPane>
               </content>
             </Tab>
          </tabs>

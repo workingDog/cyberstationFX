@@ -1,7 +1,9 @@
 package support
 
-import java.net.URL
+import java.net.{URI, URL}
 import java.io.File
+import java.nio.file.{Files, Path, Paths}
+import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -14,11 +16,11 @@ import scala.concurrent.Future
 import scala.util.Random
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object CyberUtils {
+
   // create an Akka system for thread and streaming management
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
@@ -33,6 +35,9 @@ object CyberUtils {
       case x: Throwable => false
     }
   }
+
+  // generate a long random name
+  def randNameLong: String = Random.alphanumeric.filter(_.isLetter).take(16).mkString
 
   // generate a 4-lettes random name
   def randName: String = Random.alphanumeric.filter(_.isLetter).take(4).mkString
@@ -69,6 +74,20 @@ object CyberUtils {
     }.recover({
       case e: Exception => println("----> could not connect to: " + thePath); JsNull
     })
+  }
+
+  def makeTempDir(dirName: String): Path = {
+    try {
+      //  val thePath = Paths.get(URI.create(new java.io.File(".").getCanonicalPath + "/" + name))
+      // creates temporary directory
+      val dir = Files.createTempDirectory(dirName)
+      println("----> temp dir: " + dir.toString)
+      // delete directory when the virtual machine terminate
+      dir.toFile.deleteOnExit()
+      dir
+    } catch {
+      case ex: Exception => ex.printStackTrace(); null
+    }
   }
 
 }

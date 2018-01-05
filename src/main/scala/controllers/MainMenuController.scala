@@ -7,6 +7,7 @@ import cyber.{CyberBundle, CyberStationApp, FileSender}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import java.io.IOException
 import java.nio.file.{Files, Paths}
+import java.util.UUID
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db._
@@ -28,6 +29,8 @@ import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.scene.control.Alert.AlertType
 import CyberUtils._
+import com.kodekutters.neo4j.Neo4jLoader
+import converter.{GexfConverter, GraphMLConverter, StixConverter, Transformer}
 
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
@@ -62,7 +65,12 @@ class MainMenuController(loadItem: MenuItem,
                          quitItem: MenuItem,
                          aboutItem: MenuItem,
                          openFeedItem: MenuItem,
-                         testItem: MenuItem,
+                         saveAsJsonFileItem: MenuItem,
+                         saveAsZipFileItem: MenuItem,
+                         saveAsGephiItem: MenuItem,
+                         saveAsGraphMLItem: MenuItem,
+                         saveToGephiItem: MenuItem,
+                         saveToGraphMLItem: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
@@ -71,61 +79,22 @@ class MainMenuController(loadItem: MenuItem,
     cyberController = cyberStationController
   }
 
-  /**
-    * load bundles from a file to the viewer
-    */
-  override def loadAction() {
-    fileSelector().map(file => loadLocalBundles(file))
-  }
-
-  /**
-    * load bundles from a file and sent it to the server
-    */
-  override def sendFromFile() {
-    fileSelector().map(file => FileSender.sendFile(file, cyberController))
-  }
-
-  /**
-    * save the bundles to a zip file  ("zip", "*.zip")
-    */
-  override def saveAction() {
-    if (cyberController.getAllBundles().toList.nonEmpty) {
-      val file = new FileChooser {
-        extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
-      }.showSaveDialog(new Stage())
-      if (file != null) {
-        // create the zip file
-        val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
-        // for each bundle of stix
-        cyberController.getAllBundles().foreach { bundle =>
-          val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
-            CyberUtils.randName + ".json"
-          else
-            bundle.name.value + ".json"
-          zip.putNextEntry(new ZipEntry(fileName))
-          try {
-            zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
-          } catch {
-            case e: IOException => e.printStackTrace()
-          }
-          finally {
-            zip.closeEntry()
-          }
-        }
-        zip.close()
-      }
-    }
-  }
+  //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
 
   override def aboutAction() {
     new Alert(AlertType.Information) {
       initOwner(this.owner)
       title = "CyberStation-" + CyberStationApp.version
       headerText = None
-      contentText = "CyberStation is a tool to create and send STIX-2 objects to TAXII-2 servers."
+      contentText = "CyberStation is a tool to create, edit and send STIX-2 objects to TAXII-2 servers."
     }.showAndWait()
   }
 
+  /**
+    * clear all bundle data after asking to save the current data
+    */
   override def newAction() {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val ButtonTypeYes = new ButtonType("Yes")
@@ -172,9 +141,25 @@ class MainMenuController(loadItem: MenuItem,
     })
   }
 
+  //-------------------------------------------------------------------------
+  //-------------------------load--------------------------------------------
+  //-------------------------------------------------------------------------
+  /**
+    * load bundles from a file to the viewer
+    */
+  override def loadAction() {
+    fileSelector().map(file => loadLocalBundles(file))
+  }
+
+  /**
+    * load bundles from a file and sent it to the server
+    */
+  override def sendFromFile() {
+    fileSelector().map(file => FileSender.sendFile(file, cyberController))
+  }
+
   /**
     * read a zip file containing bundles of stix
-    *
     */
   private def loadLocalZipBundles(theFile: File) {
     cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
@@ -257,6 +242,9 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
+  //-------------------------------------------------------------------------
+  //-------------------------convert to--------------------------------------
+  //-------------------------------------------------------------------------
   /**
     * save a file to a Neo4jDB
     */
@@ -271,10 +259,29 @@ class MainMenuController(loadItem: MenuItem,
     fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
   }
 
-  def testAction() {
-    //  MongoDbStix.saveMongoToNeo4j(cyberController)
+  def saveToGephiAction() {
+    fileSelector().map(file => {
+      cyberController.showSpinner(true)
+      cyberController.showThis("Saving: " + file.getName + " to Gephi: " + file.getName + ".gexf", Color.Black)
+      new Transformer(GexfConverter()).stixFileConvertion(file, ".gexf")
+      cyberController.showThis("Done saving: " + file.getName + " to Gephi format", Color.Black)
+      cyberController.showSpinner(false)
+    })
   }
 
+  def saveToGraphMLAction() {
+    fileSelector().map(file => {
+      cyberController.showSpinner(true)
+      cyberController.showThis("Saving: " + file.getName + " to GraphML: " + file.getName + ".graphml", Color.Black)
+      new Transformer(GraphMLConverter()).stixFileConvertion(file, ".graphml")
+      cyberController.showThis("Done saving: " + file.getName + " to GraphML format", Color.Black)
+      cyberController.showSpinner(false)
+    })
+  }
+
+  //-------------------------------------------------------------------------
+  //-------------------------open feed---------------------------------------
+  //-------------------------------------------------------------------------
   /**
     * open a feed that has a bundle of stix objects
     */
@@ -317,6 +324,119 @@ class MainMenuController(loadItem: MenuItem,
     } finally {
       showSpinner(false)
     }
+  }
+
+  //-------------------------------------------------------------------------
+  //-------------------------save as-----------------------------------------
+  //-------------------------------------------------------------------------
+  def saveAsJsonFileAction() {
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      val file = new FileChooser {
+        extensionFilters.add(new ExtensionFilter("json", "*.json"))
+      }.showSaveDialog(new Stage())
+      if (file != null) {
+
+      }
+    }
+  }
+
+  def saveAsZipFileAction() {
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      val file = new FileChooser {
+        extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
+      }.showSaveDialog(new Stage())
+      if (file != null) {
+        // create the zip file
+        val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
+        // for each bundle of stix
+        cyberController.getAllBundles().foreach { bundle =>
+          val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
+            CyberUtils.randName + ".json"
+          else
+            bundle.name.value + ".json"
+          zip.putNextEntry(new ZipEntry(fileName))
+          try {
+            zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
+          } catch {
+            case e: IOException => e.printStackTrace()
+          }
+          finally {
+            zip.closeEntry()
+          }
+        }
+        zip.close()
+      }
+    }
+  }
+
+  private def saveThisAction(converter: StixConverter, ext: String) {
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      cyberController.showSpinner(true)
+      // for each bundle of stix
+      cyberController.getAllBundles().foreach { bundle =>
+        val theFile = if (Files.exists(Paths.get(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)))
+          new File(new java.io.File(".").getCanonicalPath + "/" + UUID.randomUUID().toString + ext)
+        else new File(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)
+
+        cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
+        new Transformer(converter).convertToFile(theFile, bundle.toStix)
+      }
+      cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
+      cyberController.showSpinner(false)
+    } else {
+      cyberController.showThis("No bundle to save", Color.Red)
+    }
+  }
+
+  def saveAsGephiAction() {
+    saveThisAction(GexfConverter(), ".gexf")
+  }
+
+  def saveAsGraphMLAction() {
+    saveThisAction(GraphMLConverter(), ".graphml")
+  }
+
+  //-------------------------------------------------------------------------
+  //-------------------------save--------------------------------------------
+  //-------------------------------------------------------------------------
+
+  /**
+    * save the bundles to a zip file  ("zip", "*.zip")
+    */
+  override def saveAction() {
+    if (cyberController.getAllBundles().toList.nonEmpty) {
+      val file = new FileChooser {
+        extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
+      }.showSaveDialog(new Stage())
+      if (file != null) {
+        // create the zip file
+        val zip = new ZipOutputStream(Files.newOutputStream(Paths.get(file.getPath)))
+        // for each bundle of stix
+        cyberController.getAllBundles().foreach { bundle =>
+          val fileName = if ((bundle.name.value == null) || bundle.name.value.isEmpty)
+            CyberUtils.randName + ".json"
+          else
+            bundle.name.value + ".json"
+          zip.putNextEntry(new ZipEntry(fileName))
+          try {
+            zip.write(Json.stringify(Json.toJson(bundle.toStix)).getBytes)
+          } catch {
+            case e: IOException => e.printStackTrace()
+          }
+          finally {
+            zip.closeEntry()
+          }
+        }
+        zip.close()
+      }
+    }
+  }
+
+  //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  def testAction() {
+    //  MongoDbStix.saveMongoToNeo4j(cyberController)
   }
 
 }

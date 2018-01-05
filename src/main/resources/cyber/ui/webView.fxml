@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.WebViewController">
+   <children>
+      <WebView fx:id="webViewer" minHeight="-1.0" minWidth="-1.0" prefHeight="500.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="4.0" right="4.0" />
+         </VBox.margin></WebView>
+   </children>
+   <padding>
+      <Insets top="4.0" />
+   </padding>
+</VBox>
