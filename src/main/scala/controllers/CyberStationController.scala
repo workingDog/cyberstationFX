@@ -148,9 +148,9 @@ class CyberStationController(mainMenu: VBox,
   def init(): Unit = {
     showSpinner(false)
     // try to connect to the mongo db, for the save to file tool
-    //  initToolMongo()
+      initToolMongo()
     // try to connect to the mongo db, for local storage
-    //  initLocalDB()
+      initLocalDB()
   }
 
   // save the data and close properly before exiting
