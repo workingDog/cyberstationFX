@@ -1,7 +1,7 @@
 package support
 
 import java.net.{URI, URL}
-import java.io.File
+import java.io.{File, IOException, PrintWriter}
 import java.nio.file.{Files, Path, Paths}
 import java.util.UUID
 
@@ -90,4 +90,15 @@ object CyberUtils {
     }
   }
 
+  def writeToFile(outFile: File, bundlejs: String): Unit = {
+    val writer = new PrintWriter(outFile)
+    try {
+      writer.write(bundlejs)
+    } catch {
+      case e: IOException => e.printStackTrace()
+    }
+    finally {
+      writer.close()
+    }
+  }
 }

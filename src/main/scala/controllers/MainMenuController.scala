@@ -313,12 +313,22 @@ class MainMenuController(loadItem: MenuItem,
   //-------------------------------------------------------------------------
   def saveAsJsonFileAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
-      val file = new FileChooser {
-        extensionFilters.add(new ExtensionFilter("json", "*.json"))
-      }.showSaveDialog(new Stage())
-      if (file != null) {
+      val ext = ".json"
+      cyberController.showSpinner(true)
+      // for each bundle of stix
+      cyberController.getAllBundles().foreach { bundle =>
+        val theFile = if (Files.exists(Paths.get(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)))
+          new File(new java.io.File(".").getCanonicalPath + "/" + UUID.randomUUID().toString + ext)
+        else new File(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)
 
+        cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
+        val bundlejs = Json.toJson(bundle.toStix)
+        writeToFile(theFile, Json.stringify(bundlejs))
       }
+      cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
+      cyberController.showSpinner(false)
+    } else {
+      cyberController.showThis("No bundle to save", Color.Red)
     }
   }
 
