@@ -213,7 +213,9 @@ class MainMenuController(loadItem: MenuItem,
         case Some(bundle) =>
           val cyberBundle = CyberBundle.fromStix(bundle, bundleName)
           cyberController.showThis("Bundle loaded from file: " + theFile.getName, Color.Black)
-          cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
+          Platform.runLater(() => {
+            cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
+          })
         case None =>
           cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
           println("---> bundle loading failure --> invalid JSON")
@@ -295,7 +297,9 @@ class MainMenuController(loadItem: MenuItem,
           case Some(bundle) =>
             val cyberBundle = CyberBundle.fromStix(bundle, "bundle-" + randName)
             cyberController.showThis("Bundle loaded from: " + thePath, Color.Black)
-            cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
+            Platform.runLater(() => {
+              cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
+            })
           case None =>
             cyberController.showThis("Fail to load bundle from: " + thePath, Color.Red)
             println("---> bundle loading failure --> invalid JSON")
