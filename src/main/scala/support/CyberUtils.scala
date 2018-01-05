@@ -90,6 +90,12 @@ object CyberUtils {
     }
   }
 
+  /**
+    * write a bundle in json string representation to the output file
+    *
+    * @param outFile  the output file to write to
+    * @param bundlejs a string representing a bundle in json format
+    */
   def writeToFile(outFile: File, bundlejs: String): Unit = {
     val writer = new PrintWriter(outFile)
     try {

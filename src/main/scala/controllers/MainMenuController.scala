@@ -394,7 +394,7 @@ class MainMenuController(loadItem: MenuItem,
   //-------------------------------------------------------------------------
 
   /**
-    * save the bundles to a zip file  ("zip", "*.zip")
+    * "normal" saving of the bundles to a zip file  ("zip", "*.zip")
     */
   def saveAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
