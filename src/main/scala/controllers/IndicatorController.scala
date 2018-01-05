@@ -34,7 +34,7 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
 
   init()
 
-  def init() {
+  def init(): Unit = {
     // setup the list of indicators
     indicatorListView.setEditable(true)
     indicatorListView.setExpanded(true)

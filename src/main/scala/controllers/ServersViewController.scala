@@ -66,7 +66,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   // bind the collectionInfo to the selected collection of the collectionsListView
   collectionInfo <== collectionsListView.getSelectionModel.selectedItemProperty()
 
-  def init() {
+  def init(): Unit = {
     try {
       // get the pre-defined taxii servers from the application.conf file
       val definedServers = config.getStringList("taxii.servers").toList
@@ -215,7 +215,7 @@ class ServersViewController(@FXML addButton: JFXButton,
     })
   }
 
-  def createServerInfo(serverForm: ServerForm) {
+  def createServerInfo(serverForm: ServerForm): Unit = {
     // check that the url is valid
     if (serverForm.url.value == null || serverForm.url.value.isEmpty || !CyberUtils.urlValid(serverForm.url.value)) {
       serverSpinner.setVisible(false)

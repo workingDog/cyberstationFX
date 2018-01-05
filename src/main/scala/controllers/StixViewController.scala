@@ -20,7 +20,7 @@ class StixViewController(bundleHBox: HBox,
 
   init()
 
-  def init() {
+  def init(): Unit = {
     indicatorController.setBundleViewController(bundleViewController)
   }
 

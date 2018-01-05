@@ -73,17 +73,17 @@ class BundleViewController(bundleViewBox: VBox,
 
   def getBundleStixView() = bundleStixView
 
-  def addStixToBundle(stix: CyberObj) {
+  def addStixToBundle(stix: CyberObj): Unit = {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects += stix
   }
 
-  def removeStixFromBundle(stix: CyberObj) {
+  def removeStixFromBundle(stix: CyberObj): Unit = {
     if (bundlesListView.getSelectionModel.getSelectedItem != null)
       bundlesListView.getSelectionModel.getSelectedItem.objects -= stix
   }
 
-  def init() {
+  def init(): Unit = {
     serverSpinner.setVisible(false)
     // setup the list of bundles (showing names)
     bundlesListView.setEditable(true)

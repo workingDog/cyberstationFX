@@ -41,7 +41,7 @@ class TaxiiWebViewController(taxiiWebViewer: WebView) extends TaxiiWebViewContro
 
   init()
 
-  def init() {
+  def init(): Unit = {
     try {
       fetchNumber = config.getInt("taxii.objects")
     } catch {

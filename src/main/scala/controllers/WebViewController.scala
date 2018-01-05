@@ -33,7 +33,7 @@ class WebViewController(webViewer: WebView) extends WebViewControllerInterface {
 
   init()
 
-  def init() {
+  def init(): Unit = {
     webViewer.setVisible(true)
     webViewer.getEngine.javaScriptEnabled = true
     webViewer.cache = false
@@ -41,7 +41,7 @@ class WebViewController(webViewer: WebView) extends WebViewControllerInterface {
     webViewer.getEngine.load(file.toURI.toURL.toString)
   }
 
-  def doLoadAndClick(bundle: Bundle) = {
+  def doLoadAndClick(bundle: Bundle): Unit = {
     if (theBundle != bundle && bundle != null) {
       theBundle = bundle
       println("----------> webViewer doLoadAndClick " + theBundle.objects.length)
@@ -55,7 +55,7 @@ class WebViewController(webViewer: WebView) extends WebViewControllerInterface {
     }
   }
 
-  def whenReady() = {
+  def whenReady(): Unit = {
     webViewer.getEngine.getLoadWorker.stateProperty.addListener(new ChangeListener[State] {
       def changed(observable: javafx.beans.value.ObservableValue[_ <: State], oldValue: State, newValue: State) {
         if (newValue.eq(Worker.State.Succeeded.delegate) && theBundle != null) {
@@ -71,14 +71,14 @@ class WebViewController(webViewer: WebView) extends WebViewControllerInterface {
     })
   }
 
-  def refreshView() = {
+  def refreshView(): Unit = {
 
   }
 
 
-  def testScript() = {
+  def testScript(): Unit = {
     //  webViewer.engine.executeScript("handleTextarea()")
-  //  webViewer.engine.executeScript(scriptPath + "/" + s"vizStixWrapper($testJson)")
+    //  webViewer.engine.executeScript(scriptPath + "/" + s"vizStixWrapper($testJson)")
   }
 
   val testJson =

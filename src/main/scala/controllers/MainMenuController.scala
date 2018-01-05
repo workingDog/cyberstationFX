@@ -38,22 +38,6 @@ import scalafx.stage.{FileChooser, Stage}
 
 trait MainMenuControllerInterface {
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
-
-  def loadAction(): Unit
-
-  def sendFromFile(): Unit
-
-  def saveAction(): Unit
-
-  def aboutAction(): Unit
-
-  def newAction(): Unit
-
-  def quitAction(): Unit
-
-  def saveToNeo4jDB(): Unit
-
-  def saveToMongoDB(): Unit
 }
 
 @sfxml
@@ -75,7 +59,7 @@ class MainMenuController(loadItem: MenuItem,
 
   var cyberController: CyberStationControllerInterface = _
 
-  override def setCyberStationController(cyberStationController: CyberStationControllerInterface) {
+  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
     cyberController = cyberStationController
   }
 
@@ -83,7 +67,7 @@ class MainMenuController(loadItem: MenuItem,
   //-------------------------------------------------------------------------
   //-------------------------------------------------------------------------
 
-  override def aboutAction() {
+  def aboutAction(): Unit = {
     new Alert(AlertType.Information) {
       initOwner(this.owner)
       title = "CyberStation-" + CyberStationApp.version
@@ -95,7 +79,7 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * clear all bundle data after asking to save the current data
     */
-  override def newAction() {
+  def newAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val ButtonTypeYes = new ButtonType("Yes")
       val ButtonTypeNo = new ButtonType("No")
@@ -130,7 +114,7 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * stop all processes and exit from the app
     */
-  override def quitAction() {
+  def quitAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) cyberController.confirmAndSave()
     else cyberController.doClose()
   }
@@ -147,21 +131,21 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * load bundles from a file to the viewer
     */
-  override def loadAction() {
+  def loadAction(): Unit = {
     fileSelector().map(file => loadLocalBundles(file))
   }
 
   /**
     * load bundles from a file and sent it to the server
     */
-  override def sendFromFile() {
+  def sendFromFile(): Unit = {
     fileSelector().map(file => FileSender.sendFile(file, cyberController))
   }
 
   /**
     * read a zip file containing bundles of stix
     */
-  private def loadLocalZipBundles(theFile: File) {
+  private def loadLocalZipBundles(theFile: File): Unit = {
     cyberController.showThis("Loading bundles from file: " + theFile.getName, Color.Black)
     showSpinner(true)
     // try to load the data from a zip file
@@ -198,7 +182,7 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  private def loadLocalBundles(theFile: File) {
+  private def loadLocalBundles(theFile: File): Unit = {
     if (!theFile.getName.toLowerCase.endsWith(".zip"))
       loadLocalBundle(theFile)
     else
@@ -210,7 +194,7 @@ class MainMenuController(loadItem: MenuItem,
     *
     * @param theFile
     */
-  private def loadLocalBundle(theFile: File) {
+  private def loadLocalBundle(theFile: File): Unit = {
     cyberController.showThis("Loading bundle from file: " + theFile.getName, Color.Black)
     showSpinner(true)
     // try to load the data from file
@@ -248,18 +232,18 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * save a file to a Neo4jDB
     */
-  override def saveToNeo4jDB() {
+  def saveToNeo4jDB(): Unit = {
     fileSelector().map(file => Neo4jService.saveFileToDB(file, cyberController))
   }
 
   /**
     * save a file to a MongoDB
     */
-  override def saveToMongoDB() {
+  def saveToMongoDB(): Unit = {
     fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
   }
 
-  def saveToGephiAction() {
+  def saveToGephiAction(): Unit = {
     fileSelector().map(file => {
       cyberController.showSpinner(true)
       cyberController.showThis("Saving: " + file.getName + " to Gephi: " + file.getName + ".gexf", Color.Black)
@@ -269,7 +253,7 @@ class MainMenuController(loadItem: MenuItem,
     })
   }
 
-  def saveToGraphMLAction() {
+  def saveToGraphMLAction(): Unit = {
     fileSelector().map(file => {
       cyberController.showSpinner(true)
       cyberController.showThis("Saving: " + file.getName + " to GraphML: " + file.getName + ".graphml", Color.Black)
@@ -285,7 +269,7 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * open a feed that has a bundle of stix objects
     */
-  def openFeedAction() {
+  def openFeedAction(): Unit = {
     val dialog = new TextInputDialog(defaultValue = "https://misp.truesec.be/isc-top-100-stix.json") {
       initOwner(this.owner)
       title = "STIX-2 bundle feed"
@@ -301,7 +285,7 @@ class MainMenuController(loadItem: MenuItem,
     *
     * @param thePath the full url of the data to load, e.g. "https://misp.truesec.be/isc-top-100-stix.json"
     */
-  private def loadNetBundle(thePath: String) {
+  private def loadNetBundle(thePath: String): Unit = {
     cyberController.showThis("Loading bundle from: " + thePath, Color.Black)
     showSpinner(true)
     // try to load the data
@@ -329,7 +313,7 @@ class MainMenuController(loadItem: MenuItem,
   //-------------------------------------------------------------------------
   //-------------------------save as-----------------------------------------
   //-------------------------------------------------------------------------
-  def saveAsJsonFileAction() {
+  def saveAsJsonFileAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val file = new FileChooser {
         extensionFilters.add(new ExtensionFilter("json", "*.json"))
@@ -340,7 +324,7 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  def saveAsZipFileAction() {
+  def saveAsZipFileAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val file = new FileChooser {
         extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
@@ -369,7 +353,8 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  private def saveThisAction(converter: StixConverter, ext: String) {
+  private def saveWith(converter: StixConverter): Unit = {
+    val ext = converter.outputExt
     if (cyberController.getAllBundles().toList.nonEmpty) {
       cyberController.showSpinner(true)
       // for each bundle of stix
@@ -388,12 +373,12 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  def saveAsGephiAction() {
-    saveThisAction(GexfConverter(), ".gexf")
+  def saveAsGephiAction(): Unit = {
+    saveWith(GexfConverter())
   }
 
-  def saveAsGraphMLAction() {
-    saveThisAction(GraphMLConverter(), ".graphml")
+  def saveAsGraphMLAction(): Unit = {
+    saveWith(GraphMLConverter())
   }
 
   //-------------------------------------------------------------------------
@@ -403,7 +388,7 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * save the bundles to a zip file  ("zip", "*.zip")
     */
-  override def saveAction() {
+  def saveAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val file = new FileChooser {
         extensionFilters.add(new ExtensionFilter("zip", "*.zip"))
@@ -435,7 +420,7 @@ class MainMenuController(loadItem: MenuItem,
   //-------------------------------------------------------------------------
   //-------------------------------------------------------------------------
   //-------------------------------------------------------------------------
-  def testAction() {
+  def testAction(): Unit = {
     //  MongoDbStix.saveMongoToNeo4j(cyberController)
   }
 

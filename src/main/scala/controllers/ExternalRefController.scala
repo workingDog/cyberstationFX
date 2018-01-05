@@ -41,7 +41,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[HashesForm],
 
   init()
 
-  def init() = {
+  def init(): Unit = {
     // hashes
     hashesListView.cellFactory = { _ =>
       new ListCell[HashesForm] {

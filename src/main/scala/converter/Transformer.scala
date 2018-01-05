@@ -59,7 +59,7 @@ class Transformer(converter: StixConverter) {
     }
   }
 
-  def convertToFile(file: File, bundle: Bundle) = {
+  def convertToFile(file: File, bundle: Bundle): Unit = {
     writeToFile(file.getCanonicalPath, converter.convert(bundle))
   }
 

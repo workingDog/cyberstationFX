@@ -102,7 +102,7 @@ class CyberStationController(mainMenu: VBox,
 
   def messageBarSpin(): JFXSpinner = msgBarSpinner
 
-  def initToolMongo() {
+  def initToolMongo(): Unit = {
     showThis("Trying to connect to database: " + MongoDbStix.dbUri, Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
@@ -118,7 +118,7 @@ class CyberStationController(mainMenu: VBox,
     })
   }
 
-  def initLocalDB() {
+  def initLocalDB(): Unit = {
     showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
@@ -145,7 +145,7 @@ class CyberStationController(mainMenu: VBox,
     })
   }
 
-  def init() {
+  def init(): Unit = {
     showSpinner(false)
     // try to connect to the mongo db, for the save to file tool
     //  initToolMongo()
@@ -180,7 +180,7 @@ class CyberStationController(mainMenu: VBox,
     })
   }
 
-  def doClose() {
+  def doClose(): Unit = {
     DbService.close()
     TaxiiConnection.closeSystem()
     System.exit(0)
@@ -192,7 +192,7 @@ class CyberStationController(mainMenu: VBox,
     else doClose()
   }
 
-  def confirmAndSave() {
+  def confirmAndSave(): Unit = {
     val ButtonTypeYes = new ButtonType("Yes")
     val ButtonTypeNo = new ButtonType("No")
     val alert = new Alert(AlertType.Confirmation) {
