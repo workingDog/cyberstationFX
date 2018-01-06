@@ -30,19 +30,19 @@ class GexfConverter extends StixConverter {
     val nodesXml = for (stix <- bundle.objects.filter(obj => obj.isInstanceOf[SDO]))
       yield {
         val theDataName = stix match {
-          case stx: ObservedData => <attvalue for="n7" value="observed-data"/>
-          case stx: Indicator => <attvalue for="n7" value={stx.name.getOrElse("")}/>
-          case stx: AttackPattern => <attvalue for="n7" value={stx.name}/>
-          case stx: Identity => <attvalue for="n7" value={stx.name}/>
-          case stx: Campaign => <attvalue for="n7" value={stx.name}/>
-          case stx: CourseOfAction => <attvalue for="n7" value={stx.name}/>
-          case stx: IntrusionSet => <attvalue for="n7" value={stx.name}/>
-          case stx: Malware => <attvalue for="n7" value={stx.name}/>
-          case stx: Report => <attvalue for="n7" value={stx.name}/>
-          case stx: ThreatActor => <attvalue for="n7" value={stx.name}/>
-          case stx: Vulnerability => <attvalue for="n7" value={stx.name}/>
-          case stx: Tool => <attvalue for="n7" value={stx.name}/>
-          case _ => <attvalue for="n7" value=""/>
+          case stx: ObservedData => <attvalue for="n6" value="observed-data"/>
+          case stx: Indicator => <attvalue for="n6" value={stx.name.getOrElse("")}/>
+          case stx: AttackPattern => <attvalue for="n6" value={stx.name}/>
+          case stx: Identity => <attvalue for="n6" value={stx.name}/>
+          case stx: Campaign => <attvalue for="n6" value={stx.name}/>
+          case stx: CourseOfAction => <attvalue for="n6" value={stx.name}/>
+          case stx: IntrusionSet => <attvalue for="n6" value={stx.name}/>
+          case stx: Malware => <attvalue for="n6" value={stx.name}/>
+          case stx: Report => <attvalue for="n6" value={stx.name}/>
+          case stx: ThreatActor => <attvalue for="n6" value={stx.name}/>
+          case stx: Vulnerability => <attvalue for="n6" value={stx.name}/>
+          case stx: Tool => <attvalue for="n6" value={stx.name}/>
+          case _ => <attvalue for="n6" value=""/>
         }
         val b = stix.asInstanceOf[SDO]
         <node id={b.id.toString()}>
@@ -52,6 +52,7 @@ class GexfConverter extends StixConverter {
             <attvalue for="n3" value={b.modified.time}/>
             <attvalue for="n4" value={b.created_by_ref.getOrElse("").toString}/>
             <attvalue for="n5" value={b.revoked.getOrElse("").toString}/>
+            {theDataName}
           </attvalues>
         </node>
       }
@@ -81,7 +82,7 @@ class GexfConverter extends StixConverter {
                 <attvalue for="e3" value={b.modified.time}/>
                 <attvalue for="e4" value={b.created_by_ref.getOrElse("").toString}/>
                 <attvalue for="e5" value={b.revoked.getOrElse("").toString}/>
-                <attvalue for="e7" value={b.count.getOrElse("").toString}/>
+                <attvalue for="e6" value={b.count.getOrElse("").toString}/>
               </attvalues>
             </edge>
           // create an edge for every where_sighted_refs
@@ -94,7 +95,7 @@ class GexfConverter extends StixConverter {
                   <attvalue for="e3" value={b.modified.time}/>
                   <attvalue for="e4" value={b.created_by_ref.getOrElse("").toString}/>
                   <attvalue for="e5" value={b.revoked.getOrElse("").toString}/>
-                  <attvalue for="e7" value={b.count.getOrElse("").toString}/>
+                  <attvalue for="e6" value={b.count.getOrElse("").toString}/>
                 </attvalues>
               </edge>
 
@@ -112,7 +113,7 @@ class GexfConverter extends StixConverter {
           <attribute id="n3" title="modified" type="string"/>
           <attribute id="n4" title="created_by_ref" type="string"/>
           <attribute id="n5" title="revoked" type="boolean"/>
-          <attribute id="n7" title="name" type="string"/>
+          <attribute id="n6" title="name" type="string"/>
         </attributes>
         <attributes class="edge">
           <attribute id="e1" title="type" type="string"/>
@@ -120,7 +121,7 @@ class GexfConverter extends StixConverter {
           <attribute id="e3" title="modified" type="string"/>
           <attribute id="e4" title="created_by_ref" type="string"/>
           <attribute id="e5" title="revoked" type="boolean"/>
-          <attribute id="e7" title="count" type="integer"/>
+          <attribute id="e6" title="count" type="integer"/>
         </attributes>
         <nodes>
           {nodesXml}
@@ -136,4 +137,5 @@ class GexfConverter extends StixConverter {
   }
 
 }
+
 

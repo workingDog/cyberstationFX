@@ -23,6 +23,12 @@ libraryDependencies ++= Seq(
 ).map(_.exclude("org.slf4j", "*"))
 
 libraryDependencies ++= Seq(
+  "com.google.guava" % "guava" % "23.6-jre",
+  "net.sf.jung" % "jung-visualization" % "2.1.1",
+  "net.sf.jung" % "jung-graph-impl" % "2.1.1",
+  "net.sf.jung" % "jung-api" % "2.1.1",
+  "net.sf.jung" % "jung-algorithms" % "2.1.1",
+  "net.sf.jung" % "jung-io" % "2.1.1",
   "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "com.typesafe" % "config" % "1.3.2",
   "com.google.inject" % "guice" % "4.1.0",
