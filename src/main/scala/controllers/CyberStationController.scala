@@ -77,8 +77,7 @@ class CyberStationController(mainMenu: VBox,
                              @nested[MainMenuController] mainMenuController: MainMenuControllerInterface,
                              @nested[ServersViewController] serversViewController: ServersViewControllerInterface,
                              @nested[WebViewController] webViewController: WebViewControllerInterface,
-                             @nested[StixViewController] stixViewController: StixViewControllerInterface,
-                             @nested[GraphViewController] graphViewController: GraphViewControllerInterface)
+                             @nested[StixViewController] stixViewController: StixViewControllerInterface)
   extends CyberStationControllerInterface {
 
   val config: Config = ConfigFactory.load
@@ -103,7 +102,7 @@ class CyberStationController(mainMenu: VBox,
   webViewController.setCyberStationController(this)
 
   // give this controller to the graphViewController
-  graphViewController.setCyberStationController(this)
+  //  graphViewController.setCyberStationController(this)
 
   def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
@@ -229,29 +228,18 @@ class CyberStationController(mainMenu: VBox,
     if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
       val source = e.source.asInstanceOf[javafx.scene.control.Tab]
       if (source.id.value == "stixViewTab" && source.selected.value) {
-        val bndl = stixViewController.getBundleController().getCurrentBundle()
-        if (bndl.value != null) {
-       //   webViewController.doLoadAndClick(bndl.value.toStix.objects, "Bundle " + bndl.value.name.value)
+        val selected = webViewController.getButonGroup().selectedToggle.value
+        if (selected != null) {
+          selected.setSelected(!selected.isSelected)
         }
+        webViewController.doClear()
       }
     }
   }
 
-  /**
-    * the action when the "taxiiViewTab" is selected
-    */
-  //  def onTaxiiObjAction(e: Event) = {
-  //    if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
-  //      val source = e.source.asInstanceOf[javafx.scene.control.Tab]
-  //      if (source.id.value == "taxiiViewTab" && source.selected.value) {
-  //        taxiiWebViewController.doLoadAndClick()
-  //      }
-  //    }
-  //  }
-
   def viewTestBundle(stixList: ListBuffer[StixObj], theText: String): Unit = {
     webViewController.doLoadAndClick(stixList, theText)
-    graphViewController.doLoadAndClick(stixList, theText)
+    //  graphViewController.doLoadAndClick(stixList, theText)
   }
 
 
