@@ -7,6 +7,7 @@ import javafx.fxml.FXML
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 import com.kodekutters.neo4j.Neo4jLoader
+import com.kodekutters.stix.{Bundle, StixObj}
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
@@ -29,6 +30,8 @@ import scalafx.scene.paint.Color
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
 import org.neo4j.kernel.internal.GraphDatabaseAPI
+
+import scala.collection.mutable.ListBuffer
 
 trait CyberStationControllerInterface {
 
@@ -59,6 +62,9 @@ trait CyberStationControllerInterface {
   def showSpinner(onof: Boolean): Unit
 
   def onChangeAction(e: Event): Unit
+
+  def viewTestBundle(stixList: ListBuffer[StixObj], theText: String): Unit
+
 }
 
 @sfxml
@@ -72,7 +78,7 @@ class CyberStationController(mainMenu: VBox,
                              @nested[ServersViewController] serversViewController: ServersViewControllerInterface,
                              @nested[WebViewController] webViewController: WebViewControllerInterface,
                              @nested[StixViewController] stixViewController: StixViewControllerInterface,
-                             @nested[TaxiiWebViewController] taxiiWebViewController: TaxiiWebViewControllerInterface)
+                             @nested[GraphViewController] graphViewController: GraphViewControllerInterface)
   extends CyberStationControllerInterface {
 
   val config: Config = ConfigFactory.load
@@ -93,8 +99,11 @@ class CyberStationController(mainMenu: VBox,
   // give this controller to the stixViewController
   stixViewController.setCyberStationController(this)
 
-  // give this controller to the taxiiWebViewController
-  taxiiWebViewController.setCyberStationController(this)
+  // give this controller to the webViewController
+  webViewController.setCyberStationController(this)
+
+  // give this controller to the graphViewController
+  graphViewController.setCyberStationController(this)
 
   def getAllBundles() = stixViewController.getBundleController().getAllBundles()
 
@@ -148,9 +157,9 @@ class CyberStationController(mainMenu: VBox,
   def init(): Unit = {
     showSpinner(false)
     // try to connect to the mongo db, for the save to file tool
-      initToolMongo()
+    initToolMongo()
     // try to connect to the mongo db, for local storage
-      initLocalDB()
+    initLocalDB()
   }
 
   // save the data and close properly before exiting
@@ -220,11 +229,9 @@ class CyberStationController(mainMenu: VBox,
     if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
       val source = e.source.asInstanceOf[javafx.scene.control.Tab]
       if (source.id.value == "stixViewTab" && source.selected.value) {
-        println("-----> in onChangeAction stixViewTab")
         val bndl = stixViewController.getBundleController().getCurrentBundle()
         if (bndl.value != null) {
-          webViewController.doLoadAndClick(bndl.value.toStix)
-          //  Neo4jService.reload(getAllBundles().toList, this)
+       //   webViewController.doLoadAndClick(bndl.value.toStix.objects, "Bundle " + bndl.value.name.value)
         }
       }
     }
@@ -233,13 +240,19 @@ class CyberStationController(mainMenu: VBox,
   /**
     * the action when the "taxiiViewTab" is selected
     */
-  def onTaxiiObjAction(e: Event) = {
-    if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
-      val source = e.source.asInstanceOf[javafx.scene.control.Tab]
-      if (source.id.value == "taxiiViewTab" && source.selected.value) {
-        taxiiWebViewController.doLoadAndClick()
-      }
-    }
+  //  def onTaxiiObjAction(e: Event) = {
+  //    if (e.source.isInstanceOf[javafx.scene.control.Tab]) {
+  //      val source = e.source.asInstanceOf[javafx.scene.control.Tab]
+  //      if (source.id.value == "taxiiViewTab" && source.selected.value) {
+  //        taxiiWebViewController.doLoadAndClick()
+  //      }
+  //    }
+  //  }
+
+  def viewTestBundle(stixList: ListBuffer[StixObj], theText: String): Unit = {
+    webViewController.doLoadAndClick(stixList, theText)
+    graphViewController.doLoadAndClick(stixList, theText)
   }
+
 
 }

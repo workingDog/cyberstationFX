@@ -50,15 +50,6 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab id="taxiiViewTab" fx:id="taxiiViewTab" closable="false" onSelectionChanged="#onTaxiiObjAction" text="Taxii view">
-                <content>
-                    <AnchorPane HBox.hgrow="ALWAYS">
-                        <children>
-                            <fx:include fx:id="taxiiWebView" source="taxiiWebView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        </children>
-                    </AnchorPane>
-                </content>
-            </Tab>
             <Tab id="stixTab" closable="false" text="Stix objects">
               <content>
                   <AnchorPane HBox.hgrow="ALWAYS">
@@ -68,13 +59,22 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="stixViewTab" closable="false" onSelectionChanged="#onChangeAction" text="Stix view">
+            <Tab fx:id="stixViewTab" closable="false" onSelectionChanged="#onChangeAction" text="Graph view-1">
               <content>
                   <AnchorPane HBox.hgrow="ALWAYS">
                   <children>
   <fx:include fx:id="webView" source="webView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   </children>
               </AnchorPane>
+              </content>
+            </Tab>
+            <Tab fx:id="graphViewTab" text="Graph View-2">
+              <content>
+                  <AnchorPane HBox.hgrow="ALWAYS">
+                      <children>
+<fx:include fx:id="graphView" source="graphView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                      </children>
+                  </AnchorPane>
               </content>
             </Tab>
          </tabs>

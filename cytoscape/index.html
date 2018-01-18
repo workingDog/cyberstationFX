@@ -1,0 +1,23 @@
+<!DOCTYPE>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <link href="style.css" rel="stylesheet"/>
+    <!-- For loading external data files
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,fetch"></script> -->
+    <script src="cytoscape.min.js"></script>
+    <script src="cytoscape-cose-bilkent.js"></script>
+    <!--   <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script> -->
+  </head>
+
+  <body>
+  <h4 id="titleString">no data</h4>
+  <div id="cy"></div>
+  <input type="hidden" id="bundle-data" value=""/>
+
+  <!-- Load appplication code at the end to ensure DOM is loaded -->
+<script src="showstix.js"></script>
+
+</body>
+</html>

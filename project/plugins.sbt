@@ -1,8 +1,8 @@
 import sbt.Resolver
 
-resolvers += Resolver.sonatypeRepo("releases")
-
 resolvers += Resolver.sonatypeRepo("snapshots")
+
+resolvers += Resolver.sonatypeRepo("releases")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.6")
 

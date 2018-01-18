@@ -1,13 +1,12 @@
 package cyber
 
-import com.jfoenix.controls.JFXButton
 import com.kodekutters.stix.{Bundle, _}
-import play.api.libs.json.Json
+import play.api.libs.json._
 import support.CyberUtils
 
 import scala.collection.mutable.ListBuffer
 import scalafx.beans.property.{BooleanProperty, StringProperty}
-import scalafx.collections.{ObservableBuffer, ObservableMap}
+import scalafx.collections.ObservableBuffer
 import scala.collection.mutable
 
 
@@ -331,8 +330,8 @@ object HashesForm {
 
   def toHashesForms(theMapOpt: Option[Map[String, String]]): ObservableBuffer[HashesForm] = {
     theMapOpt.map(theMap =>
-        (for ((k, v) <- theMap) yield HashesForm(StringProperty(k), StringProperty(v))).to[ObservableBuffer]
-      ).getOrElse(ObservableBuffer[HashesForm]())
+      (for ((k, v) <- theMap) yield HashesForm(StringProperty(k), StringProperty(v))).to[ObservableBuffer]
+    ).getOrElse(ObservableBuffer[HashesForm]())
   }
 
   def toHashesMapOpt(theList: ObservableBuffer[HashesForm]): Option[Map[String, String]] = {
@@ -478,4 +477,3 @@ object ServerForm {
   }
 
 }
-

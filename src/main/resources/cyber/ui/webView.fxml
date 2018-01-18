@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXRadioButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.WebViewController">
    <children>
+      <HBox prefHeight="56.0" prefWidth="608.0">
+         <children>
+            <JFXRadioButton fx:id="allBundlesObj" onAction="#allBundlesObjAction" text="All bundles">
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="graphGroup" />
+               </toggleGroup>
+            </JFXRadioButton>
+            <JFXRadioButton fx:id="bundleObj" onAction="#bundleObjAction" text="Selected bundle" toggleGroup="$graphGroup">
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+            </JFXRadioButton>
+            <JFXRadioButton fx:id="taxiiObj" onAction="#taxiiObjAction" text="TAXII server objects" toggleGroup="$graphGroup">
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+            </JFXRadioButton>
+         </children>
+      </HBox>
       <WebView fx:id="webViewer" minHeight="-1.0" minWidth="-1.0" prefHeight="500.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets left="4.0" right="4.0" />

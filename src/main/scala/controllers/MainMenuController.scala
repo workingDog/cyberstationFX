@@ -2,7 +2,7 @@ package controllers
 
 import java.io.File
 
-import com.kodekutters.stix.Bundle
+import com.kodekutters.stix.{Bundle, StixObj}
 import cyber.{CyberBundle, CyberStationApp, FileSender}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import java.io.IOException
@@ -152,6 +152,7 @@ class MainMenuController(loadItem: MenuItem,
     try {
       val rootZip = new java.util.zip.ZipFile(theFile)
       val bundleList = mutable.ListBuffer[CyberBundle]()
+      val stixList = mutable.ListBuffer[StixObj]()
       rootZip.entries.asScala.foreach(stixFile => {
         // read a STIX bundle from the InputStream
         val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
@@ -163,12 +164,23 @@ class MainMenuController(loadItem: MenuItem,
         }
         // create a bundle object
         Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
-          case Some(bundle) => bundleList += CyberBundle.fromStix(bundle, bundleName)
+          case Some(bundle) =>
+            stixList ++= bundle.objects
+            bundleList += CyberBundle.fromStix(bundle, bundleName)
           case None =>
             cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
             println("---> bundle loading failure, invalid json in: " + stixFile.getName)
         }
       })
+
+      // todo ----------------------------------------------------
+      // todo ----------------------------------------------------
+      // todo ----------------------------------------------------
+      cyberController.viewTestBundle(stixList, theFile.getName)
+      // todo ----------------------------------------------------
+      // todo ----------------------------------------------------
+      // todo ----------------------------------------------------
+
       Platform.runLater(() => {
         cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
       })
@@ -183,10 +195,10 @@ class MainMenuController(loadItem: MenuItem,
   }
 
   private def loadLocalBundles(theFile: File): Unit = {
-    if (!theFile.getName.toLowerCase.endsWith(".zip"))
-      loadLocalBundle(theFile)
-    else
+    if (theFile.getName.toLowerCase.endsWith(".zip"))
       loadLocalZipBundles(theFile)
+    else
+      loadLocalBundle(theFile)
   }
 
   /**
@@ -216,6 +228,15 @@ class MainMenuController(loadItem: MenuItem,
           Platform.runLater(() => {
             cyberController.getStixViewController().getBundleController().setBundles(List(cyberBundle))
           })
+
+          // todo ----------------------------------------------------
+          // todo ----------------------------------------------------
+          // todo ----------------------------------------------------
+          cyberController.viewTestBundle(bundle.objects, theFile.getName)
+        // todo ----------------------------------------------------
+        // todo ----------------------------------------------------
+        // todo ----------------------------------------------------
+
         case None =>
           cyberController.showThis("Fail to load bundle from file: " + theFile.getName, Color.Red)
           println("---> bundle loading failure --> invalid JSON")

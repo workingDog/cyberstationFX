@@ -555,7 +555,8 @@ define(["nbextensions/stix2viz/d3"], function(d3) {
 
       force.stop();
       labelForce.stop();
-      svg.remove();
+
+      svg = svg.remove();
     }
 
     module = {

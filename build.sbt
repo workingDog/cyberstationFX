@@ -9,6 +9,10 @@ version := (version in ThisBuild).value
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+val jungver = "2.2-SNAPSHOT"
+
 libraryDependencies ++= Seq(
   "org.neo4j" % "neo4j" % "3.3.1",
 //  "org.neo4j" % "neo4j-bolt" % "3.3.1",
@@ -24,11 +28,12 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "com.google.guava" % "guava" % "23.6-jre",
-  "net.sf.jung" % "jung-visualization" % "2.1.1",
-  "net.sf.jung" % "jung-graph-impl" % "2.1.1",
-  "net.sf.jung" % "jung-api" % "2.1.1",
-  "net.sf.jung" % "jung-algorithms" % "2.1.1",
-  "net.sf.jung" % "jung-io" % "2.1.1",
+  "org.apache.commons" % "commons-collections4" % "4.1",
+  "net.sf.jung" % "jung-visualization" % jungver,
+  "net.sf.jung" % "jung-graph-impl" % jungver,
+  "net.sf.jung" % "jung-api" % jungver,
+  "net.sf.jung" % "jung-algorithms" % jungver,
+  "net.sf.jung" % "jung-io" % jungver,
   "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "com.typesafe" % "config" % "1.3.2",
   "com.google.inject" % "guice" % "4.1.0",

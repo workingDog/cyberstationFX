@@ -23,6 +23,7 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
     selectedContainer = document.getElementById('selection');
     canvasContainer = document.getElementById('canvas-container');
     canvas = document.getElementById('canvas');
+    cfg = { iconDir: "stix2viz/stix2viz/icons" };
 
     /* ******************************************************
      * Resizes the canvas based on the size of the window
@@ -49,9 +50,6 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
      * Initializes the graph, then renders it.
      * ******************************************************/
     function vizStixWrapper(content) {
-      cfg = {
-        iconDir: "stix2viz/stix2viz/icons"
-      }
       stix2viz.vizInit(canvas, cfg, populateLegend, populateSelected);
       stix2viz.vizStix(content, vizCallback);
     }
@@ -151,6 +149,9 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
     /* ******************************************************
      * When the page is ready, setup the visualization and bind events
      * ******************************************************/
-    document.getElementById('bundle-data').addEventListener('click', handleTextarea, false);
     window.onresize = resizeCanvas;
+    handleTextarea();
+
+  //  document.getElementById('bundle-data').addEventListener('click', handleTextarea, false);
+  //  window.onresize = resizeCanvas;
 });

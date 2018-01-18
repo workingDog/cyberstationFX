@@ -1,16 +1,16 @@
-//package graph
-//
-//import edu.uci.ics.jung.algorithms.layout.Layout
-//import edu.uci.ics.jung.algorithms.layout.util.Relaxer
-//import edu.uci.ics.jung.algorithms.layout.util.VisRunner
-//import edu.uci.ics.jung.algorithms.util.IterativeContext
-//import edu.uci.ics.jung.graph.Graph
-//import java.awt.Dimension
-//import javafx.scene.layout.Region
-//import javafx.scene.shape._
-//
-//
-//class JungGraphViewer[V, E](layout: Layout[V, E]) extends Region {
+package graph
+
+import edu.uci.ics.jung.algorithms.layout.Layout
+import edu.uci.ics.jung.algorithms.layout.util.Relaxer
+import edu.uci.ics.jung.algorithms.layout.util.VisRunner
+import edu.uci.ics.jung.algorithms.util.IterativeContext
+import edu.uci.ics.jung.graph.Graph
+import java.awt.Dimension
+import javafx.scene.layout.Region
+import javafx.scene.shape._
+
+
+class JungGraphViewer[V, E](layout: Layout[V, E]) extends Region {
 //  private var relaxer: Relaxer = null
 //  private val CIRCLE_SIZE = 25.0
 //
@@ -33,7 +33,7 @@
 //    val graph = layout.getGraph
 //    // draw the vertices in the graph
 //    for (v <- graph.getVertices) { // Get the position of the vertex
-//      val p:java.awt.geom.Point2D = layout.transform(v)
+//      val p: java.awt.geom.Point2D = layout.   //.transform(v)
 //      // draw the vertex as a circle
 //      val circle = CircleBuilder.create.centerX(p.getX).centerY(p.getY).radius(CIRCLE_SIZE).build
 //      // add it to the group, so it is shown on screen
@@ -53,5 +53,5 @@
 //      this.getChildren.add(line)
 //    }
 //  }
-//}
-//
+}
+

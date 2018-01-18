@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GraphViewController">
+   <padding>
+      <Insets top="4.0" />
+   </padding>
+   <children>
+      <HBox prefHeight="56.0" prefWidth="803.0">
+         <children>
+            <JFXRadioButton fx:id="allBundlesObj" onAction="#allBundlesObjAction" text="All bundles">
+               <toggleGroup>
+                  <ToggleGroup fx:id="graphGroup" />
+               </toggleGroup>
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+            </JFXRadioButton>
+            <JFXRadioButton fx:id="bundleObj" onAction="#bundleObjAction" text="Selected bundle" toggleGroup="$graphGroup">
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+            </JFXRadioButton>
+            <JFXRadioButton fx:id="taxiiObj" onAction="#taxiiObjAction" text="TAXII server objects" toggleGroup="$graphGroup">
+               <HBox.margin>
+                  <Insets right="12.0" top="22.0" />
+               </HBox.margin>
+            </JFXRadioButton>
+            <JFXButton fx:id="stopAnimation" buttonType="RAISED" onAction="#stopAnimationAction" style="-fx-background-color: lightBlue;" text="Stop animation">
+               <HBox.margin>
+                  <Insets left="22.0" top="16.0" />
+               </HBox.margin>
+            </JFXButton>
+            <JFXSpinner fx:id="theSpinner" visible="false">
+               <HBox.margin>
+                  <Insets left="22.0" />
+               </HBox.margin></JFXSpinner>
+         </children>
+      </HBox>
+      <Pane fx:id="thePane" prefHeight="453.0" prefWidth="803.0">
+         <VBox.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </VBox.margin></Pane>
+   </children>
+</VBox>
