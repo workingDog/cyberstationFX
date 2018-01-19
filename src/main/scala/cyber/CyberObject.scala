@@ -58,7 +58,7 @@ object CyberBundle {
 }
 
 /**
-  * to store the bundle name and extra info
+  * for the storage of the bundle name and extra info
   *
   * @param user_id   the user id of this session
   * @param bundle_id the bundle id stored
@@ -126,8 +126,6 @@ object CustomStixForm {
   }
 
 }
-
-// Indicator, ObservedData, Relationship, Sighting, LanguageContent, Bundle
 
 /**
   * an Indicator form
@@ -206,12 +204,37 @@ class AttackPatternForm() extends CyberObj {
   name.value = "attack-pattern_" + CyberUtils.randDigits
 
   def toStix = new AttackPattern(
-    AttackPattern.`type`, Identifier.stringToIdentifier(id.value),
-    Timestamp(created.value), Timestamp(modified.value),
-    name.value)
+    `type` = AttackPattern.`type`,
+    id = Identifier.stringToIdentifier(id.value),
+    created = Timestamp(created.value),
+    modified = Timestamp(modified.value),
+    name = name.value,
+    revoked = Option(revoked.value),
+    labels = Option(labels.toList),
+    external_references = ExternalRefForm.toExternalRefListOpt(external_references),
+    object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
+    granular_markings = Option(List()),
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value)
+  )
+
 }
 
 object AttackPatternForm {
+
+  def clone(inForm: AttackPatternForm) = {
+    new AttackPatternForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
 
   def fromStix(stix: AttackPattern) = new AttackPatternForm {
     `type`.value = stix.`type`
@@ -219,9 +242,178 @@ object AttackPatternForm {
     name.value = stix.name
     created.value = stix.created.toString()
     modified.value = stix.modified.toString()
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
   }
 
 }
+
+class MalwareForm() extends CyberObj {
+  `type`.value = Malware.`type`
+  id.value = Identifier(Malware.`type`).toString()
+  name.value = "malware_" + CyberUtils.randDigits
+
+  def toStix = new Malware(
+    `type` = Malware.`type`,
+    id = Identifier.stringToIdentifier(id.value),
+    created = Timestamp(created.value),
+    modified = Timestamp(modified.value),
+    name = name.value,
+    revoked = Option(revoked.value),
+    labels = Option(labels.toList),
+    external_references = ExternalRefForm.toExternalRefListOpt(external_references),
+    object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
+    granular_markings = Option(List()),
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value)
+  )
+
+}
+
+object MalwareForm {
+
+  def clone(inForm: MalwareForm) = {
+    new MalwareForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
+
+  def fromStix(stix: Malware) = new MalwareForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
+class IdentityForm() extends CyberObj {
+  `type`.value = Identity.`type`
+  id.value = Identifier(Identity.`type`).toString()
+  name.value = "identity_" + CyberUtils.randDigits
+
+  def toStix = new Identity(
+    `type` = Identity.`type`,
+    id = Identifier.stringToIdentifier(id.value),
+    created = Timestamp(created.value),
+    modified = Timestamp(modified.value),
+    name = name.value,
+    identity_class = "identity_class", // todo <-----
+    revoked = Option(revoked.value),
+    labels = Option(labels.toList),
+    external_references = ExternalRefForm.toExternalRefListOpt(external_references),
+    object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
+    granular_markings = Option(List()),
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value)
+  )
+
+}
+
+object IdentityForm {
+
+  def clone(inForm: IdentityForm) = {
+    new IdentityForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
+
+  def fromStix(stix: Identity) = new IdentityForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
+
+class ReportForm() extends CyberObj {
+  `type`.value = Report.`type`
+  id.value = Identifier(Malware.`type`).toString()
+  name.value = "report_" + CyberUtils.randDigits
+
+  def toStix = new Report(
+    `type` = Report.`type`,
+    id = Identifier.stringToIdentifier(id.value),
+    created = Timestamp(created.value),
+    modified = Timestamp(modified.value),
+    name = name.value,
+    published = Timestamp(created.value), // todo <-----
+    object_refs = List(), // todo <-----
+    revoked = Option(revoked.value),
+    labels = Option(labels.toList),
+    external_references = ExternalRefForm.toExternalRefListOpt(external_references),
+    object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
+    granular_markings = Option(List()),
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value)
+  )
+
+}
+
+object ReportForm {
+
+  def clone(inForm: ReportForm) = {
+    new ReportForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+    }
+  }
+
+  def fromStix(stix: Report) = new ReportForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = stix.name
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
 
 class KillChainPhaseForm() {
   val kill_chain_name = StringProperty("")
@@ -355,28 +547,6 @@ object HashesForm {
 
 }
 
-class IdentityForm() extends CyberObj {
-  `type`.value = Identity.`type`
-  id.value = Identifier(Identity.`type`).toString()
-  name.value = "identity_" + CyberUtils.randDigits
-
-  def toStix = new Identity(
-    Identity.`type`, Identifier.stringToIdentifier(id.value),
-    Timestamp(created.value), Timestamp(modified.value),
-    name.value, "identity_class")
-}
-
-object IdentityForm {
-
-  def fromStix(stix: Identity) = new IdentityForm {
-    `type`.value = stix.`type`
-    id.value = stix.id.toString()
-    name.value = stix.name
-    created.value = stix.created.toString()
-    modified.value = stix.modified.toString()
-  }
-
-}
 
 /**
   * conversions utilities
@@ -477,3 +647,10 @@ object ServerForm {
   }
 
 }
+
+
+
+
+
+
+

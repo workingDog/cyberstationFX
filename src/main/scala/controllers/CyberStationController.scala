@@ -1,26 +1,22 @@
 package controllers
 
-import java.net.URI
-import java.nio.file.{Files, Path, Paths}
+
 import javafx.fxml.FXML
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
-import com.kodekutters.neo4j.Neo4jLoader
+
 import com.kodekutters.stix.{Bundle, StixObj}
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
 import com.typesafe.config.{Config, ConfigFactory}
 import db.mongo.MongoDbStix
-import db.neo4j.Neo4jService
-import support.CyberUtils
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
-import scalafx.beans.value.ObservableValue
 import scalafx.collections.ObservableBuffer
 import scalafx.event.Event
 import scalafx.scene.control.Alert.AlertType
@@ -29,9 +25,9 @@ import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
-import org.neo4j.kernel.internal.GraphDatabaseAPI
 
 import scala.collection.mutable.ListBuffer
+
 
 trait CyberStationControllerInterface {
 
