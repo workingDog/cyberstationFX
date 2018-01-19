@@ -7,8 +7,20 @@ import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.Label
 import scalafx.scene.control.cell.TextFieldListCell
-import scalafx.scene.input.MouseEvent
 import scalafx.util.StringConverter
+
+
+trait BaseControllerInterface {
+  def init(): Unit
+
+  def setBundleViewController(controller: BundleViewControllerInterface): Unit
+}
+
+trait BaseSpecControllerInterface {
+  def control[T <: CyberObj](stix: T, controller: Option[BundleViewControllerInterface]): Unit
+
+  def clear(): Unit
+}
 
 
 class BaseFormController(cyberType: String,
@@ -21,7 +33,7 @@ class BaseFormController(cyberType: String,
   val formList = ObservableBuffer[CyberObj]()
   var bundleController: Option[BundleViewControllerInterface] = None
 
-  def init(): Unit = {
+  def init(specController: BaseSpecControllerInterface): Unit = {
     // setup the list of CyberObj
     formListView.setEditable(true)
     formListView.setExpanded(true)
@@ -38,8 +50,10 @@ class BaseFormController(cyberType: String,
       // the commonController will take care of all interactions/updates for the common attributes
       if (newValue != null) {
         commonController.control(newValue, bundleController)
+        specController.control(newValue, bundleController)
       } else {
         commonController.clear()
+        specController.clear()
       }
     }
   }

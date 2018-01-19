@@ -5,24 +5,45 @@ import javafx.fxml.FXML
 import javafx.scene.text.Text
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
-import com.kodekutters.stix.Timestamp
-import cyber.{CyberStationApp, IndicatorForm, KillChainPhaseForm}
+import com.kodekutters.stix.{Indicator, Timestamp}
+import cyber.{CyberObj, CyberStationApp, IndicatorForm, KillChainPhaseForm}
 
 import scala.language.implicitConversions
 import scalafx.Includes._
 import scalafx.scene.Scene
-import scalafx.scene.control.ListCell
+import scalafx.scene.control.{Label, ListCell}
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.stage.{Modality, Stage}
 import scalafxml.core.{DependenciesByType, FXMLLoader}
-import scalafxml.core.macros.sfxml
+import scalafxml.core.macros.{nested, sfxml}
 
 
-trait IndicatorSpecControllerInterface {
-  def control(stix: IndicatorForm, controller: Option[BundleViewControllerInterface]): Unit
+trait IndicatorControllerInterface extends BaseControllerInterface
 
-  def clear(): Unit
+
+@sfxml
+class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
+                          @FXML addButton: JFXButton,
+                          @FXML deleteButton: JFXButton,
+                          bundleLabel: Label,
+                          @nested[CommonController] commonController: CommonControllerInterface,
+                          @nested[IndicatorSpecController] indicatorSpecController: IndicatorSpecControllerInterface)
+  extends IndicatorControllerInterface {
+
+  val baseForm = new BaseFormController(Indicator.`type`, indicatorListView.asInstanceOf[JFXListView[CyberObj]], addButton, deleteButton, bundleLabel, commonController)
+
+  def setBundleViewController(controller: BundleViewControllerInterface): Unit = baseForm.setBundleViewController(controller)
+
+  deleteButton.setOnMouseClicked((_: MouseEvent) => baseForm.doDelete())
+  addButton.setOnMouseClicked((_: MouseEvent) => baseForm.doAdd(new IndicatorForm()))
+
+  def init(): Unit = baseForm.init(indicatorSpecController)
+
+  init()
+
 }
+
+trait IndicatorSpecControllerInterface extends BaseSpecControllerInterface
 
 @sfxml
 class IndicatorSpecController(@FXML patternField: JFXTextField,
@@ -107,10 +128,10 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
     }
   }
 
-  def control(stix: IndicatorForm, controller: Option[BundleViewControllerInterface]): Unit = {
+  def control[IndicatorForm](stix: IndicatorForm, controller: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
     if (stix != null) {
-      currentForm = stix
+      currentForm = stix.asInstanceOf[cyber.IndicatorForm]
       loadValues()
       // bind the form to the UI
       currentForm.valid_from <== validFromField.textProperty()
