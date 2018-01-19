@@ -71,7 +71,7 @@ class BaseFormController(cyberType: String,
     }
   }
 
-  def doDelete(ev: MouseEvent) = {
+  def doDelete() = {
     val selectedItem = formListView.getSelectionModel.getSelectedItem
     if (selectedItem != null) {
       val ndx = formList.indexWhere(b => b.id == selectedItem.id)

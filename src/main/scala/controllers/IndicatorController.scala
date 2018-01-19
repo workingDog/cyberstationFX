@@ -30,8 +30,8 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
 
   val baseForm = new BaseFormController(Indicator.`type`, indicatorListView.asInstanceOf[JFXListView[CyberObj]], addButton, deleteButton, bundleLabel, commonController)
   def setBundleViewController(controller: BundleViewControllerInterface): Unit = baseForm.setBundleViewController(controller)
-  deleteButton.setOnMouseClicked((ev: MouseEvent) => baseForm.doDelete(ev))
-  addButton.setOnMouseClicked((ev: MouseEvent) => baseForm.doAdd(new IndicatorForm()))
+  deleteButton.setOnMouseClicked((_: MouseEvent) => baseForm.doDelete())
+  addButton.setOnMouseClicked((_: MouseEvent) => baseForm.doAdd(new IndicatorForm()))
 
   init()
 
