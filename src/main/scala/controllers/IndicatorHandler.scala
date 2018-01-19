@@ -18,8 +18,10 @@ import scalafxml.core.{DependenciesByType, FXMLLoader}
 import scalafxml.core.macros.{nested, sfxml}
 
 
+/**
+  * the Indicator controller
+  */
 trait IndicatorControllerInterface extends BaseControllerInterface
-
 
 @sfxml
 class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
@@ -30,8 +32,9 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
                           @nested[IndicatorSpecController] indicatorSpecController: IndicatorSpecControllerInterface)
   extends IndicatorControllerInterface {
 
+  // the base controller for the common properties
   val baseForm = new BaseFormController(Indicator.`type`, indicatorListView.asInstanceOf[JFXListView[CyberObj]], addButton, deleteButton, bundleLabel, commonController)
-
+  // give the base controller the BundleViewControllerInterface, so it can refer to it
   def setBundleViewController(controller: BundleViewControllerInterface): Unit = baseForm.setBundleViewController(controller)
 
   deleteButton.setOnMouseClicked((_: MouseEvent) => baseForm.doDelete())
@@ -40,9 +43,11 @@ class IndicatorController(@FXML indicatorListView: JFXListView[IndicatorForm],
   def init(): Unit = baseForm.init(indicatorSpecController)
 
   init()
-
 }
 
+/**
+  * the controller for all Indicator specific properties, i.e. other than the common ones
+  */
 trait IndicatorSpecControllerInterface extends BaseSpecControllerInterface
 
 @sfxml
@@ -57,7 +62,7 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
                               @FXML killPhaseListView: JFXListView[KillChainPhaseForm]
                              ) extends IndicatorSpecControllerInterface {
 
-  var currentForm: IndicatorForm = null
+  var currentForm: IndicatorForm = _
 
   init()
 
