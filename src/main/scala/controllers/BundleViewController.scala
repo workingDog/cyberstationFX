@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.Includes._
 import scalafx.application.Platform
-import scalafx.beans.property.{ObjectProperty, ReadOnlyObjectProperty}
+import scalafx.beans.property.ReadOnlyObjectProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control.{Label, ListCell, TableColumn, TableView}

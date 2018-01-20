@@ -6,7 +6,7 @@ import javafx.fxml.FXML
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
 
-import com.kodekutters.stix.{Bundle, StixObj}
+import com.kodekutters.stix.StixObj
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}

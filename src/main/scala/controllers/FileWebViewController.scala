@@ -1,21 +1,17 @@
 package controllers
 
 import java.io.File
-import javafx.beans.value.ChangeListener
-import javafx.concurrent.Worker.State
 
 import com.kodekutters.stix.{Bundle, StixObj}
 
 import scalafx.Includes._
 import scalafx.concurrent.Worker
-import scalafxml.core.macros.{nested, sfxml}
+import scalafxml.core.macros.sfxml
 import scalafx.scene.web.WebView
-import cyber.CytoObject
 import play.api.libs.json.Json
 
 import scala.collection.mutable.ListBuffer
-import scala.util.Random
-import scalafx.application.Platform
+
 
 
 trait FileWebViewControllerInterface {

@@ -29,7 +29,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.stage.{Modality, Stage}
 import scalafxml.core.{DependenciesByType, FXMLLoader}
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 
 trait ServersViewControllerInterface {
@@ -69,7 +69,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   def init(): Unit = {
     try {
       // get the pre-defined taxii servers from the application.conf file
-      val definedServers = config.getStringList("taxii.servers").toList
+      val definedServers = config.getStringList("taxii.servers").asScala.toList
       // add the pre-defined servers to the srvList
       srvList ++= (for(s <- definedServers) yield ServerForm(url = StringProperty(s)))
     } catch {

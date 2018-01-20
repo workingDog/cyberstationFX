@@ -15,7 +15,7 @@ trait BaseControllerInterface {
 }
 
 trait BaseSpecControllerInterface {
-  def control[T <: CyberObj](stix: T, controller: Option[BundleViewControllerInterface]): Unit
+  def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit
 
   def clear(): Unit
 }

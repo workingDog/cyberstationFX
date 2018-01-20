@@ -8,7 +8,7 @@ import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
 import cyber.{CyberStationApp, ExternalRefForm, HashesForm}
 
 import scalafx.stage.{Modality, Stage}
-import scalafxml.core.macros.{nested, sfxml}
+import scalafxml.core.macros.sfxml
 import scalafx.Includes._
 import scalafx.scene.Scene
 import scalafx.scene.control.ListCell

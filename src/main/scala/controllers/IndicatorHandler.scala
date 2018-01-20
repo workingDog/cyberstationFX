@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXTextArea, JFXTextField}
 import com.kodekutters.stix.Indicator
-import cyber._
+import cyber.{CyberObj, _}
 
 import scala.language.implicitConversions
 import scalafx.Includes._
@@ -88,7 +88,7 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
     }
   }
 
-  def control[IndicatorForm](stix: IndicatorForm, controller: Option[BundleViewControllerInterface]): Unit = {
+  def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
     if (stix != null) {
       currentForm = stix.asInstanceOf[cyber.IndicatorForm]

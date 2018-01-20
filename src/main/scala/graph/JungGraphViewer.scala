@@ -1,16 +1,16 @@
-package graph
-
-import edu.uci.ics.jung.algorithms.layout.Layout
-import edu.uci.ics.jung.algorithms.layout.util.Relaxer
-import edu.uci.ics.jung.algorithms.layout.util.VisRunner
-import edu.uci.ics.jung.algorithms.util.IterativeContext
-import edu.uci.ics.jung.graph.Graph
-import java.awt.Dimension
-import javafx.scene.layout.Region
-import javafx.scene.shape._
-
-
-class JungGraphViewer[V, E](layout: Layout[V, E]) extends Region {
+//package graph
+//
+//import edu.uci.ics.jung.algorithms.layout.Layout
+//import edu.uci.ics.jung.algorithms.layout.util.Relaxer
+//import edu.uci.ics.jung.algorithms.layout.util.VisRunner
+//import edu.uci.ics.jung.algorithms.util.IterativeContext
+//import edu.uci.ics.jung.graph.Graph
+//import java.awt.Dimension
+//import javafx.scene.layout.Region
+//import javafx.scene.shape._
+//
+//
+//class JungGraphViewer[V, E](layout: Layout[V, E]) extends Region {
 //  private var relaxer: Relaxer = null
 //  private val CIRCLE_SIZE = 25.0
 //
@@ -53,5 +53,5 @@ class JungGraphViewer[V, E](layout: Layout[V, E]) extends Region {
 //      this.getChildren.add(line)
 //    }
 //  }
-}
+//}
 

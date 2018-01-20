@@ -6,7 +6,7 @@ import com.jfoenix.controls.{JFXButton, JFXTextField}
 import cyber.HashesForm
 
 import scalafx.stage.Stage
-import scalafxml.core.macros.{nested, sfxml}
+import scalafxml.core.macros.sfxml
 import scalafx.Includes._
 import scalafx.scene.input.MouseEvent
 

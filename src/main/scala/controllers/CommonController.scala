@@ -1,6 +1,5 @@
 package controllers
 
-import java.text.NumberFormat
 import javafx.fxml.FXML
 import java.io.IOException
 import javafx.scene.text.Text
@@ -14,13 +13,12 @@ import scala.language.implicitConversions
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.Scene
-import scalafx.scene.control.{ListCell, TextFormatter}
+import scalafx.scene.control.ListCell
 import scalafx.scene.control.cell.{CheckBoxListCell, TextFieldListCell}
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.stage.{Modality, Stage}
-import scalafx.util.converter.NumberStringConverter
 import scalafxml.core.{DependenciesByType, FXMLLoader}
-import scalafxml.core.macros.{nested, sfxml}
+import scalafxml.core.macros.sfxml
 
 
 trait CommonControllerInterface {

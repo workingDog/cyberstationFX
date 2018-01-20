@@ -1,12 +1,12 @@
-package support
-
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
-
-
-sealed class TimeoutException extends RuntimeException
-
-object FutureUtils {
+//package support
+//
+//import scala.concurrent.{ExecutionContext, Future}
+//import scala.util.{Failure, Success, Try}
+//
+//
+//sealed class TimeoutException extends RuntimeException
+//
+//object FutureUtils {
 
 //  import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -40,4 +40,4 @@ object FutureUtils {
 //    }
 //  }
 
-}
+//}
