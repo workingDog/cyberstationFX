@@ -15,13 +15,15 @@ trait StixViewControllerInterface {
 @sfxml
 class StixViewController(bundleHBox: HBox,
                          @nested[BundleViewController] bundleViewController: BundleViewControllerInterface,
-                         @nested[IndicatorController] indicatorController: IndicatorControllerInterface)
+                         @nested[IndicatorController] indicatorController: IndicatorControllerInterface,
+                         @nested[MalwareController] malwareController: MalwareControllerInterface)
   extends StixViewControllerInterface {
 
   init()
 
   def init(): Unit = {
     indicatorController.setBundleViewController(bundleViewController)
+    malwareController.setBundleViewController(bundleViewController)
   }
 
   def getBundleController(): BundleViewControllerInterface = bundleViewController

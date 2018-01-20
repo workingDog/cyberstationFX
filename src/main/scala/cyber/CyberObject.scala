@@ -29,6 +29,10 @@ trait CyberObj {
   def toStix: StixObj
 }
 
+trait KillChainPhaseTrait {
+  val kill_chain_phases = ObservableBuffer[KillChainPhaseForm]()
+}
+
 /**
   * a Cyber Bundle form
   */
@@ -130,7 +134,7 @@ object CustomStixForm {
 /**
   * an Indicator form
   */
-class IndicatorForm() extends CyberObj {
+class IndicatorForm() extends CyberObj with KillChainPhaseTrait {
   `type`.value = Indicator.`type`
   id.value = Identifier(Indicator.`type`).toString()
   name.value = "indicator_" + CyberUtils.randDigits
@@ -138,7 +142,6 @@ class IndicatorForm() extends CyberObj {
   val pattern = StringProperty("")
   val valid_from = StringProperty(Timestamp.now().toString())
   val valid_until = StringProperty("")
-  val kill_chain_phases = ObservableBuffer[KillChainPhaseForm]()
   val description = StringProperty("")
 
   def toStix = new Indicator(
@@ -251,10 +254,11 @@ object AttackPatternForm {
 
 }
 
-class MalwareForm() extends CyberObj {
+class MalwareForm() extends CyberObj with KillChainPhaseTrait {
   `type`.value = Malware.`type`
   id.value = Identifier(Malware.`type`).toString()
   name.value = "malware_" + CyberUtils.randDigits
+  val description = StringProperty("")
 
   def toStix = new Malware(
     `type` = Malware.`type`,
@@ -267,7 +271,9 @@ class MalwareForm() extends CyberObj {
     external_references = ExternalRefForm.toExternalRefListOpt(external_references),
     object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
     granular_markings = Option(List()),
-    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value)
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value),
+    kill_chain_phases = KillChainPhaseForm.toKillChainPhaseListOpt(kill_chain_phases),
+    description = Option(description.value)
   )
 
 }
@@ -286,6 +292,8 @@ object MalwareForm {
       revoked.value = inForm.revoked.value
       external_references ++ inForm.external_references
       object_marking_refs ++ inForm.object_marking_refs
+      kill_chain_phases ++ inForm.kill_chain_phases
+      description.value = inForm.description.value
     }
   }
 
@@ -300,6 +308,8 @@ object MalwareForm {
     revoked.value = stix.revoked.getOrElse(false)
     external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
     object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+    kill_chain_phases ++= KillChainPhaseForm.fromKillChainPhaseList(stix.kill_chain_phases.getOrElse(List()))
+    description.value = stix.description.getOrElse("").toString()
   }
 
 }

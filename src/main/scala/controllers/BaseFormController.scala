@@ -1,6 +1,6 @@
 package controllers
 
-import com.jfoenix.controls.{JFXButton, JFXListView}
+import com.jfoenix.controls.JFXListView
 import cyber.CyberObj
 
 import scalafx.Includes._
@@ -11,8 +11,6 @@ import scalafx.util.StringConverter
 
 
 trait BaseControllerInterface {
-  def init(): Unit
-
   def setBundleViewController(controller: BundleViewControllerInterface): Unit
 }
 
@@ -25,15 +23,16 @@ trait BaseSpecControllerInterface {
 
 class BaseFormController(cyberType: String,
                          formListView: JFXListView[CyberObj],
-                         addButton: JFXButton,
-                         deleteButton: JFXButton,
                          bundleLabel: Label,
-                         commonController: CommonControllerInterface) {
+                         commonController: CommonControllerInterface,
+                         specController: BaseSpecControllerInterface) {
 
   val formList = ObservableBuffer[CyberObj]()
   var bundleController: Option[BundleViewControllerInterface] = None
 
-  def init(specController: BaseSpecControllerInterface): Unit = {
+  init()
+
+  def init(): Unit = {
     // setup the list of CyberObj
     formListView.setEditable(true)
     formListView.setExpanded(true)
