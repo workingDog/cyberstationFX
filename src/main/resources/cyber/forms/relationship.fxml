@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RelationshipController">
+   <children>
+      <VBox minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+         <children>
+            <HBox minHeight="-Infinity" prefHeight="66.0" prefWidth="250.0" spacing="8.0" VBox.vgrow="NEVER">
+               <children>
+                  <JFXButton fx:id="addButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');">
+                     <HBox.margin>
+                        <Insets top="12.0" />
+                     </HBox.margin></JFXButton>
+                  <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');">
+                     <HBox.margin>
+                        <Insets top="12.0" />
+                     </HBox.margin></JFXButton>
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="12.0" right="4.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <JFXListView fx:id="theListView" editable="true" minHeight="-Infinity" prefWidth="250.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets left="8.0" />
+               </VBox.margin></JFXListView>
+         </children>
+         <opaqueInsets>
+            <Insets left="8.0" right="8.0" />
+         </opaqueInsets>
+      </VBox>
+      <ScrollPane HBox.hgrow="ALWAYS">
+         <content>
+            <VBox fillWidth="false" spacing="8.0">
+               <children>
+                  <Label fx:id="bundleLabel" maxWidth="1.7976931348623157E308" text="Part of bundle: ">
+                     <padding>
+                        <Insets left="44.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="26.0" />
+                     </VBox.margin>
+                  </Label>
+                  <AnchorPane VBox.vgrow="ALWAYS">
+                  <children>
+                     <fx:include fx:id="common" source="common.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  </children>
+                  </AnchorPane>
+                  <AnchorPane VBox.vgrow="ALWAYS">
+                     <children>
+  <fx:include fx:id="relationshipSpec" source="relationshipSpec.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</HBox>

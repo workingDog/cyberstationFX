@@ -16,7 +16,8 @@ trait StixViewControllerInterface {
 class StixViewController(bundleHBox: HBox,
                          @nested[BundleViewController] bundleViewController: BundleViewControllerInterface,
                          @nested[IndicatorController] indicatorController: IndicatorControllerInterface,
-                         @nested[MalwareController] malwareController: MalwareControllerInterface)
+                         @nested[MalwareController] malwareController: MalwareControllerInterface,
+                         @nested[RelationshipController] relationshipController: RelationshipControllerInterface)
   extends StixViewControllerInterface {
 
   init()
@@ -24,6 +25,7 @@ class StixViewController(bundleHBox: HBox,
   def init(): Unit = {
     indicatorController.setBundleViewController(bundleViewController)
     malwareController.setBundleViewController(bundleViewController)
+    relationshipController.setBundleViewController(bundleViewController)
   }
 
   def getBundleController(): BundleViewControllerInterface = bundleViewController

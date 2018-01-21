@@ -91,7 +91,7 @@ class IndicatorSpecController(@FXML patternField: JFXTextField,
   def control(stix: CyberObj, controller: Option[BundleViewControllerInterface]): Unit = {
     unbindAll()
     if (stix != null) {
-      currentForm = stix.asInstanceOf[cyber.IndicatorForm]
+      currentForm = stix.asInstanceOf[IndicatorForm]
       killPhaseSupport.setCurrentForm(currentForm)
       loadValues()
       // bind the form to the UI

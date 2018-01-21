@@ -1,5 +1,7 @@
 package cyber
 
+import java.util.UUID
+
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json._
 import support.CyberUtils
@@ -250,6 +252,75 @@ object AttackPatternForm {
     revoked.value = stix.revoked.getOrElse(false)
     external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
     object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+  }
+
+}
+
+class RelationshipForm() extends CyberObj {
+  `type`.value = Relationship.`type`
+  id.value = Identifier(Relationship.`type`).toString()
+  name.value = "relationship_" + CyberUtils.randDigits
+  val source_ref = StringProperty("")
+  val relationship_type = StringProperty("")
+  val target_ref = StringProperty("")
+  val description = StringProperty("")
+
+  // todo check source_ref, target_ref
+  def toStix = new Relationship(
+    `type` = Relationship.`type`,
+    id = Identifier.stringToIdentifier(id.value),
+    created = Timestamp(created.value),
+    modified = Timestamp(modified.value),
+    source_ref = CyberConverter.toIdentifierOpt(source_ref.value).getOrElse(new Identifier("indicator", "xxxx")),
+    relationship_type = relationship_type.value,
+    target_ref = CyberConverter.toIdentifierOpt(target_ref.value).getOrElse(new Identifier("indicator", "xxxx")),
+    revoked = Option(revoked.value),
+    labels = Option(labels.toList),
+    external_references = ExternalRefForm.toExternalRefListOpt(external_references),
+    object_marking_refs = CyberConverter.toIdentifierListOpt(object_marking_refs),
+    granular_markings = Option(List()),
+    created_by_ref = CyberConverter.toIdentifierOpt(created_by_ref.value),
+    description = Option(description.value)
+  )
+
+}
+
+object RelationshipForm {
+
+  def clone(inForm: RelationshipForm) = {
+    new RelationshipForm {
+      `type`.value = inForm.`type`.value
+      id.value = inForm.id.value
+      name.value = inForm.name.value
+      created.value = inForm.created.value
+      modified.value = inForm.modified.value
+      source_ref.value = inForm.source_ref.value
+      relationship_type.value = inForm.relationship_type.value
+      target_ref.value = inForm.target_ref.value
+      labels ++ inForm.labels
+      created_by_ref.value = inForm.created_by_ref.value
+      revoked.value = inForm.revoked.value
+      external_references ++ inForm.external_references
+      object_marking_refs ++ inForm.object_marking_refs
+      description.value = inForm.description.value
+    }
+  }
+
+  def fromStix(stix: Relationship) = new RelationshipForm {
+    `type`.value = stix.`type`
+    id.value = stix.id.toString()
+    name.value = "relationship_" + CyberUtils.randDigits
+    created.value = stix.created.toString()
+    modified.value = stix.modified.toString()
+    source_ref.value = stix.source_ref.toString()
+    relationship_type.value = stix.relationship_type
+    target_ref.value = stix.target_ref.toString()
+    labels ++= stix.labels.getOrElse(List())
+    created_by_ref.value = stix.created_by_ref.getOrElse("").toString
+    revoked.value = stix.revoked.getOrElse(false)
+    external_references ++= ExternalRefForm.fromExternalRefList(stix.external_references.getOrElse(List()))
+    object_marking_refs ++= CyberConverter.fromIdentifierList(stix.object_marking_refs.getOrElse(List()))
+    description.value = stix.description.getOrElse("").toString()
   }
 
 }
@@ -574,17 +645,17 @@ object CyberConverter {
       case stix: AttackPattern => AttackPatternForm.fromStix(stix)
       case stix: Identity => IdentityForm.fromStix(stix)
       case stix: CustomStix => CustomStixForm.fromStix(stix)
+      case stix: Relationship => RelationshipForm.fromStix(stix)
+      case stix: Malware => MalwareForm.fromStix(stix)
 
       case stix: Campaign => new IndicatorForm()
       case stix: CourseOfAction => new IndicatorForm()
       case stix: IntrusionSet => new IndicatorForm()
-      case stix: Malware => new IndicatorForm()
       case stix: ObservedData => new IndicatorForm()
       case stix: Report => new IndicatorForm()
       case stix: ThreatActor => new IndicatorForm()
       case stix: Tool => new IndicatorForm()
       case stix: Vulnerability => new IndicatorForm()
-      case stix: Relationship => new IndicatorForm()
       case stix: Sighting => new IndicatorForm()
       case stix: MarkingDefinition => new IndicatorForm()
       case _ => new IndicatorForm()
