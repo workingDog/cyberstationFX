@@ -1,7 +1,5 @@
 package cyber
 
-import java.util.UUID
-
 import com.kodekutters.stix.{Bundle, _}
 import play.api.libs.json._
 import support.CyberUtils
@@ -13,7 +11,7 @@ import scala.collection.mutable
 
 
 /**
-  * representing the common attributes of an SDO as a set of properties, a form
+  * representing the common attributes of an SDO (and SRO) as a set of properties, a form
   */
 trait CyberObj {
   val `type` = StringProperty("")
@@ -514,9 +512,9 @@ object KillChainPhaseForm {
     }
   }
 
-  def fromStix(stix: KillChainPhase): KillChainPhaseForm = new KillChainPhaseForm() {
-    kill_chain_name.value = stix.kill_chain_name
-    phase_name.value = stix.phase_name
+  def fromStix(kcf: KillChainPhase): KillChainPhaseForm = new KillChainPhaseForm() {
+    kill_chain_name.value = kcf.kill_chain_name
+    phase_name.value = kcf.phase_name
   }
 
   def toKillChainPhaseListOpt(theList: ObservableBuffer[KillChainPhaseForm]): Option[List[KillChainPhase]] = {
@@ -566,13 +564,13 @@ object ExternalRefForm {
     }
   }
 
-  def fromStix(stix: ExternalReference): ExternalRefForm = {
+  def fromStix(extRef: ExternalReference): ExternalRefForm = {
     new ExternalRefForm() {
-      source_name.value = stix.source_name
-      description.value = stix.description.getOrElse("")
-      url.value = stix.url.getOrElse("")
-      external_id.value = stix.external_id.getOrElse("")
-      hashes ++= HashesForm.toHashesForms(stix.hashes)
+      source_name.value = extRef.source_name
+      description.value = extRef.description.getOrElse("")
+      url.value = extRef.url.getOrElse("")
+      external_id.value = extRef.external_id.getOrElse("")
+      hashes ++= HashesForm.toHashesForms(extRef.hashes)
     }
   }
 
@@ -614,9 +612,9 @@ object HashesForm {
       Option((for (s <- theList) yield s.toStix).toMap)
   }
 
-  def fromStix(stix: Tuple2[String, String]) = new HashesForm {
-    theKey.value = stix._1
-    theValue.value = stix._2
+  def fromStix(hashTuple: Tuple2[String, String]) = new HashesForm {
+    theKey.value = hashTuple._1
+    theValue.value = hashTuple._2
   }
 
   def clone(inForm: HashesForm) = {
