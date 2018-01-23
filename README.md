@@ -72,6 +72,7 @@ bundle is saved to local storage, such that it can be further edited later on an
 
 ![Stix objects](/images/stixobjects.png?raw=true) 
 
+
 #### Graph view
 
 *Graph view* is an experimental feature to display the created bundles of objects or those of 
