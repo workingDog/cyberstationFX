@@ -37,7 +37,7 @@ object Neo4jService {
     }
     val dbDir = if (dbDirectory.isEmpty) new java.io.File(".").getCanonicalPath + "/cyberstix" else dbDirectory
     println("---> neo4jDB directory: " + dbDir)
-    controller.showThis("---> saving: " + file.getName + " to Neo4jDB at: " + dbDir, Color.Black)
+    controller.showThis("Saving: " + file.getName + " to Neo4jDB at: " + dbDir, Color.Black)
     Future({
       val neoLoader = new Neo4jFileLoader(dbDir)
       if (file.getName.toLowerCase.endsWith(".json")) neoLoader.loadBundleFile(file)

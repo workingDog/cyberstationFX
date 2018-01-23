@@ -29,12 +29,9 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
      * Resizes the canvas based on the size of the window
      * ******************************************************/
     function resizeCanvas() {
-      var cWidth = document.getElementById('legend').offsetLeft - 82;
-      var cHeight = window.innerHeight - 120;
+      var cWidth = document.getElementById('legend').offsetLeft - 50;
+      var cHeight = window.innerHeight - 220;
       document.getElementById('canvas-wrapper').style.width = cWidth;
-    //  d3.select("canvas").remove();
-    //  canvas.selectAll("*").remove();
-    //  canvas.getContext('2d').clearRect(0, 0, cWidth, cHeight);
       canvas.style.width = cWidth;
       canvas.style.height = cHeight;
     }
@@ -137,7 +134,7 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
         selected.className += " clicked";
         selected.style.position = 'absolute';
         selected.style.left = '25px';
-        selected.style.width = window.innerWidth - 50;
+        selected.style.width = window.innerWidth - 10;
         selected.style.top = document.getElementById('legend').offsetHeight + 10;
         selected.scrollIntoView(true);
       } else {

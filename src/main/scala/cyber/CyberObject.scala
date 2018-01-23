@@ -138,7 +138,6 @@ class IndicatorForm() extends CyberObj with KillChainPhaseTrait {
   `type`.value = Indicator.`type`
   id.value = Identifier(Indicator.`type`).toString()
   name.value = "indicator_" + CyberUtils.randDigits
-
   val pattern = StringProperty("")
   val valid_from = StringProperty(Timestamp.now().toString())
   val valid_until = StringProperty("")
@@ -147,7 +146,8 @@ class IndicatorForm() extends CyberObj with KillChainPhaseTrait {
   def toStix = new Indicator(
     Indicator.`type`, Identifier.stringToIdentifier(id.value),
     Timestamp(created.value), Timestamp(modified.value), pattern.value,
-    Timestamp(valid_from.value), Option(name.value), Option(Timestamp(valid_until.value)),
+    Timestamp(valid_from.value),
+    Option(name.value), Option(Timestamp(valid_until.value)),
     Option(labels.toList),
     KillChainPhaseForm.toKillChainPhaseListOpt(kill_chain_phases),
     Option(description.value),
@@ -258,20 +258,22 @@ class RelationshipForm() extends CyberObj {
   `type`.value = Relationship.`type`
   id.value = Identifier(Relationship.`type`).toString()
   name.value = "relationship_" + CyberUtils.randDigits
-  val source_ref = StringProperty("")
+  val source_ref = StringProperty("indicator--from-xxxx")
+  val target_ref = StringProperty("indicator--to-xxxx")
   val relationship_type = StringProperty("")
-  val target_ref = StringProperty("")
   val description = StringProperty("")
 
-  // todo check source_ref, target_ref
+  // todo ----> check source_ref, target_ref
   def toStix = new Relationship(
     `type` = Relationship.`type`,
     id = Identifier.stringToIdentifier(id.value),
     created = Timestamp(created.value),
     modified = Timestamp(modified.value),
-    source_ref = CyberConverter.toIdentifierOpt(source_ref.value).getOrElse(new Identifier("indicator", "xxxx")),
     relationship_type = relationship_type.value,
-    target_ref = CyberConverter.toIdentifierOpt(target_ref.value).getOrElse(new Identifier("indicator", "xxxx")),
+    source_ref = CyberConverter.toIdentifierOpt(source_ref.value)
+      .getOrElse(new Identifier("indicator", "from-xxxx")),
+    target_ref = CyberConverter.toIdentifierOpt(target_ref.value)
+      .getOrElse(new Identifier("indicator", "to-xxxx")),
     revoked = Option(revoked.value),
     labels = Option(labels.toList),
     external_references = ExternalRefForm.toExternalRefListOpt(external_references),

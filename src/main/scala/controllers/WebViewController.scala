@@ -31,7 +31,7 @@ trait WebViewControllerInterface {
 
   def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit
 
-  def doLoadAndClick(stixList: ListBuffer[StixObj], text: String): Unit
+  def doLoad(stixList: ListBuffer[StixObj], text: String): Unit
 }
 
 @sfxml
@@ -87,23 +87,20 @@ class WebViewController(webViewer: WebView,
         val window = webViewer.getEngine.executeScript("window").asInstanceOf[JSObject]
         window.setMember("java", bridge)
         webViewer.getEngine.executeScript("console.log = function(message)\n" + "{\n" + "    java.log(message);\n" + "};")
-        doLoad()
+        // the objects as json
+        //val theJsonString = CytoObject.toCytoEls(theStixList)
+        val theJsonString = Json.stringify(Json.toJson(Bundle(theStixList)))
+        val doc = webViewer.getEngine.getDocument
+        if (doc != null) {
+          doc.getElementById("titleString").setTextContent(theText)
+          doc.getElementById("bundle-data").setAttribute("value", theJsonString)
+          webViewer.getEngine.executeScript("document.getElementById(\"bundle-data\").click();")
+        }
       }
     }
   }
 
-  private def doLoad() = {
-    //val theJsonString = CytoObject.toCytoEls(theStixList)
-    val theJsonString = Json.stringify(Json.toJson(Bundle(theStixList)))
-    val doc = webViewer.getEngine.getDocument
-    if (doc != null) {
-      doc.getElementById("titleString").setTextContent(theText)
-      doc.getElementById("bundle-data").setAttribute("value", theJsonString)
-      webViewer.getEngine.executeScript("document.getElementById(\"bundle-data\").click();")
-    }
-  }
-
-  def doLoadAndClick(stixList: ListBuffer[StixObj], text: String): Unit = {
+  def doLoad(stixList: ListBuffer[StixObj], text: String): Unit = {
     theText = "File: " + text
     allBundlesObj.setSelected(true)
     theStixList.clear()

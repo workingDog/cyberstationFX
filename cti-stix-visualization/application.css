@@ -73,8 +73,8 @@ svg {
 }
 
 #selected {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 25px;
+  padding: 25px;
   background-color: #fafafa;
   cursor: pointer;
 }
@@ -93,7 +93,7 @@ svg {
 }
 
 #selection > div > .type {
-  width: 20%;
+  width: 30%;
   font-weight: bold;
 }
 
@@ -137,7 +137,7 @@ ul li div {
 
 ul > li > p {
   display: inline-block;
-  margin: 5px 10px;
+  margin: 15px 30px;
 }
 
 pre {

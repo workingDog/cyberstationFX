@@ -234,7 +234,7 @@ class CyberStationController(mainMenu: VBox,
   }
 
   def viewTestBundle(stixList: ListBuffer[StixObj], theText: String): Unit = {
-    webViewController.doLoadAndClick(stixList, theText)
+    webViewController.doLoad(stixList, theText)
     //  graphViewController.doLoadAndClick(stixList, theText)
   }
 

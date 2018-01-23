@@ -23,9 +23,9 @@
             <Insets bottom="4.0" left="6.0" right="4.0" top="8.0" />
          </GridPane.margin>
       </JFXTextArea>
-      <JFXTextField fx:id="targetRefField" promptText="target reference" GridPane.rowIndex="1" />
-      <JFXTextField fx:id="sourceRefField" promptText="source reference" />
-      <JFXTextField fx:id="relationshipTypeField" promptText="relationship type" GridPane.rowIndex="2" />
+      <JFXTextField fx:id="targetRefField" labelFloat="true" promptText="target reference" GridPane.rowIndex="1" />
+      <JFXTextField fx:id="sourceRefField" labelFloat="true" promptText="source reference" />
+      <JFXTextField fx:id="relationshipTypeField" labelFloat="true" promptText="relationship type" GridPane.rowIndex="2" />
    </children>
    <padding>
       <Insets left="8.0" right="8.0" top="8.0" />
