@@ -51,6 +51,7 @@ One api root and associated collection endpoint should be selected to be able to
 
 To change the server URL or the user name or the password, double click on it and a dialog will be popup.
 
+![Taxii servers](/images/taxiiservers.png?raw=true) 
 
 #### Stix objects
 
