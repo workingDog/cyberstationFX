@@ -5,18 +5,14 @@ creating and sending [STIX 2.0](https://oasis-open.github.io/cti-documentation/s
 to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server.
 
 [STIX-2.0](https://oasis-open.github.io/cti-documentation/resources#stix-20-specification) 
- cyber threat intelligence objects are described as [1]: 
-"Structured Threat Information Expression (STIX™) is a language and serialization format 
-used to exchange cyber threat intelligence (CTI). STIX enables organizations to share 
-CTI with one another in a consistent and machine readable manner, allowing security 
-communities to better understand what computer-based attacks they are most likely to 
-see and to anticipate and/or respond to those attacks faster and more effectively.
+stands for "Structured Threat Information Expression", it is an 
+international JSON standard for representing cyber threat intelligence (CTI) objects.
 
-[TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server 
-is described as [2]: "Trusted Automated Exchange of Intelligence Information (TAXII™) 
-is an application protocol for exchanging CTI over HTTPS. ​TAXII defines a RESTful API 
+[TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) 
+stands for "Trusted Automated Exchange of Intelligence Information", it is an application  
+protocol for exchanging CTI over HTTPS. ​TAXII defines a RESTful API 
 (a set of services and message exchanges) and a set of requirements for TAXII Clients 
-and Servers."
+and Servers.
 
 **CyberStation** is a prototype application to assist in manually creating STIX-2.0 objects through a 
 simple user interface, and sending those to a chosen TAXII-2 server for sharing cyber threat 
@@ -25,8 +21,7 @@ intelligence amongst the participating clients.
 
 ### Documentation
 
-With **CyberStation** a user can create and edit STIX-2.0 objects and send them as a bundle to a selected TAXII-2 server. 
-The application user interface consists of three main areas; the *Taxii servers* area, where Taxii servers can be setup and selected, 
+**CyberStation** user interface consists of three main areas; the *Taxii servers* area, where Taxii servers can be setup and selected, 
 the *Stix objects* area, where STIX-2 objects can be created and edited, and the *Graph view* area, where the STIX objects 
 can be displayed as a graph.
  
@@ -37,7 +32,7 @@ The work flow typically consists of selecting a server together with a collectio
 It uses [ScalaFX](http://www.scalafx.org/) for the UI and 
 [cti-stix-visualization](https://github.com/oasis-open/cti-stix-visualization) to display the graph view.
 
-The following describes the different areas of **CyberStation**. 
+The following describes the different elements of **CyberStation**. 
 
 #### Taxii servers
 
@@ -68,7 +63,7 @@ Other tabs on the STIX page allow for creating the different STIX types objects.
 Currently only **malware, indicator and relationship** are implemented.
 
 If a server/api root/collection has not yet been selected, a bundle of STIX objects can still be created. Such 
-bundle is saved to local storage, such that it can be further edited later on and eventually sent to a TAXII-2 server.   
+bundle can be saved to local storage, can then be further edited as desired and eventually sent to a TAXII-2 server.   
 
 ![Stix objects](/images/stixobjects.png?raw=true) 
 
@@ -97,8 +92,6 @@ convertion of STIX files and the saving of bundles into a *MongoDB* database.
 To enable this, *MongoDB* must be installed and running. 
 
 
-
-
 #### Installation and running
 
 Install [SBT](https://www.scala-sbt.org/)
@@ -116,7 +109,7 @@ To use *MongoDB* for storage, *MongoDB* must be installed and running; e.g. type
 
 ### Status
 
-work in progress
+work in progress, unstable
 
 
 ### License 
@@ -126,7 +119,7 @@ Apache License, Version 2.0.
 
 ### Copyright 
 
-Copyright 2017 R. Wathelet, All rights reserved.
+Copyright 2018 R. Wathelet, All rights reserved.
 
 
 
