@@ -70,6 +70,7 @@ Currently only **malware, indicator and relationship** are implemented.
 If a server/api root/collection has not yet been selected, a bundle of STIX objects can still be created. Such 
 bundle is saved to local storage, such that it can be further edited later on and eventually sent to a TAXII-2 server.   
 
+![Stix objects](/images/stixobjects.png?raw=true) 
 
 #### Graph view
 
@@ -85,6 +86,7 @@ Also from the *Tools* menu, a user can send a file of STIX objects directly to t
 Similarly, from the *File* menu, the created (or loaded) bundles of STIX objects can be saved into various formats.
 Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* menu item.
 
+![Graph view](/images/graphview.png?raw=true) 
 
 ##### Databases
 
