@@ -73,6 +73,9 @@ bundle can be saved to local storage, can then be further edited as desired and 
 *Graph view* is an experimental feature to display the created bundles of objects or those of 
 the Taxii server.
 
+
+![Graph view](/images/graphview.png?raw=true) 
+
 #### Tools
 
 In addition to the main viewing areas, various tools from the *Tools* menu are available to convert files of STIX objects into formats 
@@ -81,8 +84,6 @@ Also from the *Tools* menu, a user can send a file of STIX objects directly to t
 
 Similarly, from the *File* menu, the created (or loaded) bundles of STIX objects can be saved into various formats.
 Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* menu item.
-
-![Graph view](/images/graphview.png?raw=true) 
 
 ##### Databases
 
