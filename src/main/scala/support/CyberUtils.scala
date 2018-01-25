@@ -48,6 +48,9 @@ object CyberUtils {
   val commonLabels = List[String]("anomalous-activity", "anonymization", "benign",
     "organization", "compromised", "malicious-activity", "attribution")
 
+  val relTypes = List[String]("uses", "targets", "indicates",
+    "mitigates", "attributed-to", "variant-of", "duplicate-of", "derived-from", "related-to", "impersonates")
+
   /**
     * popup a open fileChooser with the desired filter, default .json and .zip
     */

@@ -260,7 +260,7 @@ class RelationshipForm() extends CyberObj {
   name.value = "relationship_" + CyberUtils.randDigits
   val source_ref = StringProperty("indicator--from-xxxx")
   val target_ref = StringProperty("indicator--to-xxxx")
-  val relationship_type = StringProperty("")
+  val relationship_type = StringProperty("uses")
   val description = StringProperty("")
 
   // todo ----> check source_ref, target_ref

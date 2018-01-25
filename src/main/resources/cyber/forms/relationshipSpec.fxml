@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="relationshipSpec" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RelationshipSpecController">
+<GridPane fx:id="relationshipSpec" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RelationshipSpecController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="412.0" minWidth="10.0" prefWidth="386.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="477.0" minWidth="10.0" prefWidth="385.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="850.0" minWidth="594.0" prefWidth="594.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="477.0" minWidth="10.0" prefWidth="240.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="181.0" vgrow="SOMETIMES" />
@@ -18,14 +21,27 @@
       <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="181.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <JFXTextArea fx:id="descriptionField" labelFloat="true" promptText="description" wrapText="true" GridPane.columnIndex="1" GridPane.rowSpan="3">
+      <JFXTextArea fx:id="descriptionField" labelFloat="true" prefHeight="86.0" prefWidth="376.0" promptText="description" wrapText="true" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="4.0" left="6.0" right="4.0" top="8.0" />
          </GridPane.margin>
       </JFXTextArea>
       <JFXTextField fx:id="targetRefField" labelFloat="true" promptText="target reference" GridPane.rowIndex="1" />
       <JFXTextField fx:id="sourceRefField" labelFloat="true" promptText="source reference" />
-      <JFXTextField fx:id="relationshipTypeField" labelFloat="true" promptText="relationship type" GridPane.rowIndex="2" />
+      <VBox prefHeight="208.0" prefWidth="236.0" GridPane.columnIndex="1" GridPane.rowSpan="3">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="relationship type" underline="true">
+               <VBox.margin>
+                  <Insets left="44.0" top="8.0" />
+               </VBox.margin>
+            </Label>
+            <JFXListView fx:id="relationshipTypeView">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="22.0" right="12.0" top="4.0" />
+               </VBox.margin>
+            </JFXListView>
+         </children>
+      </VBox>
    </children>
    <padding>
       <Insets left="8.0" right="8.0" top="8.0" />
