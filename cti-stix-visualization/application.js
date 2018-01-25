@@ -29,8 +29,8 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
      * Resizes the canvas based on the size of the window
      * ******************************************************/
     function resizeCanvas() {
-      var cWidth = document.getElementById('legend').offsetLeft - 50;
-      var cHeight = window.innerHeight - 220;
+      var cWidth = document.getElementById('legend').offsetLeft - 80;
+      var cHeight = window.innerHeight - 100;
       document.getElementById('canvas-wrapper').style.width = cWidth;
       canvas.style.width = cWidth;
       canvas.style.height = cHeight;
@@ -134,8 +134,8 @@ require(["domReady!", "stix2viz/stix2viz/stix2viz"], function (document, stix2vi
         selected.className += " clicked";
         selected.style.position = 'absolute';
         selected.style.left = '25px';
-        selected.style.width = window.innerWidth - 10;
-        selected.style.top = document.getElementById('legend').offsetHeight + 10;
+        selected.style.width = window.innerWidth - 110;
+        selected.style.top = document.getElementById('legend').offsetHeight + 25;
         selected.scrollIntoView(true);
       } else {
         selected.className = "sidebar"

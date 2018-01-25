@@ -5,7 +5,6 @@ import javafx.fxml.FXML
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.jfoenix.controls.{JFXSpinner, JFXTabPane}
-
 import com.kodekutters.stix.StixObj
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
@@ -25,8 +24,8 @@ import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafxml.core.macros.{nested, sfxml}
 import scalafx.Includes._
-
 import scala.collection.mutable.ListBuffer
+import scalafx.scene.web.WebView
 
 
 trait CyberStationControllerInterface {
@@ -68,6 +67,7 @@ class CyberStationController(mainMenu: VBox,
                              messageLabel: Label,
                              serversView: HBox,
                              objectsView: VBox,
+                             neo4jweb: WebView,
                              @FXML msgBarSpinner: JFXSpinner,
                              @FXML stixView: JFXTabPane,
                              @nested[MainMenuController] mainMenuController: MainMenuControllerInterface,
@@ -237,6 +237,5 @@ class CyberStationController(mainMenu: VBox,
     webViewController.doLoad(stixList, theText)
     //  graphViewController.doLoadAndClick(stixList, theText)
   }
-
 
 }
