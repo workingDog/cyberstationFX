@@ -12,7 +12,7 @@ mongod
 // in another terminal, the mongo shell:
 mongo
 
-// to show what databases exit
+// to show what databases exist
 show dbs
 
 // to select a database to use
@@ -37,6 +37,12 @@ db.userLog.find().pretty()
 db.indicator.find().pretty()
 
 db.indicator.find().pretty()
+
+db.relationship.find().pretty()
+
+// to delete a whole database
+db.dropDatabase()
+
 ---------------------------------------------
 
 

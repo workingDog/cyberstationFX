@@ -13,6 +13,7 @@ import reactivemongo.api._
 import reactivemongo.play.json.collection._
 import reactivemongo.play.json._
 
+import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -33,6 +34,12 @@ object MongoDbStix {
 
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
+
+  val count = mutable.Map("SDO" -> 0, "SRO" -> 0, "StixObj" -> 0)
+
+  def resetCount(): Unit = count.foreach({ case (k, v) => count(k) = 0 })
+
+  def inc(k: String): Unit = count(k) = count(k) + 1
 
   val customObjectType = "custom-object"
 
@@ -88,6 +95,11 @@ object MongoDbStix {
   private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
       val stixType = if (stix.`type`.startsWith("x-")) customObjectType else stix.`type`
+      stix match {
+        case x: SDO => inc("SDO")
+        case x: SRO => inc("SRO")
+        case x: StixObj => inc("StixObj")
+      }
       for {
         stxCol <- database.map(_.collection[JSONCollection](stixType))
         theError <- stxCol.insert(stix)
@@ -107,6 +119,8 @@ object MongoDbStix {
           saveBundleFile(file)
         }
         controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
+        controller.showThis("   SDO: " + count("SDO") + " SRO: " + count("SRO") + " StixObj: " + count("StixObj"), Color.Black)
+        resetCount()
         println("----> Done saving: " + file.getName + " to MongoDb at: " + dbUri)
       } catch {
         case ex: Throwable =>

@@ -12,7 +12,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 libraryDependencies ++= Seq(
-  "org.neo4j" % "neo4j" % "3.3.1",
+  "org.neo4j" % "neo4j" % "3.3.2",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
 //  "com.typesafe.play" %% "play-ws-standalone-json" % "1.1.3",
   "com.github.workingDog" %% "scalastix" % "0.7",

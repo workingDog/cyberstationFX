@@ -1,21 +1,21 @@
 package db.mongo
 
 import java.io.File
+
 import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.stix.StixObj._
 import com.kodekutters.stix._
 import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 import cyber.{BundleInfo, CyberBundle}
-
 import db.{DbService, UserLog}
-
 import play.api.libs.json._
 import reactivemongo.api._
 import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
 
+import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -35,6 +35,12 @@ object MongoLocalService extends DbService {
 
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
+
+  val count = mutable.Map("SDO" -> 0, "SRO" -> 0, "StixObj" -> 0)
+
+  def resetCount(): Unit = count.foreach({ case (k, v) => count(k) = 0 })
+
+  def inc(k: String): Unit = count(k) = count(k) + 1
 
   val config: Config = ConfigFactory.load
 
@@ -113,6 +119,11 @@ object MongoLocalService extends DbService {
 
   private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
+      stix match {
+        case x: SDO => inc("SDO")
+        case x: SRO => inc("SRO")
+        case x: StixObj => inc("StixObj")
+      }
       for {
         stxCol <- database.map(_.collection[JSONCollection](stix.`type`))
         theError <- stxCol.insert(stix)
@@ -184,6 +195,8 @@ object MongoLocalService extends DbService {
         saveBundleFile(file)
       }
       controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
+      controller.showThis("   SDO: " + count("SDO") + " SRO: " + count("SRO") + " StixObj: " + count("StixObj"), Color.Black)
+      resetCount()
       controller.showSpinner(false)
     })
   }
@@ -209,9 +222,11 @@ object MongoLocalService extends DbService {
     val rootZip = new java.util.zip.ZipFile(file)
     // for each entry file containing a single bundle
     rootZip.entries.asScala.foreach(f => {
-      readBundle(rootZip.getInputStream(f)) match {
-        case Some(bundle) => saveBundleAsStixs(bundle)
-        case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
+      if (f.getName.toLowerCase.endsWith(".json") || f.getName.toLowerCase.endsWith(".stix")) {
+        readBundle(rootZip.getInputStream(f)) match {
+          case Some(bundle) => saveBundleAsStixs(bundle)
+          case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
+        }
       }
     })
     close()
