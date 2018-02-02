@@ -2,6 +2,7 @@ package db.neo4j
 
 import java.io.File
 
+import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.neo4j.{Neo4jFileLoader, Neo4jLoader}
 import com.kodekutters.stix.{Bundle, StixObj}
 import com.typesafe.config.{Config, ConfigFactory}
@@ -41,10 +42,30 @@ object Neo4jService {
     Future({
       val neoLoader = new Neo4jFileLoader(dbDir)
       if (file.getName.toLowerCase.endsWith(".json")) neoLoader.loadBundleFile(file)
-      if (file.getName.toLowerCase.endsWith(".zip")) neoLoader.loadBundleZipFile(file)
+      if (file.getName.toLowerCase.endsWith(".zip")) loadBundleZipFile(neoLoader, file)
       controller.showThis("Done saving: " + file.getName + " to Neo4jDB at: " + dbDir, Color.Black)
       controller.showSpinner(false)
     })
+  }
+
+  private def loadBundleZipFile(fileLoader: Neo4jFileLoader, inFile: File): Unit = {
+    import scala.collection.JavaConverters._
+    logger.info("processing file: " + inFile.getCanonicalPath)
+    // get the zip file
+    val rootZip = new java.util.zip.ZipFile(inFile)
+    // for each entry file containing a single bundle
+    rootZip.entries.asScala.foreach(f => {
+      if (f.getName.toLowerCase.endsWith(".json") || f.getName.toLowerCase.endsWith(".stix")) {
+        readBundle(rootZip.getInputStream(f)) match {
+          case Some(bundle) =>
+            logger.info("file: " + f.getName + " --> " + inFile)
+            fileLoader.loader.loadIntoNeo4j(bundle)
+            fileLoader.loader.counter.log()
+          case None => logger.error("ERROR invalid bundle JSON in zip file: \n")
+        }
+      }
+    })
+    fileLoader.loader.close()
   }
 
   def saveStixToNeo4j(stixList: List[StixObj], controller: CyberStationControllerInterface): Unit = {

@@ -141,9 +141,11 @@ object MongoDbStix {
     val rootZip = new java.util.zip.ZipFile(file)
     // for each entry file containing a single bundle
     rootZip.entries.asScala.foreach(f => {
-      readBundle(rootZip.getInputStream(f)) match {
-        case Some(bundle) => saveBundleAsStixs(bundle)
-        case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
+      if (f.getName.toLowerCase.endsWith(".json") || f.getName.toLowerCase.endsWith(".stix")) {
+        readBundle(rootZip.getInputStream(f)) match {
+          case Some(bundle) => saveBundleAsStixs(bundle)
+          case None => println("-----> ERROR invalid bundle JSON in zip file: \n")
+        }
       }
     })
     close()

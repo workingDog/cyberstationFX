@@ -154,22 +154,24 @@ class MainMenuController(loadItem: MenuItem,
       val bundleList = mutable.ListBuffer[CyberBundle]()
       val stixList = mutable.ListBuffer[StixObj]()
       rootZip.entries.asScala.foreach(stixFile => {
-        // read a STIX bundle from the InputStream
-        val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
-        val bundleName = stixFile.getName.toLowerCase match {
-          case x if x.endsWith(".json") => x.dropRight(5)
-          case x if x.endsWith(".stix") => x.dropRight(5)
-          case x if x.endsWith(".txt") => x.dropRight(4)
-          case x => x
-        }
-        // create a bundle object
-        Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
-          case Some(bundle) =>
-            stixList ++= bundle.objects
-            bundleList += CyberBundle.fromStix(bundle, bundleName)
-          case None =>
-            cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
-            println("---> bundle loading failure, invalid json in: " + stixFile.getName)
+        if (stixFile.getName.toLowerCase.endsWith(".json") || stixFile.getName.toLowerCase.endsWith(".stix")) {
+          // read a STIX bundle from the InputStream
+          val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
+          val bundleName = stixFile.getName.toLowerCase match {
+            case x if x.endsWith(".json") => x.dropRight(5)
+            case x if x.endsWith(".stix") => x.dropRight(5)
+            case x if x.endsWith(".txt") => x.dropRight(4)
+            case x => x
+          }
+          // create a bundle object
+          Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
+            case Some(bundle) =>
+              stixList ++= bundle.objects
+              bundleList += CyberBundle.fromStix(bundle, bundleName)
+            case None =>
+              cyberController.showThis("Fail to load bundle from file: " + stixFile.getName, Color.Red)
+              println("---> bundle loading failure, invalid json in: " + stixFile.getName)
+          }
         }
       })
 

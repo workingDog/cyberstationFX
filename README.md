@@ -6,7 +6,7 @@ to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html
 
 [STIX-2.0](https://oasis-open.github.io/cti-documentation/resources#stix-20-specification) 
 stands for "Structured Threat Information Expression", it is an 
-international JSON standard for representing cyber threat intelligence (CTI) objects.
+open JSON standard for representing cyber threat intelligence (CTI) objects.
 
 [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) 
 stands for "Trusted Automated Exchange of Intelligence Information", it is an application  
