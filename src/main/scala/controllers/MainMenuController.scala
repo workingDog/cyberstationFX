@@ -157,12 +157,7 @@ class MainMenuController(loadItem: MenuItem,
         if (stixFile.getName.toLowerCase.endsWith(".json") || stixFile.getName.toLowerCase.endsWith(".stix")) {
           // read a STIX bundle from the InputStream
           val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
-          val bundleName = stixFile.getName.toLowerCase match {
-            case x if x.endsWith(".json") => x.dropRight(5)
-            case x if x.endsWith(".stix") => x.dropRight(5)
-            case x if x.endsWith(".txt") => x.dropRight(4)
-            case x => x
-          }
+          val bundleName = stixFile.getName.toLowerCase.dropRight(5)
           // create a bundle object
           Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
             case Some(bundle) =>
