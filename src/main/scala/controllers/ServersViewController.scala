@@ -1,6 +1,7 @@
 package controllers
 
 import java.io.IOException
+import java.net.URL
 import javafx.fxml.FXML
 import javafx.scene.text.Text
 
@@ -71,7 +72,7 @@ class ServersViewController(@FXML addButton: JFXButton,
       // get the pre-defined taxii servers from the application.conf file
       val definedServers = config.getStringList("taxii.servers").asScala.toList
       // add the pre-defined servers to the srvList
-      srvList ++= (for(s <- definedServers) yield ServerForm(url = StringProperty(s)))
+      srvList ++= (for (s <- definedServers) yield ServerForm(url = StringProperty(s), user = StringProperty("guest"), psw = StringProperty("guest")))
     } catch {
       case e: Throwable => println("---> config error: " + e)
     }
@@ -249,7 +250,9 @@ class ServersViewController(@FXML addButton: JFXButton,
               if (apirootList.length > 0) apirootsListView.getSelectionModel.selectFirst()
             })
 
-          case Left(taxiiErrorMessage) => showAlert(taxiiErrorMessage)
+          case Left(taxiiErrorMessage) =>
+            println("---> taxiiErrorMessage: " + taxiiErrorMessage)
+            showAlert(taxiiErrorMessage)
         }
 
       case Failure(t) => serverSpinner.setVisible(false)

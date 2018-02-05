@@ -101,7 +101,7 @@ class ObjectsViewController(objCountLabel: Label,
     if (taxiiCol.id != null && apirootInfo != null) {
       val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
         serverInfo.user.value, serverInfo.psw.value, 10))
-      col.getObjects(range = ("0-" + fetchNumber.toString)).map(bndl => {
+      col.getObjects(range = "0-" + fetchNumber.toString).map(bndl => {
         bndl.map(theBundle => {
           for (stix <- theBundle.objects) objects.append(CyberConverter.toCyberObj(stix))
           col.conn.close()

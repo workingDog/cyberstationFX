@@ -170,12 +170,12 @@ class WebViewController(webViewer: WebView,
         val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
           serverInfo.user.value, serverInfo.psw.value, 10))
         // need to wait here because want to be on the JavaFX thread to show the objects
-        //  range = ("0-" + fetchNumber.toString)
         Await.result(
-          col.getObjects().map(bndl => {
+          col.getObjects(range = "0-" + fetchNumber.toString).map(bndl => {
             bndl.map(bundle =>
               if (theStixList != bundle.objects) {
-                theStixList ++= bundle.objects.toList.to[ListBuffer]
+                // todo ----> remove take(fetchNumber), temp until Taxii servers allow pagination
+                theStixList ++= bundle.objects.toList.to[ListBuffer].take(fetchNumber)
                 theTaxiiStixList.clear()
                 theTaxiiStixList ++= theStixList
                 col.conn.close()
