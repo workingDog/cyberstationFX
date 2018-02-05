@@ -55,6 +55,11 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="Postgres" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Convert Taxii feed to">
+                    <items>
+                      <MenuItem fx:id="taxiiGephi" mnemonicParsing="false" onAction="#taxiiGephiAction" text="Gephi" />
+                    </items>
+                  </Menu>
               </items>
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">

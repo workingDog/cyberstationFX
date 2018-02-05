@@ -178,10 +178,10 @@ class WebViewController(webViewer: WebView,
                 theStixList ++= bundle.objects.toList.to[ListBuffer].take(fetchNumber)
                 theTaxiiStixList.clear()
                 theTaxiiStixList ++= theStixList
-                col.conn.close()
               }
             )
           }), 60 second)
+        col.conn.close()
       } else {
         theStixList ++= theTaxiiStixList
       }

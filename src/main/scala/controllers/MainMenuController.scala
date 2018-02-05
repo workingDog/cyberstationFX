@@ -3,7 +3,7 @@ package controllers
 import java.io.File
 
 import com.kodekutters.stix.{Bundle, StixObj}
-import cyber.{CyberBundle, CyberStationApp, FileSender}
+import cyber.{CyberBundle, CyberStationApp, FileSender, ServerForm}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import java.io.IOException
 import java.nio.file.{Files, Paths}
@@ -30,10 +30,15 @@ import scalafx.application.Platform
 import scalafx.scene.control.Alert.AlertType
 import CyberUtils._
 import com.kodekutters.neo4j.Neo4jLoader
+import com.kodekutters.taxii.{Collection, TaxiiCollection, TaxiiConnection}
+import com.typesafe.config.{Config, ConfigFactory}
 import converter.{GexfConverter, GraphMLConverter, StixConverter, Transformer}
 
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.Await
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
+import scala.concurrent.duration._
 
 
 trait MainMenuControllerInterface {
@@ -55,12 +60,25 @@ class MainMenuController(loadItem: MenuItem,
                          saveAsGraphMLItem: MenuItem,
                          saveToGephiItem: MenuItem,
                          saveToGraphMLItem: MenuItem,
+                         taxiiGephi: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
+  var serverInfo: ServerForm = _
+  var taxiiCol: TaxiiCollection = _
+  var apirootInfo = ""
 
-  override def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
+  def setCyberStationController(cyberStationController: CyberStationControllerInterface): Unit = {
     cyberController = cyberStationController
+    cyberStationController.getSelectedServer().onChange { (_, oldValue, newValue) =>
+      if (newValue != null) serverInfo = newValue
+    }
+    cyberStationController.getSelectedApiroot().onChange { (_, oldValue, newValue) =>
+      apirootInfo = newValue
+    }
+    cyberStationController.getSelectedCollection().onChange { (_, oldValue, newValue) =>
+      taxiiCol = newValue
+    }
   }
 
   //-------------------------------------------------------------------------
@@ -444,6 +462,32 @@ class MainMenuController(loadItem: MenuItem,
         }
         zip.close()
       }
+    }
+  }
+
+  def taxiiGephiAction(): Unit = {
+    if (taxiiCol == null) {
+      cyberController.showThis("Cannot save Taxii feed because no collection selected ", Color.Red)
+      return
+    }
+    if (taxiiCol.id != null && apirootInfo != null) {
+      cyberController.showSpinner(true)
+      val theTaxiiStixList = ListBuffer[StixObj]()
+      val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
+        serverInfo.user.value, serverInfo.psw.value, 10))
+      // need to wait here because want to be on the JavaFX thread to show the objects
+      Await.result(
+        col.getObjects().map(bndl =>
+          bndl.map(bundle => {
+            val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ".gexf")
+            new Transformer(GexfConverter()).convertToFile(thisFile, bundle)
+            cyberController.showThis("Done saving Taxii feed to: " + thisFile.getCanonicalPath, Color.Black)
+          })
+        ), 60 second)
+      col.conn.close()
+      cyberController.showSpinner(false)
+    } else {
+      cyberController.showThis("Cannot save Taxii feed because no collection selected ", Color.Red)
     }
   }
 

@@ -120,7 +120,7 @@ class GraphMLConverter extends StixConverter {
       </graph>
     </graphml>
 
-    """<?xml version="1.0" encoding="UTF-8"?>""" + "\n" + xmlDoc.toString()
+    """<?xml version="1.1" encoding="UTF-8"?>""" + "\n" + xmlDoc.toString()
   }
 
 }

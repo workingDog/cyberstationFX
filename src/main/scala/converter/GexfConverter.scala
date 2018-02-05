@@ -103,9 +103,9 @@ class GexfConverter extends StixConverter {
         }
       }
 
-    val xmlDoc = <gexf xmlns="http://www.gexf.net/1.2draft"
-                       xmlns:xsi="http://www.w3.org/2001/XMLSchema−instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd"
-                       version="1.2">
+    val xmlDoc = <gexf xmlns="http://www.gexf.net/1.3draft"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema−instance" xsi:schemaLocation="http://www.gexf.net/1.3draft http://www.gexf.net/1.3draft/gexf.xsd"
+                       version="1.3">
       <graph mode="static" defaultedgetype="directed">
         <attributes class="node">
           <attribute id="n1" title="type" type="string"/>
@@ -132,7 +132,7 @@ class GexfConverter extends StixConverter {
       </graph>
     </gexf>
 
-    """<?xml version="1.0" encoding="UTF-8"?>""" + "\n" + xmlDoc.toString()
+    """<?xml version="1.1" encoding="UTF-8"?>""" + "\n" + xmlDoc.toString()
 
   }
 
