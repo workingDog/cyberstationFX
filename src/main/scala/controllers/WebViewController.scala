@@ -18,9 +18,11 @@ import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success}
 import scalafx.scene.control.ToggleGroup
 import scalafx.Includes._
+import scalafx.application.Platform
 
 trait WebViewControllerInterface {
   def init(): Unit
@@ -163,29 +165,34 @@ class WebViewController(webViewer: WebView,
       return
     }
     if (taxiiCol.id != null && apirootInfo != null) {
+      cyberController.showSpinner(true)
       theText = taxiiCol.title
       theStixList.clear()
-      if (hasChanged) {
-        hasChanged = false
-        val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
-          serverInfo.user.value, serverInfo.psw.value, 10))
-        // need to wait here because want to be on the JavaFX thread to show the objects
-        Await.result(
-          col.getObjects(range = "0-" + fetchNumber.toString).map(bndl => {
-            bndl.map(bundle =>
-              if (theStixList != bundle.objects) {
-                // todo ----> remove take(fetchNumber), temp until Taxii servers allow pagination
-                theStixList ++= bundle.objects.toList.to[ListBuffer].take(fetchNumber)
-                theTaxiiStixList.clear()
-                theTaxiiStixList ++= theStixList
-              }
-            )
-          }), 60 second)
-        col.conn.close()
-      } else {
-        theStixList ++= theTaxiiStixList
+      Future {
+        if (hasChanged) {
+          hasChanged = false
+          val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
+            serverInfo.user.value, serverInfo.psw.value, 10))
+          // need to wait here because want to be on the JavaFX thread to show the objects
+          Await.result(
+            col.getObjects(range = "0-" + fetchNumber.toString).map(bndl => {
+              bndl.map(bundle =>
+                if (theStixList != bundle.objects) {
+                  // todo ----> remove take(fetchNumber), temp until Taxii servers allow pagination
+                  theStixList ++= bundle.objects.toList.to[ListBuffer].take(fetchNumber)
+                  theTaxiiStixList.clear()
+                  theTaxiiStixList ++= theStixList
+                }
+              )
+            }), 60 second)
+          col.conn.close()
+        } else {
+          theStixList ++= theTaxiiStixList
+        }
+        Platform.runLater(() => { webViewer.getEngine.load(indexURI) })
       }
-      webViewer.getEngine.load(indexURI)
+    } foreach {
+      x => cyberController.showSpinner(false)
     }
   }
 

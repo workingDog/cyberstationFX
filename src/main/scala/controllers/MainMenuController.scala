@@ -35,7 +35,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import converter.{GexfConverter, GraphMLConverter, StixConverter, Transformer}
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scala.concurrent.duration._
@@ -473,19 +473,22 @@ class MainMenuController(loadItem: MenuItem,
     if (taxiiCol.id != null && apirootInfo != null) {
       cyberController.showSpinner(true)
       val theTaxiiStixList = ListBuffer[StixObj]()
-      val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
-        serverInfo.user.value, serverInfo.psw.value, 10))
-      // need to wait here because want to be on the JavaFX thread to show the objects
-      Await.result(
-        col.getObjects().map(bndl =>
-          bndl.map(bundle => {
-            val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ".gexf")
-            new Transformer(GexfConverter()).convertToFile(thisFile, bundle)
-            cyberController.showThis("Done saving Taxii feed to: " + thisFile.getCanonicalPath, Color.Black)
-          })
-        ), 60 second)
-      col.conn.close()
-      cyberController.showSpinner(false)
+      Future {
+        val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
+          serverInfo.user.value, serverInfo.psw.value, 10))
+        // need to wait here because want to be on the JavaFX thread to show the objects
+        Await.result(
+          col.getObjects().map(bndl =>
+            bndl.map(bundle => {
+              val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ".gexf")
+              new Transformer(GexfConverter()).convertToFile(thisFile, bundle)
+              cyberController.showThis("Done saving Taxii feed to: " + thisFile.getCanonicalPath, Color.Black)
+            })
+          ), 60 second)
+        col.conn.close()
+      } foreach {
+        x => cyberController.showSpinner(false)
+      }
     } else {
       cyberController.showThis("Cannot save Taxii feed because no collection selected ", Color.Red)
     }
