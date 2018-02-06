@@ -1,0 +1,69 @@
+{
+  "type": "bundle",
+  "id": "bundle--0fe33f18-9717-4329-9179-429d7304ef73",
+  "spec_version": "2.0",
+  "objects": [
+
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--d7b066aa-4091-4276-a142-29d5d81c3484",
+      "created": "2014-10-31T15:52:13.126Z",
+      "modified": "2014-10-31T15:52:13.126Z",
+      "name": "Phishing",
+      "external_references": [
+        {
+          "source_name": "capec",
+          "external_id": "CAPEC-98",
+          "hashes": {
+            "MD3": "66e2ea40fffffff574ea215a81f1",
+            "MD1": "bbbbbbb01574ea215a81f1",
+            "MD2": "hhhhhhhhhhea215a81f1"
+          }
+        }
+      ],
+      "created_by_ref": "identity--f690c992-8e7d-4b9a-9303-3312616c0220"
+    },
+    {
+      "created": "2016-08-01T10:00:00.000Z",
+      "modified": "2016-08-01T10:00:00.000Z",
+      "version": 0,
+      "labels": [],
+      "external_references": [{
+        "source_name": "attack.mitre.org",
+        "external_id": "T1003",
+        "url": "https://attack.mitre.org/wiki/Technique/T1003"
+      }],
+      "granular_markings": [],
+      "name": "Credential Dumping",
+      "description": "Credential dumping is the process of obtaining account login and password information from the operating system and software. Credentials can be used to perform Lateral Movement and access restricted information. Tools may dump credentials in many different ways: extracting credential hashes for offline cracking, extracting plaintext passwords, and extracting Kerberos tickets, among others. Examples of credential dumpers include pwdump7, Windows Credential Editor, Mimikatz, and gsecdump. These tools are in use by both professional security testers and adversaries. Plaintext passwords can be obtained using tools such as Mimikatz to extract passwords stored by the Local Security Authority (LSA). If smart cards are used to authenticate to a domain using a personal identification number (PIN), then that PIN is also cached as a result and may be dumped.1",
+      "kill_chain_phases": [{
+        "kill_chain_name": "mitre-attack",
+        "phase_name": "credential-access"
+      }],
+      "x_unfetter_sophistication_level": 2,
+      "type": "attack-pattern",
+      "id": "attack-pattern--0a3ead4e-6d47-4ccb-854c-a6a4f9d96b22"
+    },
+    {
+      "modified": "2016-09-14T17:56:37.031Z",
+      "created": "2016-09-14T17:56:37.031Z",
+      "name": "Network Analysis",
+      "description": "Network monitoring and analysis device.",
+      "version": 0,
+      "kill_chain_phases": [{
+        "kill_chain_name": "sensors",
+        "phase_name": "network"
+      }],
+      "aliases": [],
+      "granular_markings": [],
+      "external_references": [],
+      "labels": [
+        "information-gathering"
+      ],
+      "id": "x-unfetter-sensor--7fdabb41-397c-4a0e-936f-f06f11f29175",
+      "type": "x-unfetter-sensor"
+    }
+
+
+    ]
+}

@@ -67,6 +67,7 @@ bundle can be saved to local storage, can then be further edited as desired and 
 
 ![Stix objects](/images/stixobjects.png?raw=true) 
 
+![Stix objects](/images/indicator.png?raw=true) 
 
 #### Graph view
 
