@@ -32,17 +32,6 @@
                         <MenuItem fx:id="quitItem" mnemonicParsing="false" onAction="#quitAction" text="Quit" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Undo" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Redo" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Cut" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Copy" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Paste" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
             <Menu mnemonicParsing="false" text="Tools">
               <items>
                   <MenuItem fx:id="sendFromFileItem" mnemonicParsing="false" onAction="#sendFromFile" text="Send file to server" />
