@@ -58,7 +58,7 @@ assemblyMergeStrategy in assembly := {
     oldStrategy(x)
 }
 
-assemblyJarName in assembly := "CyberStationApp" + version.value + ".jar"
+assemblyJarName in assembly := "cyberstation-" + version.value + ".jar"
 
 mainClass in assembly := Some("cyber.CyberStationApp")
 
