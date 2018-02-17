@@ -4,14 +4,14 @@ import java.io.File
 
 import com.kodekutters.stix.{Bundle, StixObj}
 import cyber.{CyberBundle, CyberStationApp, FileSender, ServerForm}
-import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.libs.json.Json
 import java.io.IOException
 import java.nio.file.{Files, Paths}
 import java.util.UUID
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import db._
-import db.mongo.{MongoDbStix, MongoLocalService}
+import db.mongo.MongoDbStix
 import db.neo4j.Neo4jService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -29,9 +29,7 @@ import scala.util.{Failure, Success}
 import scalafx.application.Platform
 import scalafx.scene.control.Alert.AlertType
 import CyberUtils._
-import com.kodekutters.neo4j.Neo4jLoader
 import com.kodekutters.taxii.{Collection, TaxiiCollection, TaxiiConnection}
-import com.typesafe.config.{Config, ConfigFactory}
 import converter.{GexfConverter, GraphMLConverter, StixConverter, Transformer}
 
 import scala.collection.mutable.ListBuffer
@@ -61,6 +59,9 @@ class MainMenuController(loadItem: MenuItem,
                          saveToGephiItem: MenuItem,
                          saveToGraphMLItem: MenuItem,
                          taxiiGephi: MenuItem,
+                         taxiiFile: MenuItem,
+                         taxiiMongo: MenuItem,
+                         taxiiNeo4j: MenuItem,
                          newItem: MenuItem) extends MainMenuControllerInterface {
 
   var cyberController: CyberStationControllerInterface = _
@@ -137,11 +138,9 @@ class MainMenuController(loadItem: MenuItem,
     else cyberController.doClose()
   }
 
-  private def showSpinner(onof: Boolean) = {
-    Platform.runLater(() => {
-      cyberController.messageBarSpin().setVisible(onof)
-    })
-  }
+  private def showSpinner(onof: Boolean) = Platform.runLater(() => {
+    cyberController.messageBarSpin().setVisible(onof)
+  })
 
   //-------------------------------------------------------------------------
   //-------------------------load--------------------------------------------
@@ -149,16 +148,12 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * load bundles from a file to the viewer
     */
-  def loadAction(): Unit = {
-    fileSelector().map(file => loadLocalBundles(file))
-  }
+  def loadAction(): Unit = fileSelector().map(file => loadLocalBundles(file))
 
   /**
     * load bundles from a file and sent it to the server
     */
-  def sendFromFile(): Unit = {
-    fileSelector().map(file => FileSender.sendFile(file, cyberController))
-  }
+  def sendFromFile(): Unit = fileSelector().map(file => FileSender.sendFile(file, cyberController))
 
   /**
     * read a zip file containing bundles of stix
@@ -270,16 +265,12 @@ class MainMenuController(loadItem: MenuItem,
   /**
     * save a file to a Neo4jDB
     */
-  def saveToNeo4jDB(): Unit = {
-    fileSelector().map(file => Neo4jService.saveFileToDB(file, cyberController))
-  }
+  def saveToNeo4jDB(): Unit = fileSelector().map(file => Neo4jService.saveFileToDB(file, cyberController))
 
   /**
     * save a file to a MongoDB
     */
-  def saveToMongoDB(): Unit = {
-    fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
-  }
+  def saveToMongoDB(): Unit = fileSelector().map(file => MongoDbStix.saveFileToDB(file, cyberController))
 
   private def saveToWith(converter: StixConverter) = {
     fileSelector().map(file => {
@@ -291,13 +282,9 @@ class MainMenuController(loadItem: MenuItem,
     })
   }
 
-  def saveToGephiAction(): Unit = {
-    saveToWith(GexfConverter())
-  }
+  def saveToGephiAction(): Unit = saveToWith(GexfConverter())
 
-  def saveToGraphMLAction(): Unit = {
-    saveToWith(GraphMLConverter())
-  }
+  def saveToGraphMLAction(): Unit = saveToWith(GraphMLConverter())
 
   //-------------------------------------------------------------------------
   //-------------------------open feed---------------------------------------
@@ -360,10 +347,8 @@ class MainMenuController(loadItem: MenuItem,
         val theFile = if (Files.exists(Paths.get(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)))
           new File(new java.io.File(".").getCanonicalPath + "/" + UUID.randomUUID().toString + ext)
         else new File(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)
-
         cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
-        val bundlejs = Json.toJson(bundle.toStix)
-        writeToFile(theFile, Json.stringify(bundlejs))
+        writeToFile(theFile, bundle.toStix)
       }
       cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
       cyberController.showSpinner(false)
@@ -421,13 +406,9 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  def saveAsGephiAction(): Unit = {
-    saveAsWith(GexfConverter())
-  }
+  def saveAsGephiAction(): Unit = saveAsWith(GexfConverter())
 
-  def saveAsGraphMLAction(): Unit = {
-    saveAsWith(GraphMLConverter())
-  }
+  def saveAsGraphMLAction(): Unit = saveAsWith(GraphMLConverter())
 
   //-------------------------------------------------------------------------
   //-------------------------save--------------------------------------------
@@ -465,9 +446,21 @@ class MainMenuController(loadItem: MenuItem,
     }
   }
 
-  def taxiiGephiAction(): Unit = {
+  //-------------------------------------------------------------------------
+  //-------------------------save taxii endpoint-----------------------------
+  //-------------------------------------------------------------------------
+
+  def taxiiGephiAction(): Unit = saveTaxiiBundle(new Transformer(GexfConverter()).convertToFile, ".gexf")
+
+  def taxiiFileAction(): Unit = saveTaxiiBundle(writeToFile, ".json")
+
+  def taxiiMongoAction(): Unit = saveTaxiiBundle(MongoDbStix.writeToMongo, "")
+
+  def taxiiNeo4jAction(): Unit = saveTaxiiBundle(Neo4jService.writeToNeo4j, "/neo4j")
+
+  def saveTaxiiBundle(writeFunc: (File, Bundle) => Unit, ext: String): Unit = {
     if (taxiiCol == null) {
-      cyberController.showThis("Cannot save Taxii feed because no collection selected ", Color.Red)
+      cyberController.showThis("Cannot save Taxii server endpoint because no collection is selected ", Color.Red)
       return
     }
     if (taxiiCol.id != null && apirootInfo != null) {
@@ -480,9 +473,10 @@ class MainMenuController(loadItem: MenuItem,
         Await.result(
           col.getObjects().map(bndl =>
             bndl.map(bundle => {
-              val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ".gexf")
-              new Transformer(GexfConverter()).convertToFile(thisFile, bundle)
-              cyberController.showThis("Done saving Taxii feed to: " + thisFile.getCanonicalPath, Color.Black)
+              val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ext)
+              cyberController.showThis("Saving Taxii server endpoint to: " + thisFile.getName, Color.Black)
+              writeFunc(thisFile, bundle)
+              cyberController.showThis("Done saving Taxii server endpoint to: " + thisFile.getCanonicalPath, Color.Black)
             })
           ), 60 second)
         col.conn.close()
@@ -490,15 +484,8 @@ class MainMenuController(loadItem: MenuItem,
         x => cyberController.showSpinner(false)
       }
     } else {
-      cyberController.showThis("Cannot save Taxii feed because no collection selected ", Color.Red)
+      cyberController.showThis("Cannot save Taxii server endpoint because no collection is selected ", Color.Red)
     }
-  }
-
-  //-------------------------------------------------------------------------
-  //-------------------------------------------------------------------------
-  //-------------------------------------------------------------------------
-  def testAction(): Unit = {
-    //  MongoDbStix.saveMongoToNeo4j(cyberController)
   }
 
 }

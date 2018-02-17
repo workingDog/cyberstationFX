@@ -44,9 +44,12 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="Postgres" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Convert Taxii feed to">
+                  <Menu mnemonicParsing="false" text="Convert Taxii server to">
                     <items>
                       <MenuItem fx:id="taxiiGephi" mnemonicParsing="false" onAction="#taxiiGephiAction" text="Gephi" />
+                        <MenuItem fx:id="taxiifFile" mnemonicParsing="false" onAction="#taxiiFileAction" text="File" />
+                        <MenuItem fx:id="taxiiMongo" mnemonicParsing="false" onAction="#taxiiMongoAction" text="MongoDB" />
+                        <MenuItem fx:id="taxiiNeo4j" mnemonicParsing="false" onAction="#taxiiNeo4jAction" text="Neo4j" />
                     </items>
                   </Menu>
               </items>

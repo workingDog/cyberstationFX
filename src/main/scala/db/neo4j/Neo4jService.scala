@@ -8,7 +8,7 @@ import com.kodekutters.stix.{Bundle, StixObj}
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import controllers.CyberStationControllerInterface
-import org.neo4j.graphdb.{Direction, Result}
+import org.neo4j.graphdb.Result
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,6 +47,8 @@ object Neo4jService {
       controller.showSpinner(false)
     })
   }
+
+  def writeToNeo4j(dbDir: File, bundle: Bundle): Unit = Future(new Neo4jLoader(dbDir.getCanonicalPath).loadIntoNeo4j(bundle))
 
   private def loadBundleZipFile(fileLoader: Neo4jFileLoader, inFile: File): Unit = {
     import scala.collection.JavaConverters._
@@ -99,21 +101,22 @@ object Neo4jService {
     }
   }
 
-  def clearDbWith2(neoLoader: Neo4jLoader): Future[Option[Result]] = {
-    Future({
-      val clearX = "MATCH (n) DETACH DELETE n"
-      val clearAction = "MATCH (n) OPTIONAL MATCH (n)-[r]-() WITH n,r LIMIT 50000 DELETE n,r RETURN count(n) as deletedNodesCount"
-      neoLoader.neoService.transaction {
-        neoLoader.neoService.graphDB.execute(clearAction)
-      }
-    })
-  }
+//  def clearDbWith2(neoLoader: Neo4jLoader): Future[Option[Result]] = {
+//    Future({
+//      val clearX = "MATCH (n) DETACH DELETE n"
+//      val clearAction = "MATCH (n) OPTIONAL MATCH (n)-[r]-() WITH n,r LIMIT 50000 DELETE n,r RETURN count(n) as deletedNodesCount"
+//      neoLoader.neoService.transaction {
+//        neoLoader.neoService.graphDB.execute(clearAction)
+//      }
+//    })
+//  }
 
-  def clearDbWith(neoLoader: Neo4jLoader) =
+  def clearDbWith(neoLoader: Neo4jLoader) = {
     neoLoader.neoService.transaction {
       neoLoader.neoService.graphDB.getAllRelationships.forEach(_.delete())
       neoLoader.neoService.graphDB.getAllNodes.forEach(_.delete())
     }
+  }
 
   def reload(cyberBundles: List[CyberBundle], controller: CyberStationControllerInterface) = {
     Future({

@@ -2,6 +2,7 @@ package db.mongo
 
 import java.io.File
 
+import support.Counter
 import com.kodekutters.stix.StixObj._
 import com.kodekutters.stix._
 import com.typesafe.config.{Config, ConfigFactory}
@@ -35,11 +36,7 @@ object MongoDbStix {
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
 
-  val count = mutable.Map("SDO" -> 0, "SRO" -> 0, "StixObj" -> 0)
-
-  def resetCount(): Unit = count.foreach({ case (k, v) => count(k) = 0 })
-
-  def inc(k: String): Unit = count(k) = count(k) + 1
+  val counter = Counter()
 
   val customObjectType = "custom-object"
 
@@ -95,17 +92,15 @@ object MongoDbStix {
   private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
       val stixType = if (stix.`type`.startsWith("x-")) customObjectType else stix.`type`
-      stix match {
-        case x: SDO => inc("SDO")
-        case x: SRO => inc("SRO")
-        case x: StixObj => inc("StixObj")
-      }
+      counter.countStix(stix)
       for {
         stxCol <- database.map(_.collection[JSONCollection](stixType))
         theError <- stxCol.insert(stix)
       } yield theError
     }
   }
+
+  def writeToMongo(file: File, bundle: Bundle): Unit = saveBundleAsStixs(bundle)
 
   def saveFileToDB(file: File, controller: CyberStationControllerInterface): Unit = {
     if (isConnected()) {
@@ -119,8 +114,8 @@ object MongoDbStix {
           saveBundleFile(file)
         }
         controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
-        controller.showThis("   SDO: " + count("SDO") + " SRO: " + count("SRO") + " StixObj: " + count("StixObj"), Color.Black)
-        resetCount()
+        controller.showThis("   SDO: " + counter.count("SDO") + " SRO: " + counter.count("SRO") + " StixObj: " + counter.count("StixObj"), Color.Black)
+        counter.reset()
         println("----> Done saving: " + file.getName + " to MongoDb at: " + dbUri)
       } catch {
         case ex: Throwable =>

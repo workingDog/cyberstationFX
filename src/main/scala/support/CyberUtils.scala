@@ -2,11 +2,11 @@ package support
 
 import java.net.{URI, URL}
 import java.io.{File, IOException, PrintWriter}
-import java.nio.file.{Files, Path, Paths}
-import java.util.UUID
+import java.nio.file.{Files, Path}
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import com.kodekutters.stix.Bundle
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.libs.ws.JsonBodyReadables._
@@ -17,6 +17,10 @@ import scala.util.Random
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.kodekutters.stix.{SDO, SRO, StixObj}
+
+import scala.collection.mutable
+
 
 
 object CyberUtils {
@@ -97,12 +101,12 @@ object CyberUtils {
     * write a bundle in json string representation to the output file
     *
     * @param outFile  the output file to write to
-    * @param bundlejs a string representing a bundle in json format
+    * @param bundle  a bundle
     */
-  def writeToFile(outFile: File, bundlejs: String): Unit = {
+  def writeToFile(outFile: File, bundle: Bundle): Unit = {
     val writer = new PrintWriter(outFile)
     try {
-      writer.write(bundlejs)
+      writer.write(Json.prettyPrint(Json.toJson(bundle)))
     } catch {
       case e: IOException => e.printStackTrace()
     }
@@ -111,3 +115,33 @@ object CyberUtils {
     }
   }
 }
+
+/**
+  * helper class for counting the SDO, SRO and StixObj
+  *
+  */
+case class Counter() {
+
+  val count = mutable.Map("SDO" -> 0, "SRO" -> 0, "StixObj" -> 0)
+
+  /**
+    * reset the counter to zero
+    */
+  def reset(): Unit = {
+    count.foreach({ case (k, v) => count(k) = 0 })
+  }
+
+  /**
+    * increment the count of key=k by 1
+    */
+  def inc(k: String): Unit = count(k) = count(k) + 1
+
+  def countStix(stix: StixObj): Unit = {
+    stix match {
+      case x: SDO => inc("SDO")
+      case x: SRO => inc("SRO")
+      case x: StixObj => inc("StixObj")
+    }
+  }
+}
+
