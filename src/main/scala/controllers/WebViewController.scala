@@ -51,7 +51,7 @@ class WebViewController(webViewer: WebView,
   val config: Config = ConfigFactory.load
   var fetchNumber = 100
   var hasChanged: Boolean = false
-  //   cti-stix-visualization   cytoscape
+
   val indexURI = getClass.getResource("/controllers/cti-stix-visualization/index.html").toURI.toURL.toString
 
   def getButonGroup(): ToggleGroup = graphGroup

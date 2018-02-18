@@ -79,9 +79,10 @@ the Taxii server.
 
 #### Tools
 
-In addition to the main viewing areas, various tools from the *Tools* menu are available to convert files of STIX objects into formats 
+In addition to the main viewing areas, various tools from the *Tools* menu are available to 
+convert files of STIX objects and TAXII collections into formats 
 such as; MongoDB, Neo4jDB, Gelphi and GraphML. 
-Also from the *Tools* menu, a user can send a file of STIX objects directly to the selected Taxii server.
+Also from the *Tools* menu, a user can send a file of STIX objects directly to the selected TAXII server.
 
 Similarly, from the *File* menu, the created (or loaded) bundles of STIX objects can be saved into various formats.
 Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* menu item.
@@ -89,9 +90,9 @@ Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* 
 ##### Databases
 
 *MongoDB* is used to store the current state of *CyberStation*, that is, the current list of bundles being edited, 
-as well as the log all transactions to the Taxii servers. In addition, *MongoDB* can be used in the  
-convertion of STIX files and the saving of bundles into a *MongoDB* database. 
-To enable this, *MongoDB* must be installed and running. 
+as well as the log all transactions to the Taxii servers. Note only the current state is 
+saved and restored, there is no history of data. In addition, *MongoDB* can be used in saving STIX files into a *MongoDB* database. 
+To enable these features, *MongoDB* must be installed and running. 
 
 
 #### Installation and running
