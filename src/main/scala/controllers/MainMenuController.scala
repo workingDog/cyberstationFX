@@ -138,9 +138,7 @@ class MainMenuController(loadItem: MenuItem,
     else cyberController.doClose()
   }
 
-  private def showSpinner(onof: Boolean) = Platform.runLater(() => {
-    cyberController.messageBarSpin().setVisible(onof)
-  })
+  private def showSpinner(onof: Boolean) = Platform.runLater(() => cyberController.messageBarSpin().setVisible(onof))
 
   //-------------------------------------------------------------------------
   //-------------------------load--------------------------------------------
@@ -191,9 +189,9 @@ class MainMenuController(loadItem: MenuItem,
       // todo ----------------------------------------------------
       // todo ----------------------------------------------------
 
-      Platform.runLater(() => {
+      Platform.runLater(() =>
         cyberController.getStixViewController().getBundleController().setBundles(bundleList.toList)
-      })
+      )
       cyberController.showThis("", Color.Black)
     } catch {
       case ex: Throwable =>
@@ -460,7 +458,7 @@ class MainMenuController(loadItem: MenuItem,
 
   def saveTaxiiBundle(writeFunc: (File, Bundle) => Unit, ext: String): Unit = {
     if (taxiiCol == null) {
-      cyberController.showThis("Cannot save Taxii server endpoint because no collection is selected ", Color.Red)
+      cyberController.showThis("Cannot save Taxii collection because none is selected ", Color.Red)
       return
     }
     if (taxiiCol.id != null && apirootInfo != null) {
@@ -474,9 +472,9 @@ class MainMenuController(loadItem: MenuItem,
           col.getObjects().map(bndl =>
             bndl.map(bundle => {
               val thisFile = new File(new java.io.File(".").getCanonicalPath + "/" + taxiiCol.id + ext)
-              cyberController.showThis("Saving Taxii server endpoint to: " + thisFile.getName, Color.Black)
+              cyberController.showThis("Saving Taxii collection to: " + thisFile.getName, Color.Black)
               writeFunc(thisFile, bundle)
-              cyberController.showThis("Done saving Taxii server endpoint to: " + thisFile.getCanonicalPath, Color.Black)
+              cyberController.showThis("Done saving Taxii collection to: " + thisFile.getCanonicalPath, Color.Black)
             })
           ), 60 second)
         col.conn.close()
@@ -484,7 +482,7 @@ class MainMenuController(loadItem: MenuItem,
         x => cyberController.showSpinner(false)
       }
     } else {
-      cyberController.showThis("Cannot save Taxii server endpoint because no collection is selected ", Color.Red)
+      cyberController.showThis("Cannot save Taxii collection because none is selected ", Color.Red)
     }
   }
 

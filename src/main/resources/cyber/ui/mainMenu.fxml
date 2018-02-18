@@ -44,7 +44,7 @@
                         <MenuItem disable="true" mnemonicParsing="false" text="Postgres" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Convert Taxii server to">
+                  <Menu mnemonicParsing="false" text="Convert Taxii collection to">
                     <items>
                       <MenuItem fx:id="taxiiGephi" mnemonicParsing="false" onAction="#taxiiGephiAction" text="Gephi" />
                         <MenuItem fx:id="taxiifFile" mnemonicParsing="false" onAction="#taxiiFileAction" text="File" />
