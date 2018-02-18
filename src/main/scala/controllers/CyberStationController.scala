@@ -107,7 +107,7 @@ class CyberStationController(mainMenu: VBox,
   def messageBarSpin(): JFXSpinner = msgBarSpinner
 
   def initToolMongo(): Unit = {
-    showThis("Trying to connect to database: " + MongoDbStix.dbUri, Color.Black)
+    showThis("Trying to connect to database: " + MongoDbStix.getUri(), Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
     Future(try {
@@ -116,14 +116,14 @@ class CyberStationController(mainMenu: VBox,
       MongoDbStix.init()
     } catch {
       case ex: Throwable =>
-        showThis("Fail to connect to database: " + MongoDbStix.dbUri + " --> data will not be saved to the database", Color.Red)
+        showThis("Fail to connect to database: " + MongoDbStix.getUri() + " --> data will not be saved to the database", Color.Red)
     } finally {
       showSpinner(false)
     })
   }
 
   def initLocalDB(): Unit = {
-    showThis("Trying to connect to database: " + DbService.dbUri, Color.Black)
+    showThis("Trying to connect to database: " + DbService.getUri(), Color.Black)
     showSpinner(true)
     // try to connect to the mongo db
     Future(try {
@@ -133,17 +133,15 @@ class CyberStationController(mainMenu: VBox,
       // load the data
       DbService.loadLocalBundles().onComplete {
         case Success(theList) =>
-          showThis("Connected to database: " + DbService.dbUri, Color.Black)
-          Platform.runLater(() => {
-            stixViewController.getBundleController().setBundles(theList)
-          })
+          showThis("Connected to database: " + DbService.getUri(), Color.Black)
+          Platform.runLater(() => stixViewController.getBundleController().setBundles(theList))
         case Failure(err) =>
-          showThis("Fail to load data from database: " + DbService.dbUri, Color.Red)
+          showThis("Fail to load data from database: " + DbService.getUri(), Color.Red)
           println("---> bundles loading failure: " + err)
       }
     } catch {
       case ex: Throwable =>
-        showThis("Fail to connect to database: " + DbService.dbUri + " --> data will not be saved to the database", Color.Red)
+        showThis("Fail to connect to database: " + DbService.getUri() + " --> data will not be saved to the database", Color.Red)
     } finally {
       showSpinner(false)
     })

@@ -23,6 +23,8 @@ trait DbService {
 
   def dropLocalBundles(): Unit
 
+  def getUri(): String
+
 }
 
 
@@ -30,7 +32,7 @@ object DbService extends DbService {
 
   val mongoDB = MongoLocalService
 
-  val dbUri: String = mongoDB.dbUri
+  def getUri(): String = mongoDB.dbUri
 
   def isConnected(): Boolean = mongoDB.isConnected()
 

@@ -48,6 +48,8 @@ trait MongoBase {
 
   def readConfig(): Unit = { }
 
+  def getUri(): String = dbUri
+
   /**
     * initialisation --> config and connection
     */
