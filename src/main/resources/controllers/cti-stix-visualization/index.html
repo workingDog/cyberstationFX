@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>STIX Viewer</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="application.css" />
+    <!-- data-main attribute tells require.js to load application.js after require.js loads -->
+    <script src="require.js" data-main="application"></script>
+    <style>
+      .selected {
+        /* Drop-shadow SVG styling has to go here for compatibility reasons */
+        filter: url("#drop-shadow");
+      }
+    </style>
+
+</head>
+
+<body>
+
+<h4 id="titleString">no data</h4>
+<div id="canvas-container">
+    <input type="hidden" id="bundle-data" value=""/>
+    <div id="canvas-wrapper">
+        <svg id="canvas"></svg>
+        <p>Nodes are draggable! (Node will 'pin' on mouseup)</p>
+        <p>Double-click a pinned node to unpin it!</p>
+        <p>Click the 'Selected Node' area to expand/shrink it.</p>
+    </div>
+    <div id="legend" class="sidebar">
+        <h2>Legend</h2>
+        <ul id="legend-content"></ul>
+    </div>
+    <div id="selected" class="sidebar">
+        <h2>Selected Node</h2>
+        <div id="selection">
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
