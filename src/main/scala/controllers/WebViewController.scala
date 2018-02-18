@@ -1,6 +1,5 @@
 package controllers
 
-import java.io.File
 import javafx.fxml.FXML
 
 import com.jfoenix.controls.JFXRadioButton
@@ -19,7 +18,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, Future}
-import scala.util.{Failure, Success}
 import scalafx.scene.control.ToggleGroup
 import scalafx.Includes._
 import scalafx.application.Platform
@@ -54,7 +52,7 @@ class WebViewController(webViewer: WebView,
   var fetchNumber = 100
   var hasChanged: Boolean = false
   //   cti-stix-visualization   cytoscape
-  val indexURI = new File(new java.io.File(".").getCanonicalPath + "/cti-stix-visualization/index.html").toURI.toURL.toString
+  val indexURI = getClass.getResource("/controllers/cti-stix-visualization/index.html").toURI.toURL.toString
 
   def getButonGroup(): ToggleGroup = graphGroup
 
