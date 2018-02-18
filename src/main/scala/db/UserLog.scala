@@ -10,8 +10,7 @@ import play.api.libs.json.Json
   * @param sent
   * @param col_id
   */
-case class UserLog(user_id: String, bundle_id: String,
-                   stix_id: String, col_id: String, sent: String)
+case class UserLog(user_id: String, bundle_id: String, stix_id: String, col_id: String, sent: String)
 
 object UserLog {
   implicit val fmt = Json.format[UserLog]

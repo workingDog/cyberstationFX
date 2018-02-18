@@ -74,9 +74,7 @@ class ExternalRefController(@FXML hashesListView: JFXListView[HashesForm],
 
   def isOkClicked(): Boolean = isOk
 
-  def setDialogStage(theStage: Stage): Unit = {
-    dialogStage = theStage
-  }
+  def setDialogStage(theStage: Stage): Unit = dialogStage = theStage
 
   def setExternalRef(extRef: ExternalRefForm): Unit = {
     clear()

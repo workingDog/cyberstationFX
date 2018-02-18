@@ -34,9 +34,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
 
   def isOkClicked(): Boolean = isOk
 
-  def setDialogStage(theStage: Stage): Unit = {
-    dialogStage = theStage
-  }
+  def setDialogStage(theStage: Stage): Unit = dialogStage = theStage
 
   def setServerInfo(srvForm: ServerForm): Unit = {
     clear()

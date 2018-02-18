@@ -178,11 +178,7 @@ class CyberStationController(mainMenu: VBox,
     messageBar().setText(text)
   })
 
-  def showSpinner(onof: Boolean) = {
-    Platform.runLater(() => {
-      msgBarSpinner.setVisible(onof)
-    })
-  }
+  def showSpinner(onof: Boolean) = Platform.runLater(() => msgBarSpinner.setVisible(onof))
 
   def doClose(): Unit = {
     DbService.close()
@@ -191,10 +187,7 @@ class CyberStationController(mainMenu: VBox,
   }
 
   // close properly before exiting
-  override def stopApp(): Unit = {
-    if (getAllBundles().toList.nonEmpty) confirmAndSave()
-    else doClose()
-  }
+  override def stopApp(): Unit = if (getAllBundles().toList.nonEmpty) confirmAndSave() else doClose()
 
   def confirmAndSave(): Unit = {
     val ButtonTypeYes = new ButtonType("Yes")

@@ -40,7 +40,6 @@ object CyberStationApp extends JFXApp {
   }
 
   // initialise the main controller
-//  controller.showSpinner(false)
   controller.init()
 
   // close properly before exiting

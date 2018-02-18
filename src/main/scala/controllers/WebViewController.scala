@@ -76,7 +76,7 @@ class WebViewController(webViewer: WebView,
     }
     val manager = new java.net.CookieManager()
     java.net.CookieHandler.setDefault(manager)
-    manager.getCookieStore.removeAll
+    manager.getCookieStore.removeAll()
     webViewer.setVisible(true)
     webViewer.getEngine.javaScriptEnabled = true
     webViewer.cache = false
@@ -174,8 +174,9 @@ class WebViewController(webViewer: WebView,
           val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
             serverInfo.user.value, serverInfo.psw.value, 10))
           // need to wait here because want to be on the JavaFX thread to show the objects
+          // range = "0-" + fetchNumber.toString  // pagination
           Await.result(
-            col.getObjects(range = "0-" + fetchNumber.toString).map(bndl => {
+            col.getObjects().map(bndl => {
               bndl.map(bundle =>
                 if (theStixList != bundle.objects) {
                   // todo ----> remove take(fetchNumber), temp until Taxii servers allow pagination

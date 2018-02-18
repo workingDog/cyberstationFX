@@ -30,32 +30,20 @@ object DbService extends DbService {
 
   val mongoDB = MongoLocalService
 
-  val dbUri = mongoDB.dbUri
+  val dbUri: String = mongoDB.dbUri
 
-  def isConnected() = mongoDB.isConnected()
+  def isConnected(): Boolean = mongoDB.isConnected()
 
-  def init(): Unit = {
-    mongoDB.init()
-  }
+  def init(): Unit = mongoDB.init()
 
-  def close(): Unit = {
-    mongoDB.close()
-  }
+  def close(): Unit = mongoDB.close()
 
-  def saveServerBundle(bundle: Bundle, colPath: String): Unit = {
-    mongoDB.saveServerBundle(bundle, colPath)
-  }
+  def saveServerBundle(bundle: Bundle, colPath: String): Unit = mongoDB.saveServerBundle(bundle, colPath)
 
-  def saveLocalBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = {
-    mongoDB.saveLocalBundles(cyberList)
-  }
+  def saveLocalBundles(cyberList: List[CyberBundle]): Future[(MultiBulkWriteResult, MultiBulkWriteResult)] = mongoDB.saveLocalBundles(cyberList)
 
-  def loadLocalBundles(): Future[List[CyberBundle]] = {
-    mongoDB.loadLocalBundles()
-  }
+  def loadLocalBundles(): Future[List[CyberBundle]] = mongoDB.loadLocalBundles()
 
-  def dropLocalBundles(): Unit = {
-    mongoDB.dropLocalBundles()
-  }
+  def dropLocalBundles(): Unit = mongoDB.dropLocalBundles()
 
 }

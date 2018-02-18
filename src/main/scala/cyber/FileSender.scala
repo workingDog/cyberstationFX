@@ -46,7 +46,7 @@ object FileSender {
       }
     } catch {
       case ex: Throwable =>
-        cyberController.showThis("Fail to send the bundle to the server: " + theFile.getName, Color.Red)
+        cyberController.showThis("Fail to send the file to the server: " + theFile.getName, Color.Red)
     } finally {
       cyberController.showSpinner(false)
     }

@@ -57,15 +57,13 @@ class BundleViewController(bundleViewBox: VBox,
                            bundleName: Label) extends BundleViewControllerInterface {
 
   val bundleList = ObservableBuffer[CyberBundle]()
-  bundleList.onChange((source, changes) => {
-    if (bundleList.isEmpty) sendButton.setDisable(true)
-  })
+  bundleList.onChange((source, changes) => if (bundleList.isEmpty) sendButton.setDisable(true))
 
   var serverInfo: ServerForm = _
   val connInfo = ObservableBuffer[InfoTableEntry]()
   var taxiiApiroot: Option[String] = None
   var taxiiCol: Option[TaxiiCollection] = None
-  var cyberStationController: CyberStationControllerInterface = null
+  var cyberStationController: CyberStationControllerInterface = _
 
   init()
 
@@ -219,9 +217,7 @@ class BundleViewController(bundleViewBox: VBox,
     def toString(bndl: CyberBundle): String = bndl.name.value
   }
 
-  def makeNameFrom(obj: CyberObj): String = {
-    if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
-  }
+  def makeNameFrom(obj: CyberObj): String = if (obj == null) "" else obj.name.value + " (" + obj.id.value + ")"
 
   def getAllBundles(): ObservableBuffer[CyberBundle] = bundleList
 

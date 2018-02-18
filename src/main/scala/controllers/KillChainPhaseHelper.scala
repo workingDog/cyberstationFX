@@ -36,7 +36,6 @@ class KillChainPhaseHelper(killPhaseListView: JFXListView[KillChainPhaseForm],
         if (showKillChainDialog(newForm)) currentForm.kill_chain_phases += newForm
       }
     })
-    //    // kill chain phases
     killPhaseListView.cellFactory = { _ =>
       new ListCell[KillChainPhaseForm] {
         item.onChange { (_, _, kcf) =>

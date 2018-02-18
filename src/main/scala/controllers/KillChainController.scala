@@ -31,9 +31,7 @@ class KillChainController(@FXML okButton: JFXButton,
 
   def isOkClicked(): Boolean = isOk
 
-  def setDialogStage(theStage: Stage): Unit = {
-    dialogStage = theStage
-  }
+  def setDialogStage(theStage: Stage): Unit = dialogStage = theStage
 
   def setKillChainPhase(extRef: KillChainPhaseForm): Unit = {
     clear()

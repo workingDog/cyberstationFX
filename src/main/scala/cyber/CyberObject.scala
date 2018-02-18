@@ -80,7 +80,7 @@ object BundleInfo {
 
 
 /**
-  * an CustomStix form
+  * a CustomStix form
   */
 class CustomStixForm() extends CyberObj {
   `type`.value = CustomStix.`type`

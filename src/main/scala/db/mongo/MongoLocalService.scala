@@ -14,6 +14,7 @@ import reactivemongo.api._
 import reactivemongo.api.commands.{MultiBulkWriteResult, WriteResult}
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
+import support.Counter
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,11 +37,7 @@ object MongoLocalService extends DbService {
     override def writes(o: StixObj): JsObject = fmt.writes(o).asInstanceOf[JsObject]
   }
 
-  val count = mutable.Map("SDO" -> 0, "SRO" -> 0, "StixObj" -> 0)
-
-  def resetCount(): Unit = count.foreach({ case (k, v) => count(k) = 0 })
-
-  def inc(k: String): Unit = count(k) = count(k) + 1
+  val counter = Counter()
 
   val config: Config = ConfigFactory.load
 
@@ -119,11 +116,7 @@ object MongoLocalService extends DbService {
 
   private def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {
-      stix match {
-        case x: SDO => inc("SDO")
-        case x: SRO => inc("SRO")
-        case x: StixObj => inc("StixObj")
-      }
+      counter.countStix(stix)
       for {
         stxCol <- database.map(_.collection[JSONCollection](stix.`type`))
         theError <- stxCol.insert(stix)
@@ -195,8 +188,8 @@ object MongoLocalService extends DbService {
         saveBundleFile(file)
       }
       controller.showThis("Done saving: " + file.getName + " to MongoDb at: " + dbUri, Color.Black)
-      controller.showThis("   SDO: " + count("SDO") + " SRO: " + count("SRO") + " StixObj: " + count("StixObj"), Color.Black)
-      resetCount()
+      controller.showThis("   SDO: " + counter.count("SDO") + " SRO: " + counter.count("SRO") + " StixObj: " + counter.count("StixObj"), Color.Black)
+      counter.reset()
       controller.showSpinner(false)
     })
   }

@@ -31,9 +31,7 @@ class HashesController(@FXML okButton: JFXButton,
 
   def isOkClicked(): Boolean = isOk
 
-  def setDialogStage(theStage: Stage): Unit = {
-    dialogStage = theStage
-  }
+  def setDialogStage(theStage: Stage): Unit = dialogStage = theStage
 
   def setHashes(extRef: HashesForm): Unit = {
     clear()
