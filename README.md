@@ -55,14 +55,15 @@ must belong to a bundle. As such, a bundle object must first be created from the
 any STIX objects types can be added to it.
 
 The UI allows for adding new bundles by clicking the ![+](/images/add.png?raw=true "Add") button or deleting previously defined bundles 
-by selecting the desired bundle and clicking on the ![-](/images/delete.png?raw=true "Delete") button. In addition a **SEND TO SERVER** button 
+by selecting the desired bundle and clicking on the ![-](/images/delete.png?raw=true "Delete") button. 
+In addition a ![+](/images/upload.png?raw=true "Send to server") button 
 allows for sending the bundle to the selected server. This button is disabled if no server and collection 
 endpoints are selected or the selected collection does not allow writing to.
 
 Other tabs on the STIX page allow for creating the different STIX types objects.
 Currently only **malware, indicator and relationship** are implemented.
 
-If a server/api root/collection has not yet been selected, a bundle of STIX objects can still be created. Such 
+If a *server/api root/collection* has not yet been selected, a bundle of STIX objects can still be created. Such 
 bundle can be saved to local storage, can then be further edited as desired and eventually sent to a TAXII-2 server.   
 
 ![Stix objects](/images/stixobjects.png?raw=true) 
@@ -72,7 +73,8 @@ bundle can be saved to local storage, can then be further edited as desired and 
 #### Graph view
 
 *Graph view* is an experimental feature to display the created bundles of objects or those of 
-the Taxii server.
+the Taxii server. Note that currently the number of STIX objects displayed is restricted 
+to the *taxii.objects* value in the *application.conf*  file.
 
 
 ![Graph view](/images/graphview.png?raw=true) 
@@ -91,7 +93,8 @@ Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* 
 
 *MongoDB* is used to store the current state of *CyberStation*, that is, the current list of bundles being edited, 
 as well as the log all transactions to the Taxii servers. Note only the current state is 
-saved and restored, there is no history of data. In addition, *MongoDB* can be used in saving STIX files into a *MongoDB* database. 
+saved and restored, there is no history of data. In addition, *MongoDB* can be used in saving STIX files into 
+a separate *MongoDB* database. 
 To enable these features, *MongoDB* must be installed and running. 
 
 
@@ -112,7 +115,7 @@ To use *MongoDB* for storage, *MongoDB* must be installed and running; e.g. type
 
 ### Status
 
-work in progress, unstable
+work in progress
 
 
 ### License 
