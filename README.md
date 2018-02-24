@@ -56,7 +56,7 @@ any STIX objects types can be added to it.
 
 The UI allows for adding new bundles by clicking the ![+](/images/add.png?raw=true "Add") button or deleting previously defined bundles 
 by selecting the desired bundle and clicking on the ![-](/images/delete.png?raw=true "Delete") button. 
-In addition a ![+](/images/upload.png?raw=true "Send to server") button 
+In addition the ![Send](/images/upload.png?raw=true "Send") button 
 allows for sending the bundle to the selected server. This button is disabled if no server and collection 
 endpoints are selected or the selected collection does not allow writing to.
 
