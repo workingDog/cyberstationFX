@@ -12,9 +12,9 @@
 
 <HBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServersViewController">
          <children>
-            <VBox minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="ALWAYS">
+            <VBox minWidth="-Infinity" prefHeight="480.0" prefWidth="203.0" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="8.0">
+                  <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="203.0" spacing="8.0">
                      <children>
                         <JFXButton fx:id="addButton" buttonType="RAISED" defaultButton="true" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/plus-icon.png');" />
                         <JFXButton fx:id="deleteButton" buttonType="RAISED" prefHeight="32.0" prefWidth="32.0" style="-fx-background-image: url('/img/minus-icon.png');" />
@@ -24,7 +24,7 @@
                         <Insets bottom="4.0" left="12.0" right="4.0" top="8.0" />
                      </padding>
                   </HBox>
-                  <JFXListView fx:id="serversListView" editable="true" minWidth="-Infinity" prefWidth="250.0">
+                  <JFXListView fx:id="serversListView" editable="true" prefHeight="480.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="8.0" right="8.0" />
                </VBox.margin>
@@ -33,9 +33,9 @@
                </tooltip></JFXListView>
                </children>
             </VBox>
-            <VBox prefWidth="491.0" HBox.hgrow="ALWAYS">
+            <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                <children>
-                  <AnchorPane maxHeight="169.0" prefHeight="146.0" prefWidth="491.0" VBox.vgrow="NEVER">
+                  <AnchorPane maxHeight="169.0" prefHeight="146.0" VBox.vgrow="NEVER">
                <children>
                   <TableView fx:id="serverInfoTable" pickOnBounds="false" prefHeight="169.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>

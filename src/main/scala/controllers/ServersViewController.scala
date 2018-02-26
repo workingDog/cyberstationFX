@@ -7,7 +7,7 @@ import javafx.scene.text.Text
 
 import scalafx.Includes._
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner}
-import cyber.{CyberStationApp, InfoTableEntry, ServerForm}
+import cyber.{CyberStationApp, InfoTableEntry, ServerForm, ServerInfo}
 
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.input.{MouseButton, MouseEvent}
@@ -15,8 +15,9 @@ import scalafxml.core.macros.sfxml
 import scalafx.scene.control.TableColumn._
 import scalafx.scene.control._
 import com.kodekutters.taxii._
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{Config, ConfigFactory, ConfigObject, ConfigRenderOptions}
 import db.mongo.MongoLocalService.{bundlesCol, bundlesInf, config, dbUri, userLogCol}
+import play.api.libs.json.Json
 import support.CyberUtils
 
 import scala.collection.mutable.ListBuffer
@@ -70,9 +71,17 @@ class ServersViewController(@FXML addButton: JFXButton,
   def init(): Unit = {
     try {
       // get the pre-defined taxii servers from the application.conf file
-      val definedServers = config.getStringList("taxii.servers").asScala.toList
+      val definedServers = config.getList("taxii.servers").asScala.toList
+      val srvinfo = for(t <- definedServers) yield {
+        val js = Json.parse(t.render(ConfigRenderOptions.concise()))
+        Json.fromJson[ServerInfo](js).asOpt
+      }
       // add the pre-defined servers to the srvList
-      srvList ++= (for (s <- definedServers) yield ServerForm(url = StringProperty(s), user = StringProperty("guest"), psw = StringProperty("guest")))
+      srvList ++= (for (s <- srvinfo.flatten) yield ServerForm(
+        name = StringProperty(s.name),
+        url = StringProperty(s.url),
+        user = StringProperty("guest"),
+        psw = StringProperty("guest")))
     } catch {
       case e: Throwable => println("---> config error: " + e)
     }
@@ -85,7 +94,7 @@ class ServersViewController(@FXML addButton: JFXButton,
     serversListView.cellFactory = { _ =>
       new ListCell[ServerForm] {
         item.onChange { (_, _, srv) =>
-          if (srv != null) text = srv.url.value
+          if (srv != null) text = srv.name.value
           else text = ""
         }
       }

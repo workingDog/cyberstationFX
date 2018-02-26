@@ -713,7 +713,16 @@ case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
   override def toString: String = name
 }
 
-case class ServerForm(url: StringProperty = StringProperty(""),
+//---------------------------------------------------------------
+
+case class ServerInfo(name: String, url: String)
+
+object ServerInfo {
+  implicit val fmt = Json.format[ServerInfo]
+}
+
+case class ServerForm(name: StringProperty = StringProperty(""),
+                      url: StringProperty = StringProperty(""),
                       user: StringProperty = StringProperty(""),
                       psw: StringProperty = StringProperty(""))
 
@@ -721,6 +730,7 @@ object ServerForm {
 
   def clone(inForm: ServerForm) = {
     new ServerForm {
+      name.value = inForm.name.value
       url.value = inForm.url.value
       user.value = inForm.user.value
       psw.value = inForm.psw.value

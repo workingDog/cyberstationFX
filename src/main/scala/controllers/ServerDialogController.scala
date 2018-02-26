@@ -24,6 +24,7 @@ trait ServerDialogControllerInterface {
 @sfxml
 class ServerDialogController(@FXML okButton: JFXButton,
                              @FXML cancelButton: JFXButton,
+                             @FXML nameField: JFXTextField,
                              @FXML urlField: JFXTextField,
                              @FXML userField: JFXTextField,
                              @FXML pswField: JFXPasswordField) extends ServerDialogControllerInterface {
@@ -42,6 +43,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
       theForm = srvForm
       loadValues()
       // bind the form to the UI
+      theForm.name <== nameField.textProperty()
       theForm.user <== userField.textProperty()
       theForm.url <== urlField.textProperty()
       theForm.psw <== pswField.textProperty()
@@ -66,6 +68,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
   })
 
   private def loadValues(): Unit = {
+    nameField.setText(theForm.name.value)
     userField.setText(theForm.user.value)
     urlField.setText(theForm.url.value)
     pswField.setText(theForm.psw.value)
@@ -73,6 +76,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
 
   private def unbindAll(): Unit = {
     if (theForm != null) {
+      theForm.name.unbind()
       theForm.user.unbind()
       theForm.url.unbind()
       theForm.psw.unbind()
@@ -81,6 +85,7 @@ class ServerDialogController(@FXML okButton: JFXButton,
 
   private def clear(): Unit = {
     unbindAll()
+    nameField.setText("")
     userField.setText("")
     urlField.setText("")
     pswField.setText("")
