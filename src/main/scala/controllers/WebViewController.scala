@@ -171,11 +171,6 @@ class WebViewController(webViewer: WebView,
           hasChanged = false
           val col = Collection(taxiiCol, apirootInfo, new TaxiiConnection(serverInfo.url.value,
             serverInfo.user.value, serverInfo.psw.value, 10))
-
-          println("----> col.api_root: "+col.api_root)
-          println("----> col.basePath: "+col.basePath)
-          println("----> col.thePath: "+col.thePath)
-
           // need to wait here because want to be on the JavaFX thread to show the objects
           // range = "0-" + fetchNumber.toString  // pagination
           Await.result(

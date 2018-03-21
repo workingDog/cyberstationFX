@@ -3,7 +3,7 @@ import Keys._
 
 name := "cyberstation"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.5"
 
 version := (version in ThisBuild).value
 
@@ -13,25 +13,26 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 
 libraryDependencies ++= Seq(
   "org.neo4j" % "neo4j" % "3.3.3",
-  "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
+  "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.6",
 //  "com.typesafe.play" %% "play-ws-standalone-json" % "1.1.3",
   "com.github.workingDog" %% "scalastix" % "0.7",
   "com.github.workingDog" %% "taxii2lib" % "0.3",
   "com.github.workingDog" %% "stixtoneolib" % "0.3",
-  "org.reactivemongo" %% "reactivemongo" % "0.12.7",
-  "org.reactivemongo" %% "reactivemongo-play-json" % "0.12.7-play26",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
+  "org.reactivemongo" %% "reactivemongo" % "0.13.0",
+  "org.reactivemongo" %% "reactivemongo-play-json" % "0.13.0-play26",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
 ).map(_.exclude("org.slf4j", "*"))
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
-  "com.typesafe" % "config" % "1.3.2",
-  "com.google.inject" % "guice" % "4.1.0",
-  "com.jfoenix" % "jfoenix" % "8.0.2",
+  "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
+  "com.typesafe" % "config" % "1.3.3",
+  "com.google.inject" % "guice" % "4.2.0",
+  "com.jfoenix" % "jfoenix" % "8.0.3",
   "org.scalafx" %% "scalafx" % "8.0.144-R12",
   "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
   "ch.qos.logback" % "logback-classic" % "1.2.3"
 )
+
 
 homepage := Some(url("https://github.com/workingDog/cyberstationFX"))
 
