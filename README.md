@@ -61,7 +61,8 @@ allows for sending the bundle to the selected server. This button is disabled if
 endpoints are selected or the selected collection does not allow writing to.
 
 Other tabs on the STIX page allow for creating the different STIX types objects.
-Currently only **malware, indicator and relationship** are implemented.
+Currently only **malware, indicator and relationship** are implemented. 
+Other STIX objects will be implemented if there is an interest in this tool.
 
 If a *server/api root/collection* has not yet been selected, a bundle of STIX objects can still be created. Such 
 bundle can be saved to local storage, can then be further edited as desired and eventually sent to a TAXII-2 server.   
@@ -87,6 +88,11 @@ such as; MongoDB, Neo4jDB, Gelphi and GraphML.
 Also from the *Tools* menu, a user can send a file of STIX objects directly to the selected TAXII server.
 
 Similarly, from the *File* menu, the created (or loaded) bundles of STIX objects can be saved into various formats.
+
+The *File->Save as->JSON (or Gephi or GraphML)* will automatically save the STIX bundles in the chosen format and 
+in the chosen directory. The name of the files will contain the bundle's name.
+
+
 Bundle of STIX objects can be loaded into *CyberStation* using the *File->Open* menu item.
 
 ##### Databases
@@ -108,7 +114,7 @@ Download this repository, and adjust the *application.conf* file if need be.
 
 ### Requirements
 
-Must have java 1.8.0_152 installed.
+Must have java 1.8 (at least 1.8.0_152) installed.
 
 To use *MongoDB* for storage, *MongoDB* must be installed and running; e.g. type: mongod in a terminal 
 (see also the settings in the *application.conf* file)

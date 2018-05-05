@@ -35,7 +35,7 @@ import converter.{GexfConverter, GraphMLConverter, StixConverter, Transformer}
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, Future}
 import scalafx.stage.FileChooser.ExtensionFilter
-import scalafx.stage.{FileChooser, Stage}
+import scalafx.stage.{DirectoryChooser, FileChooser, Stage}
 import scala.concurrent.duration._
 
 
@@ -339,19 +339,22 @@ class MainMenuController(loadItem: MenuItem,
   def saveAsJsonFileAction(): Unit = {
     if (cyberController.getAllBundles().toList.nonEmpty) {
       val ext = ".json"
-      cyberController.showSpinner(true)
-      // for each bundle of stix
-      cyberController.getAllBundles().foreach { bundle =>
-        val theFile = if (Files.exists(Paths.get(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)))
-          new File(new java.io.File(".").getCanonicalPath + "/" + UUID.randomUUID().toString + ext)
-        else new File(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)
-        cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
-        writeToFile(theFile, bundle.toStix)
+      val dir = new DirectoryChooser().showDialog(new Stage())
+      if (dir != null) {
+        cyberController.showSpinner(true)
+        // for each bundle of stix
+        cyberController.getAllBundles().foreach { bundle =>
+          val theFile = if (Files.exists(Paths.get(dir.toPath.toAbsolutePath.toString + "/" + bundle.name.value + ext)))
+            new File(dir.toPath.toAbsolutePath.toString + "/" + UUID.randomUUID().toString + ext)
+          else new File(dir.toPath.toAbsolutePath.toString + "/" + bundle.name.value + ext)
+          cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
+          writeToFile(theFile, bundle.toStix)
+        }
+        cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
+        cyberController.showSpinner(false)
+      } else {
+        cyberController.showThis("No bundle to save", Color.Red)
       }
-      cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
-      cyberController.showSpinner(false)
-    } else {
-      cyberController.showThis("No bundle to save", Color.Red)
     }
   }
 
@@ -387,20 +390,22 @@ class MainMenuController(loadItem: MenuItem,
   private def saveAsWith(converter: StixConverter): Unit = {
     val ext = converter.outputExt
     if (cyberController.getAllBundles().toList.nonEmpty) {
-      cyberController.showSpinner(true)
-      // for each bundle of stix
-      cyberController.getAllBundles().foreach { bundle =>
-        val theFile = if (Files.exists(Paths.get(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)))
-          new File(new java.io.File(".").getCanonicalPath + "/" + UUID.randomUUID().toString + ext)
-        else new File(new java.io.File(".").getCanonicalPath + "/" + bundle.name.value + ext)
-
-        cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
-        new Transformer(converter).convertToFile(theFile, bundle.toStix)
+      val dir = new DirectoryChooser().showDialog(new Stage())
+      if (dir != null) {
+        cyberController.showSpinner(true)
+        // for each bundle of stix
+        cyberController.getAllBundles().foreach { bundle =>
+          val theFile = if (Files.exists(Paths.get(dir.toPath.toAbsolutePath.toString + "/" + bundle.name.value + ext)))
+            new File(dir.toPath.toAbsolutePath.toString + "/" + UUID.randomUUID().toString + ext)
+          else new File(dir.toPath.toAbsolutePath.toString + "/" + bundle.name.value + ext)
+          cyberController.showThis("Saving bundle to: " + theFile.getName, Color.Black)
+          new Transformer(converter).convertToFile(theFile, bundle.toStix)
+        }
+        cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
+        cyberController.showSpinner(false)
+      } else {
+        cyberController.showThis("No bundle to save", Color.Red)
       }
-      cyberController.showThis("Done saving bundles to " + ext.drop(1).toUpperCase + " format", Color.Black)
-      cyberController.showSpinner(false)
-    } else {
-      cyberController.showThis("No bundle to save", Color.Red)
     }
   }
 
