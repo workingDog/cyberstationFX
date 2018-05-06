@@ -108,7 +108,7 @@ To enable these features, *MongoDB* must be installed and running.
 
 Install [SBT](https://www.scala-sbt.org/)
 
-Download this repository, and adjust the *application.conf* file if need be.
+Download this repository, and adjust the *application.conf* file in the *src/main/resource* directory if need be.
 
     sbt run
 
@@ -117,7 +117,7 @@ Download this repository, and adjust the *application.conf* file if need be.
 Must have java 1.8 (at least 1.8.0_152) installed.
 
 To use *MongoDB* for storage, *MongoDB* must be installed and running; e.g. type: mongod in a terminal 
-(see also the settings in the *application.conf* file)
+(see also the settings in the *application.conf* file in the *src/main/resource* directory)
 
 ### Status
 
