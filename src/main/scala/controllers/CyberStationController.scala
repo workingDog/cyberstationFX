@@ -9,8 +9,8 @@ import com.kodekutters.stix.StixObj
 import cyber.{CyberBundle, ServerForm}
 import db.DbService
 import com.kodekutters.taxii.{TaxiiCollection, TaxiiConnection}
-import com.typesafe.config.{Config, ConfigFactory}
 import db.mongo.MongoDbStix
+import support.CyberUtils
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -62,6 +62,7 @@ trait CyberStationControllerInterface {
 
 }
 
+
 @sfxml
 class CyberStationController(mainMenu: VBox,
                              messageLabel: Label,
@@ -76,7 +77,7 @@ class CyberStationController(mainMenu: VBox,
                              @nested[StixViewController] stixViewController: StixViewControllerInterface)
   extends CyberStationControllerInterface {
 
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
 
   var theTempPath: String = _
 

@@ -18,12 +18,15 @@ import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.kodekutters.stix.{SDO, SRO, StixObj}
+import com.typesafe.config.ConfigFactory
 
 import scala.collection.mutable
 
 
-
 object CyberUtils {
+
+  val baseConfig = ConfigFactory.load()
+  val config = ConfigFactory.parseFile(new java.io.File("settings.conf")).withFallback(baseConfig).resolve()
 
   // create an Akka system for thread and streaming management
   implicit val system = ActorSystem()
@@ -100,7 +103,7 @@ object CyberUtils {
   /**
     * write a bundle in json string representation to the output file
     *
-    * @param outFile  the output file to write to
+    * @param outFile the output file to write to
     * @param bundle  a bundle
     */
   def writeToFile(outFile: File, bundle: Bundle): Unit = {

@@ -7,6 +7,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import cyber.{CyberConverter, CyberObj, ServerForm}
 import db.mongo.MongoLocalService.{bundlesCol, bundlesInf, config, userLogCol}
 import com.kodekutters.taxii.{Collection, TaxiiCollection, TaxiiConnection}
+import support.CyberUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scalafx.application.Platform
@@ -31,7 +32,9 @@ class ObjectsViewController(objCountLabel: Label,
   val objects = ObservableBuffer[CyberObj]()
   var apirootInfo = ""
 
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
+
+
   private var fetchNumber = 100
 
   init()

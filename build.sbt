@@ -3,7 +3,7 @@ import Keys._
 
 name := "cyberstation"
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.6"
 
 version := (version in ThisBuild).value
 
@@ -52,8 +52,8 @@ assemblyMergeStrategy in assembly := {
   case PathList(xs@_*) if xs.last endsWith "LICENSE.txt" => MergeStrategy.discard
   case PathList(xs@_*) if xs.last endsWith "logback.xml" => MergeStrategy.discard
   case PathList(xs @_*) if xs.last.toLowerCase endsWith ".fxml" => MergeStrategy.concat
-  case "META-INF/io.netty.versions.properties" => MergeStrategy.discard
   case "application.conf" => MergeStrategy.concat
+  case x if x.endsWith("io.netty.versions.properties") => MergeStrategy.first
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)

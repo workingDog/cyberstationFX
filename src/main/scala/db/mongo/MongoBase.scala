@@ -5,12 +5,11 @@ import java.io.File
 import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.stix.StixObj._
 import com.kodekutters.stix._
-import com.typesafe.config.{Config, ConfigFactory}
 import controllers.CyberStationControllerInterface
 import play.api.libs.json._
 import reactivemongo.api._
 import reactivemongo.play.json.collection._
-import support.Counter
+import support.{Counter, CyberUtils}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -34,7 +33,7 @@ trait MongoBase {
 
   val counter = Counter()
 
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
 
   var database: Future[DefaultDB] = _
 

@@ -56,8 +56,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   val srvList = ObservableBuffer[ServerForm]()
   val apirootList = ObservableBuffer[String]()
   val collectionList = ObservableBuffer[TaxiiCollection]()
-
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
 
   init()
 

@@ -75,7 +75,7 @@ bundle can be saved to local storage, can then be further edited as desired and 
 
 *Graph view* is an experimental feature to display the created bundles of objects or those of 
 the Taxii server. Note that currently the number of STIX objects displayed is restricted 
-to the *taxii.objects* value in the *application.conf*  file.
+to the *taxii.objects* value in the *settings.conf* file.
 
 
 ![Graph view](/images/graphview.png?raw=true) 
@@ -106,9 +106,9 @@ To enable these features, *MongoDB* must be installed and running.
 
 #### Installation and running
 
-Install [SBT](https://www.scala-sbt.org/)
+Install the latest [SBT](https://www.scala-sbt.org/)
 
-Download this repository, and adjust the *application.conf* file in the *src/main/resource* directory if need be.
+Download this repository, and adjust the *settings.conf* file.
 
     sbt run
 
@@ -117,7 +117,7 @@ Download this repository, and adjust the *application.conf* file in the *src/mai
 Must have java 1.8 (at least 1.8.0_152) installed.
 
 To use *MongoDB* for storage, *MongoDB* must be installed and running; e.g. type: mongod in a terminal 
-(see also the settings in the *application.conf* file in the *src/main/resource* directory)
+(see also the settings in the *settings.conf* file)
 
 ### Status
 

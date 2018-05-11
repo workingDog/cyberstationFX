@@ -5,15 +5,14 @@ import java.io.File
 import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.neo4j.{Neo4jFileLoader, Neo4jLoader}
 import com.kodekutters.stix.{Bundle, StixObj}
-import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import controllers.CyberStationControllerInterface
-import org.neo4j.graphdb.Result
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scalafx.scene.paint.Color
 import cyber.CyberBundle
+import support.CyberUtils
 
 /**
   * the Neo4j graph database services
@@ -21,7 +20,7 @@ import cyber.CyberBundle
   */
 object Neo4jService {
 
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
 
   implicit val logger = Logger("CyberStation")
 

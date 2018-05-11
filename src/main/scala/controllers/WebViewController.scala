@@ -13,6 +13,7 @@ import scalafx.scene.web.WebView
 import cyber.{CytoObject, ServerForm}
 import netscape.javascript.JSObject
 import play.api.libs.json.Json
+import support.CyberUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -48,7 +49,7 @@ class WebViewController(webViewer: WebView,
   var serverInfo: ServerForm = _
   var taxiiCol: TaxiiCollection = _
   var apirootInfo = ""
-  val config: Config = ConfigFactory.load
+  val config = CyberUtils.config
   var fetchNumber = 100
   var hasChanged: Boolean = false
 
