@@ -1,6 +1,6 @@
 ### CyberStation
 
-**CyberStation** is a prototype interactive desktop application for 
+**CyberStation** is a prototype interactive desktop application for manually  
 creating, editing and sending [STIX 2.0](https://oasis-open.github.io/cti-documentation/stix/intro) objects 
 to a [TAXII-2.0](https://oasis-open.github.io/cti-documentation/taxii/intro.html) server.
 
@@ -40,8 +40,7 @@ The UI allows for adding new servers by clicking the
 ![+](/images/add.png?raw=true "Add") button or deleting previously defined servers 
 by selecting the desired server and clicking on the ![-](/images/delete.png?raw=true "Delete") button.
 
-A test server from [freetaxii-server](https://github.com/freetaxii/freetaxii-server)
-is predefined for selection. Selecting a server (by clicking on it) brings a list of its api roots. 
+Some test servers are predefined for selection. Selecting a server (by clicking on it) brings a list of its api roots. 
 One api root and associated collection endpoint should be selected to be able to send STIX objects to the server. 
 
 To change the server URL or the user name or the password, double click on it and a dialog will be popup.

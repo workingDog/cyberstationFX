@@ -715,7 +715,7 @@ case class LabelItem(init: Boolean, name: String, var form: CyberObj) {
 
 //---------------------------------------------------------------
 
-case class ServerInfo(name: String, url: String)
+case class ServerInfo(name: String, url: String, user: String, psw: String)
 
 object ServerInfo {
   implicit val fmt = Json.format[ServerInfo]

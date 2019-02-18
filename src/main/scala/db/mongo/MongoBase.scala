@@ -1,6 +1,7 @@
 package db.mongo
 
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 import com.kodekutters.neo4j.Neo4jFileLoader.readBundle
 import com.kodekutters.stix.StixObj._
@@ -11,8 +12,10 @@ import reactivemongo.api._
 import reactivemongo.play.json.collection._
 import support.{Counter, CyberUtils}
 
+import reactivemongo.api.{ DefaultDB, FailoverStrategy }
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.duration.{FiniteDuration, TimeUnit, _}
 import scala.concurrent.{Await, Future}
 import scala.io.Source
 import scala.language.{implicitConversions, postfixOps}
@@ -49,6 +52,21 @@ trait MongoBase {
 
   def getUri(): String = dbUri
 
+  val failoverStrategy = FailoverStrategy(retries = 5)
+
+  private val timeoutFactor = 1.25D
+
+  def estTimeout(fos: FailoverStrategy): FiniteDuration =
+    (1 to fos.retries).foldLeft(fos.initialDelay) { (d, i) =>
+      d + (fos.initialDelay * (timeoutFactor * fos.delayFactor(i)).toLong)
+    }
+
+  val timeoutClose: FiniteDuration = {
+    val maxTimeout = estTimeout(failoverStrategy)
+    if (maxTimeout < 10.seconds) 10.seconds
+    else maxTimeout
+  }
+
   /**
     * initialisation --> config and connection
     */
@@ -74,7 +92,7 @@ trait MongoBase {
     Await.result(database, timeout seconds)
   }
 
-  def close(): Unit = if (database != null && isReady) database.map(db => db.connection.close())
+  def close(): Unit = if (database != null && isReady) database.map(db => db.connection.askClose()(timeoutClose))
 
   def saveBundleAsStixs(bundle: Bundle): Unit = {
     for (stix <- bundle.objects) {

@@ -2,13 +2,12 @@ package controllers
 
 import java.io.IOException
 import java.net.URL
+
 import javafx.fxml.FXML
 import javafx.scene.text.Text
-
 import scalafx.Includes._
 import com.jfoenix.controls.{JFXButton, JFXListView, JFXSpinner}
 import cyber.{CyberStationApp, InfoTableEntry, ServerForm, ServerInfo}
-
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafxml.core.macros.sfxml
@@ -29,8 +28,10 @@ import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.ScrollPane.ScrollBarPolicy
 import scalafx.stage.{Modality, Stage}
 import scalafxml.core.{DependenciesByType, FXMLLoader}
+
 import scala.collection.JavaConverters._
 
 
@@ -67,6 +68,7 @@ class ServersViewController(@FXML addButton: JFXButton,
   // bind the collectionInfo to the selected collection of the collectionsListView
   collectionInfo <== collectionsListView.getSelectionModel.selectedItemProperty()
 
+
   def init(): Unit = {
     try {
       // get the pre-defined taxii servers from the application.conf file
@@ -79,8 +81,8 @@ class ServersViewController(@FXML addButton: JFXButton,
       srvList ++= (for (s <- srvinfo.flatten) yield ServerForm(
         name = StringProperty(s.name),
         url = StringProperty(s.url),
-        user = StringProperty("guest"),
-        psw = StringProperty("guest")))
+        user = StringProperty(s.user),
+        psw = StringProperty(s.psw)))
     } catch {
       case e: Throwable => println("---> config error: " + e)
     }
@@ -197,7 +199,7 @@ class ServersViewController(@FXML addButton: JFXButton,
       serverSpinner.setVisible(false)
       return
     }
-    connOpt.map(conn => {
+    connOpt.map(conn =>
       // get the future response
       Collections(apiroot, conn).response onComplete {
 
@@ -220,8 +222,7 @@ class ServersViewController(@FXML addButton: JFXButton,
           }
 
         case Failure(t) => serverSpinner.setVisible(false)
-      }
-    })
+      })
   }
 
   def createServerInfo(serverForm: ServerForm): Unit = {

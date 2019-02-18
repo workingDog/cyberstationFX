@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServersViewController">
+<HBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServersViewController">
          <children>
             <VBox minWidth="-Infinity" prefHeight="480.0" prefWidth="203.0" HBox.hgrow="ALWAYS">
                <children>
@@ -24,7 +24,7 @@
                         <Insets bottom="4.0" left="12.0" right="4.0" top="8.0" />
                      </padding>
                   </HBox>
-                  <JFXListView fx:id="serversListView" editable="true" prefHeight="480.0" VBox.vgrow="ALWAYS">
+                  <JFXListView fx:id="serversListView" accessibleRole="SCROLL_PANE" editable="true" prefHeight="480.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="8.0" right="8.0" />
                </VBox.margin>
@@ -44,8 +44,8 @@
                </VBox.margin></AnchorPane>
             <HBox prefHeight="328.0" VBox.vgrow="ALWAYS">
                <children>
-                  <JFXListView fx:id="apirootsListView" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
-                  <JFXListView fx:id="collectionsListView" HBox.hgrow="ALWAYS" />
+                  <JFXListView fx:id="apirootsListView" accessibleRole="SCROLL_PANE" prefHeight="328.0" prefWidth="300.0" HBox.hgrow="NEVER" />
+                  <JFXListView fx:id="collectionsListView" accessibleRole="SCROLL_PANE" HBox.hgrow="ALWAYS" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" />
