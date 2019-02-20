@@ -16,16 +16,17 @@ import scala.concurrent.Future
 import scala.util.Random
 import scalafx.stage.FileChooser.ExtensionFilter
 import scalafx.stage.{FileChooser, Stage}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.kodekutters.stix.{SDO, SRO, StixObj}
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.mutable
 
 
 object CyberUtils {
 
-  val baseConfig = ConfigFactory.load()
+  val baseConfig: Config = ConfigFactory.load()
   val config = ConfigFactory.parseFile(new java.io.File("settings.conf")).withFallback(baseConfig).resolve()
 
   // create an Akka system for thread and streaming management
