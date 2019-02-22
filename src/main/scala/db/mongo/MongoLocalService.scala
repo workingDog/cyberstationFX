@@ -70,9 +70,9 @@ object MongoLocalService extends MongoBase with DbService {
     // insert all bundles and info
     for {
       bundles <- bundlesInfoF
-      infErrors <- bundles.insert[BundleInfo](ordered = true).many(infoList)
+      infErrors <- bundles.insert(ordered = true).many(infoList)
       bundles <- bundlesF
-      errors <- bundles.insert[Bundle](ordered = true).many(bundleList)
+      errors <- bundles.insert(ordered = true).many(bundleList)
     } yield (infErrors, errors)
   }
 

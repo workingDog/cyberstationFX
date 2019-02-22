@@ -17,8 +17,8 @@ libraryDependencies ++= Seq(
   "com.github.workingDog" %% "scalastix" % "0.9",
   "com.github.workingDog" %% "taxii2lib" % "0.5",
   "com.github.workingDog" %% "stixtoneolib" % "0.4",
-  "org.reactivemongo" %% "reactivemongo" % "0.16.1",
-  "org.reactivemongo" %% "reactivemongo-play-json" % "0.16.1-play26",
+  "org.reactivemongo" %% "reactivemongo" % "0.16.2",
+  "org.reactivemongo" %% "reactivemongo-play-json" % "0.16.2-play27",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
 ).map(_.exclude("org.slf4j", "*"))
 
