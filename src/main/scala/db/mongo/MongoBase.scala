@@ -123,7 +123,8 @@ trait MongoBase {
 
   def saveBundleFile(file: File): Unit = {
     // read a STIX bundle from the file
-    val jsondoc = Source.fromFile(file).mkString
+    val source = Source.fromFile(file, "UTF-8")
+    val jsondoc = try source.mkString finally source.close()
     Option(Json.parse(jsondoc)) match {
       case None => println("\n-----> could not parse JSON in file: " + file.getName)
       case Some(js) =>

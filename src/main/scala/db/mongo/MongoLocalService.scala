@@ -55,7 +55,7 @@ object MongoLocalService extends MongoBase with DbService {
       val userlog = UserLog("user_id", bundle.id.toString(), stix.id.toString(), colPath, Timestamp.now().toString())
       for {
         userCol <- userLogF
-        theError <- userCol.insert(userlog)
+        theError <- userCol.insert(ordered = false).one(userlog)
       } yield theError
     }
   }

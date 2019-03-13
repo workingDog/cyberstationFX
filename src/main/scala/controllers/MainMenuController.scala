@@ -167,7 +167,8 @@ class MainMenuController(loadItem: MenuItem,
       rootZip.entries.asScala.foreach(stixFile => {
         if (stixFile.getName.toLowerCase.endsWith(".json") || stixFile.getName.toLowerCase.endsWith(".stix")) {
           // read a STIX bundle from the InputStream
-          val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
+          val theSource = Source.fromInputStream(rootZip.getInputStream(stixFile), "UTF-8")
+          val jsondoc = try theSource.mkString finally theSource.close()
           val bundleName = stixFile.getName.toLowerCase.dropRight(5)
           // create a bundle object
           Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
@@ -227,7 +228,8 @@ class MainMenuController(loadItem: MenuItem,
         case x => x
       }
       // read a bundle from theFile
-      val jsondoc = Source.fromFile(theFile).mkString
+      val source = Source.fromFile(theFile, "UTF-8")
+      val jsondoc = try source.mkString finally source.close()
       // create a bundle object from it
       Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
         case Some(bundle) =>

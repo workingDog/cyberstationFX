@@ -51,7 +51,8 @@ class Transformer(converter: StixConverter) {
     */
   def stixConvertion(inFile: String, outFile: String): Unit = {
     // read a STIX bundle from a file
-    val jsondoc = Source.fromFile(inFile).mkString
+    val source = Source.fromFile(inFile, "UTF-8")
+    val jsondoc = try source.mkString finally source.close()
     // create a bundle object from it
     Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
       case None => println("\n-----> ERROR reading bundle in file: " + inFile); None
@@ -99,7 +100,8 @@ class Transformer(converter: StixConverter) {
     */
   def loadBundle(source: InputStream): Option[Bundle] = {
     // read a STIX bundle from the InputStream
-    val jsondoc = Source.fromInputStream(source).mkString
+    val theSource = Source.fromInputStream(source, "UTF-8")
+    val jsondoc = try theSource.mkString finally theSource.close()
     // create a bundle object from it
     Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
       case None => println("-----> ERROR invalid bundle JSON in zip file: \n"); None

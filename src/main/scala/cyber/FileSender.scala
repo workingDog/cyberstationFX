@@ -36,7 +36,8 @@ object FileSender {
     try {
       cyberController.showThis("Reading bundle file: " + theFile.getName, Color.Black)
       // read a bundle from theFile
-      val jsondoc = Source.fromFile(theFile).mkString
+      val source = Source.fromFile(theFile, "UTF-8")
+      val jsondoc = try source.mkString finally source.close()
       // create a bundle object from it
       Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
         case Some(bundle) => sendBundleToServer(bundle)
@@ -86,7 +87,8 @@ object FileSender {
       val rootZip = new java.util.zip.ZipFile(theFile)
       rootZip.entries.asScala.foreach(stixFile => {
         // read a STIX bundle from the InputStream
-        val jsondoc = Source.fromInputStream(rootZip.getInputStream(stixFile)).mkString
+        val source = Source.fromInputStream(rootZip.getInputStream(stixFile), "UTF-8")
+        val jsondoc = try source.mkString finally source.close()
         // create a bundle object
         Json.fromJson[Bundle](Json.parse(jsondoc)).asOpt match {
           case Some(bundle) => sendBundleToServer(bundle)
